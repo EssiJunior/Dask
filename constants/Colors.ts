@@ -6,8 +6,10 @@ export default {
     text: '#000',
     background: '#fff',
     tint: tintColorLight,
-    tabIconDefault: '#ccc',
+    tabIconDefault: '#888',
     tabIconSelected: tintColorLight,
+    primary: "#00a8e8",
+    primaryLight: "#E1E5F2",
   },
   dark: {
     text: '#fff',
