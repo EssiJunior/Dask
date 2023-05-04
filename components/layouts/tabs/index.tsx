@@ -8,13 +8,13 @@ import {
 import { Link } from "expo-router";
 import React from "react";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
-import Button from "../../buttons/Button";
+import TouchableSurface from "../../buttons/TouchableSurface";
 import Colors from "../../../constants/Colors";
 import Animated, {
   useSharedValue,
   withTiming,
   useAnimatedStyle,
-  interpolate
+  interpolate,
 } from "react-native-reanimated";
 
 type TabBarProps = {
@@ -44,7 +44,6 @@ export function TabBar({ state, navigation }: TabBarProps) {
         <TabBarIcon
           onPress={() => handleTabPress("index")}
           active={tabName === "index"}
-          
         >
           <MaterialIcons
             name="dashboard"
@@ -63,7 +62,6 @@ export function TabBar({ state, navigation }: TabBarProps) {
         <TabBarIcon
           onPress={() => handleTabPress("shared")}
           active={tabName === "shared"}
-          
         >
           <MaterialIcons
             name="folder-shared"
@@ -82,7 +80,6 @@ export function TabBar({ state, navigation }: TabBarProps) {
         <TabBarIcon
           onPress={() => handleTabPress("profile")}
           active={tabName === "profile"}
-          
         >
           <Ionicons
             name="person-circle"
@@ -101,7 +98,6 @@ export function TabBar({ state, navigation }: TabBarProps) {
         <TabBarIcon
           onPress={() => handleTabPress("setting")}
           active={tabName === "setting"}
-          
         >
           <Ionicons
             name="settings-sharp"
@@ -148,18 +144,18 @@ function TabBarIcon({
     opacity: activeValue.value,
     transform: [
       {
-        scale: interpolate(activeValue.value, [0, 1], [.7, 1])
+        scale: interpolate(activeValue.value, [0, 1], [0.7, 1]),
       },
-    ]
+    ],
   }));
 
   const IconStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(activeValue.value, [0, 1], [.8, 1.2])
+        scale: interpolate(activeValue.value, [0, 1], [0.8, 1]),
       },
-    ]
-  }))
+    ],
+  }));
 
   return (
     <View
@@ -168,10 +164,16 @@ function TabBarIcon({
         width: "100%",
       }}
     >
-      <Animated.View
-        style={[IconStyle]}
-      >
-        <Button onPress={onPress}>{children}</Button>
+      <Animated.View style={[IconStyle]}>
+        <TouchableSurface
+          onPress={onPress}
+          style={{
+            paddingHorizontal: 20,
+            paddingVertical: 14,
+          }}
+        >
+          {children}
+        </TouchableSurface>
       </Animated.View>
 
       <Animated.View

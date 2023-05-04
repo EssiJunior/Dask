@@ -1,27 +1,87 @@
-import { TouchableNativeFeedback, View, Text } from "react-native";
+import { View } from "react-native";
 import Colors from "../../constants/Colors";
-import styles from "./styles";
+import TouchableSurface from "./TouchableSurface";
 
-type ButtonProps = {
-  onPress?: () => void;
+export type ButtonProps = {
   children: React.ReactNode;
+  onPress?: () => void;
   color?: string;
-  type?: "contained" | "outlined";
+  rippleColor?: string;
+  disabled?: boolean;
+  textColor?: string;
+  type?: "contained" | "outlined" | "text";
+  rounded?: boolean;
+  width?: number;
+  style: object;
+  pv?: number;
+  ph?: number;
+  elevation?: number;
 };
 
-export default function Button({ onPress, children, color }: ButtonProps) {
+const Button = ({
+  children,
+  onPress,
+  color,
+  disabled,
+  textColor,
+  type,
+  rounded,
+  rippleColor,
+  width,
+  style,
+  pv,
+  ph,
+  elevation,
+}: ButtonProps) => {
   return (
-    <TouchableNativeFeedback
-      onPress={onPress}
-      background={TouchableNativeFeedback.Ripple(Colors.light.primaryLight, false)}
+    <View
+      style={[
+        {
+          backgroundColor: type === "contained" ? color : "transparent",
+          borderColor: type === "outlined" ? color : "transparent",
+          borderWidth: type === "outlined" ? 2 : 0,
+          borderRadius: rounded ? 20 : 8,
+          opacity: disabled ? 0.5 : 1,
+          width,
+          elevation,
+        },
+        style,
+      ]}
     >
-      <View style={[styles.button]}>{children}</View>
-    </TouchableNativeFeedback>
+      <TouchableSurface
+        onPress={onPress}
+        rippleColor={rippleColor}
+        useForeground
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            paddingVertical: pv,
+            paddingHorizontal: ph,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {children}
+        </View>
+      </TouchableSurface>
+    </View>
   );
-}
+};
+
+export default Button;
 
 Button.defaultProps = {
-  color: "#000",
-  type: "contained",
   onPress: () => {},
+  color: Colors.light.primary,
+  rippleColor: Colors.light.primaryLight,
+  disabled: false,
+  textColor: Colors.light.text,
+  type: "contained",
+  rounded: false,
+  width: "auto",
+  style: {},
+  pv: 10,
+  ph: 20,
+  elevation: 0,
 };
