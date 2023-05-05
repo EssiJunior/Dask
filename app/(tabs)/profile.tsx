@@ -1,5 +1,6 @@
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Avatar from "../../components/avatars/Avatar";
 import Button from "../../components/buttons/Button";
 import Typography from "../../components/text/Typography";
 import Colors from "../../constants/Colors";
@@ -47,12 +48,19 @@ export default function ProfileScreen() {
         ph={20}
       >
         <Typography
-          fontSize={18}
+          fontSize={16}
           color={Colors.light.text}
           weight="light"
           text="Logout"
         />
       </Button>
+      <Avatar 
+        size={100}
+        rounded
+        style={{
+          marginTop: 20,
+        }}
+      />
     </SafeAreaView>
   );
 }

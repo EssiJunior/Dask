@@ -16,8 +16,8 @@ export default function HomeScreen() {
         width={180}
         rounded
         style={{ marginTop: 20 }}
-        pv={15}
-        ph={25}
+        pv={13}
+        ph={20}
         bottom={20}
         right={20}
       >
@@ -28,7 +28,7 @@ export default function HomeScreen() {
           style={{ marginRight: 15 }}
         />
         <Typography
-          fontSize={18}
+          fontSize={16}
           color={Colors.dark.text}
           weight="bold"
           text="New Project"

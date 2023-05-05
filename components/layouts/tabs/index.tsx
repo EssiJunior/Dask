@@ -162,6 +162,7 @@ function TabBarIcon({
       style={{
         position: "relative",
         width: "100%",
+        alignItems: "center",
       }}
     >
       <Animated.View style={[IconStyle]}>
@@ -179,11 +180,11 @@ function TabBarIcon({
       <Animated.View
         style={[
           {
-            width: "100%",
+            width: 40,
             height: 5,
             backgroundColor: Colors.light.primary,
-            borderTopRightRadius: 3,
-            borderTopLeftRadius: 3,
+            borderTopRightRadius: 20,
+            borderTopLeftRadius: 20,
           },
           activeStyle,
         ]}

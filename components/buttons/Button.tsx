@@ -40,7 +40,7 @@ const Button = ({
           backgroundColor: type === "contained" ? color : "transparent",
           borderColor: type === "outlined" ? color : "transparent",
           borderWidth: type === "outlined" ? 2 : 0,
-          borderRadius: rounded ? 20 : 8,
+          borderRadius: rounded ? 50 : 8,
           opacity: disabled ? 0.5 : 1,
           width,
           elevation,
