@@ -9,6 +9,8 @@ type AvatarProps = {
   onPress?: () => void;
   style?: object;
   rounded?: boolean;
+  borderWidth?: number;
+  borderColor?: string;
 };
 
 export default function Avatar({
@@ -17,6 +19,8 @@ export default function Avatar({
   style,
   rounded,
   source,
+  borderWidth,
+  borderColor,
 }: AvatarProps) {
   return (
     <TouchableSurface
@@ -25,6 +29,8 @@ export default function Avatar({
           width: size,
           height: size,
           borderRadius: rounded ? 200 : 8,
+          borderWidth,
+          borderColor,
         },
         style,
       ]}
@@ -47,4 +53,6 @@ Avatar.defaultProps = {
   size: 40,
   rounded: true,
   source: image,
+  borderWidth: 0,
+  borderColor: "transparent",
 };
