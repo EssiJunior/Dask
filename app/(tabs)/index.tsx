@@ -7,13 +7,25 @@ import FloatingButton from "../../components/buttons/FloattingButton";
 import HeaderHome from "../../components/layouts/headers/HeaderHome";
 import Typography from "../../components/text/Typography";
 import Colors from "../../constants/Colors";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function HomeScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
       <HeaderHome />
 
-      <Typography fontSize={18} weight="semibold" text="Personal Projects" />
+      <ScrollView style={{ paddingHorizontal: 20 }}>
+        <Typography
+          fontSize={26}
+          weight="semibold"
+          text="Personal Projects"
+          color={Colors.light.secondary}
+        />
+
+        {
+          // TODO: Add projects list
+        }
+      </ScrollView>
 
       <FloatingButton
         width={180}
