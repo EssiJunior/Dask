@@ -6,6 +6,7 @@ import styles from "./styles";
 type BadgeProps = {
   padding: number;
   color: string;
+  textColor: string;
   fontSize: number;
   text: string;
   width: number;
@@ -14,6 +15,7 @@ type BadgeProps = {
 export default function Badge({
   padding,
   color,
+  textColor,
   fontSize,
   text,
   width,
@@ -22,12 +24,9 @@ export default function Badge({
     <View style={[styles.badge, { padding, backgroundColor: color, width }]}>
       <Typography
         text={text}
-        color={Colors.dark.text}
+        color={textColor}
         fontSize={fontSize}
         weight="semibold"
-        style={{
-          paddingTop: -2,
-        }}
       />
     </View>
   );
@@ -36,6 +35,7 @@ export default function Badge({
 Badge.defaultProps = {
   padding: 2,
   color: Colors.light.primary,
+  textColor: Colors.dark.text,
   fontSize: 12,
   width: 20,
 };

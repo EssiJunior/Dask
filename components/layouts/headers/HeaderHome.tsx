@@ -17,7 +17,7 @@ export default function HeaderHome() {
 
   return (
     <View style={styles.header}>
-      <Avatar onPress={() => handleNavigate("Profile")} />
+      <Avatar onPress={() => handleNavigate("profile")} />
 
       <View style={styles.headerIcons}>
         <TouchableSurface rounded style={{ borderRadius: 50 }}>

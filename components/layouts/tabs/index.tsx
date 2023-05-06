@@ -49,21 +49,18 @@ export function TabBar({ state, navigation }: TabBarProps) {
           onPress={() => handleTabPress("index")}
           active={tabName === "index"}
         >
-          {tabName === "index" ? (
-            <MaterialIcons
-              name="dashboard"
-              size={30}
-              style={{ marginBottom: -3 }}
-              color={Colors.light.primary}
-            />
-          ) : (
-            <MaterialCommunityIcons
-              name="view-dashboard-outline"
-              size={30}
-              style={{ marginBottom: -3 }}
-              color={Colors.light.tabIconDefault}
-            />
-          )}
+          <MaterialCommunityIcons
+            name={
+              tabName === "index" ? "view-dashboard" : "view-dashboard-outline"
+            }
+            size={30}
+            style={{ marginBottom: -3 }}
+            color={
+              tabName === "index"
+                ? Colors.light.primary
+                : Colors.light.tabIconDefault
+            }
+          />
         </TabBarIcon>
       </Link>
 
@@ -72,21 +69,16 @@ export function TabBar({ state, navigation }: TabBarProps) {
           onPress={() => handleTabPress("shared")}
           active={tabName === "shared"}
         >
-          {tabName === "shared" ? (
-            <MaterialIcons
-              name="folder-shared"
-              size={30}
-              style={{ marginBottom: -3 }}
-              color={Colors.light.primary}
-            />
-          ) : (
-            <MaterialCommunityIcons
-              name="folder-account-outline"
-              size={30}
-              style={{ marginBottom: -3 }}
-              color={Colors.light.tabIconDefault}
-            />
-          )}
+          <Ionicons
+            name={tabName === "shared" ? "folder-open" : "folder-open-outline"}
+            size={28}
+            style={{ marginBottom: -3 }}
+            color={
+              tabName === "shared"
+                ? Colors.light.primary
+                : Colors.light.tabIconDefault
+            }
+          />
 
           {/* folder-account-outline */}
         </TabBarIcon>

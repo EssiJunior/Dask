@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { ScrollView, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,16 +26,22 @@ export default function SharedProjectScreen() {
       </ScrollView>
 
       <FloatingButton
-        width={200}
+        width={180}
         rounded
         style={{ marginTop: 20 }}
-        pv={15}
-        ph={25}
+        pv={13}
+        ph={20}
         bottom={20}
         right={20}
       >
+        <Feather
+          name="plus"
+          size={24}
+          color={Colors.dark.text}
+          style={{ marginRight: 15 }}
+        />
         <Typography
-          fontSize={18}
+          fontSize={16}
           color={Colors.dark.text}
           weight="bold"
           text="New Project"
