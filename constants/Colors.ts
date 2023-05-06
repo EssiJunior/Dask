@@ -12,7 +12,8 @@ export default {
     primaryLight: "#E1E5F2",
     secondary: "#003459",
     gray: "#4E4E4E",
-    red: "#E51B1B"
+    red: "#E51B1B",
+    green: "#1E9F42",
   },
   dark: {
     text: "#fff",

@@ -6,6 +6,7 @@ type TypographyProps = {
   fontSize?: number;
   color?: string;
   weight?: "bold" | "normal" | "light" | "black" | "semibold";
+  style?: object;
 };
 
 export default function Typography({
@@ -13,6 +14,7 @@ export default function Typography({
   fontSize,
   color,
   weight,
+  style,
 }: TypographyProps) {
   // Handlers
   const getFontFamily = () => {
@@ -34,12 +36,15 @@ export default function Typography({
 
   return (
     <Text
-      style={{
-        fontSize,
-        color,
-        fontFamily: getFontFamily(),
-        verticalAlign: "middle",
-      }}
+      style={[
+        {
+          fontSize,
+          color,
+          fontFamily: getFontFamily(),
+          verticalAlign: "middle",
+        },
+        style,
+      ]}
     >
       {text}
     </Text>
@@ -50,4 +55,5 @@ Typography.defaultProps = {
   fontSize: 16,
   color: Colors.light.text,
   weight: "normal",
+  style: {},
 };

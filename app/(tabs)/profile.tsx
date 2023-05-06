@@ -1,6 +1,7 @@
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Avatar from "../../components/avatars/Avatar";
+import Badge from "../../components/badges/Badge";
 import Button from "../../components/buttons/Button";
 import HeaderText from "../../components/layouts/headers/HeaderText";
 import Typography from "../../components/text/Typography";
@@ -16,51 +17,15 @@ export default function ProfileScreen() {
     >
       <HeaderText title="Profile" />
 
-      <Button
-        width={150}
-        type="outlined"
-        style={{ marginTop: 20 }}
-        pv={10}
-        ph={20}
-      >
-        <Typography
-          fontSize={18}
-          color={Colors.light.primary}
-          weight="bold"
-          text="Logout"
-        />
-      </Button>
+      {/* 
+          TODO: Add profile information here
+      */}
 
-      <Button
-        width={150}
-        type="contained"
-        style={{ marginTop: 20 }}
-        pv={10}
-        ph={20}
-      >
-        <Typography
-          fontSize={18}
-          color={Colors.dark.text}
-          weight="light"
-          text="Logout"
-        />
-      </Button>
 
-      <Button width={150} type="text" style={{ marginTop: 20 }} pv={10} ph={20}>
-        <Typography
-          fontSize={16}
-          color={Colors.light.text}
-          weight="light"
-          text="Logout"
-        />
-      </Button>
-      <Avatar
-        size={200}
-        rounded={false}
-        style={{
-          marginTop: 20,
-        }}
-      />
+
+      <Badge text="done" width={40} />
+      <Badge text="In process" width={70} color={Colors.light.green} />
+      <Badge text="To do" width={45} color={Colors.light.tabIconDefault} />
     </SafeAreaView>
   );
 }

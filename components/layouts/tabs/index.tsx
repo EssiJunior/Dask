@@ -7,7 +7,11 @@ import {
 } from "@react-navigation/native";
 import { Link } from "expo-router";
 import React from "react";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import TouchableSurface from "../../buttons/TouchableSurface";
 import Colors from "../../../constants/Colors";
 import Animated, {
@@ -45,16 +49,21 @@ export function TabBar({ state, navigation }: TabBarProps) {
           onPress={() => handleTabPress("index")}
           active={tabName === "index"}
         >
-          <MaterialIcons
-            name="dashboard"
-            size={30}
-            style={{ marginBottom: -3 }}
-            color={
-              tabName === "index"
-                ? Colors.light.primary
-                : Colors.light.tabIconDefault
-            }
-          />
+          {tabName === "index" ? (
+            <MaterialIcons
+              name="dashboard"
+              size={30}
+              style={{ marginBottom: -3 }}
+              color={Colors.light.primary}
+            />
+          ) : (
+            <MaterialCommunityIcons
+              name="view-dashboard-outline"
+              size={30}
+              style={{ marginBottom: -3 }}
+              color={Colors.light.tabIconDefault}
+            />
+          )}
         </TabBarIcon>
       </Link>
 
@@ -63,16 +72,23 @@ export function TabBar({ state, navigation }: TabBarProps) {
           onPress={() => handleTabPress("shared")}
           active={tabName === "shared"}
         >
-          <MaterialIcons
-            name="folder-shared"
-            size={30}
-            style={{ marginBottom: -3 }}
-            color={
-              tabName === "shared"
-                ? Colors.light.primary
-                : Colors.light.tabIconDefault
-            }
-          />
+          {tabName === "shared" ? (
+            <MaterialIcons
+              name="folder-shared"
+              size={30}
+              style={{ marginBottom: -3 }}
+              color={Colors.light.primary}
+            />
+          ) : (
+            <MaterialCommunityIcons
+              name="folder-account-outline"
+              size={30}
+              style={{ marginBottom: -3 }}
+              color={Colors.light.tabIconDefault}
+            />
+          )}
+
+          {/* folder-account-outline */}
         </TabBarIcon>
       </Link>
 
@@ -82,7 +98,9 @@ export function TabBar({ state, navigation }: TabBarProps) {
           active={tabName === "profile"}
         >
           <Ionicons
-            name="person-circle"
+            name={
+              tabName === "profile" ? "person-circle" : "person-circle-outline"
+            }
             size={28}
             style={{ marginBottom: -3 }}
             color={
@@ -100,7 +118,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
           active={tabName === "setting"}
         >
           <Ionicons
-            name="settings-sharp"
+            name={tabName === "setting" ? "settings-sharp" : "settings-outline"}
             size={28}
             style={{ marginBottom: -3 }}
             color={

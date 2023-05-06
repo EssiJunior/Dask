@@ -5,11 +5,19 @@ import styles from "./styles";
 import TouchableSurface from "../../buttons/TouchableSurface";
 import Colors from "../../../constants/Colors";
 import Dot from "../../dot/Dot";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 
 export default function HeaderHome() {
+  const navigation = useNavigation();
+
+  // Some handlers
+  const handleNavigate = (screen: string) => {
+    navigation.dispatch(CommonActions.navigate(screen));
+  };
+
   return (
     <View style={styles.header}>
-      <Avatar />
+      <Avatar onPress={() => handleNavigate("Profile")} />
 
       <View style={styles.headerIcons}>
         <TouchableSurface rounded style={{ borderRadius: 50 }}>
