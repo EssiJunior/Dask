@@ -29,6 +29,7 @@ export default function Avatar({
         style,
       ]}
       onPress={onPress}
+      // rounded
     >
       <Image
         source={source}

@@ -2,13 +2,19 @@ import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Avatar from "../../components/avatars/Avatar";
 import Button from "../../components/buttons/Button";
+import HeaderText from "../../components/layouts/headers/HeaderText";
 import Typography from "../../components/text/Typography";
 import Colors from "../../constants/Colors";
 
 export default function ProfileScreen() {
   return (
-    <SafeAreaView>
-      <Text>Profile</Text>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Colors.light.background,
+      }}
+    >
+      <HeaderText title="Profile" />
 
       <Button
         width={150}
@@ -40,13 +46,7 @@ export default function ProfileScreen() {
         />
       </Button>
 
-      <Button
-        width={150}
-        type="text"
-        style={{ marginTop: 20 }}
-        pv={10}
-        ph={20}
-      >
+      <Button width={150} type="text" style={{ marginTop: 20 }} pv={10} ph={20}>
         <Typography
           fontSize={16}
           color={Colors.light.text}
@@ -54,9 +54,9 @@ export default function ProfileScreen() {
           text="Logout"
         />
       </Button>
-      <Avatar 
-        size={100}
-        rounded
+      <Avatar
+        size={200}
+        rounded={false}
         style={{
           marginTop: 20,
         }}
