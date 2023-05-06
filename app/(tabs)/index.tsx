@@ -4,12 +4,15 @@ import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../components/buttons/Button";
 import FloatingButton from "../../components/buttons/FloattingButton";
+import HeaderHome from "../../components/layouts/headers/HeaderHome";
 import Typography from "../../components/text/Typography";
 import Colors from "../../constants/Colors";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
+      <HeaderHome />
+
       <Typography fontSize={18} weight="semibold" text="Personal Projects" />
 
       <FloatingButton
