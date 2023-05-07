@@ -92,6 +92,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        <Stack.Screen name="(project)" options={{ headerShown: false }} />
       </Stack>
     </>
   );

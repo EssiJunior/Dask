@@ -3,7 +3,7 @@ import TouchableSurface from "../buttons/TouchableSurface";
 
 const image = require("../../assets/images/image1.jpeg");
 
-type AvatarProps = {
+export type AvatarProps = {
   source: ImageSourcePropType;
   size: number;
   onPress?: () => void;

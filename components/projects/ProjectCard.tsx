@@ -1,12 +1,18 @@
 import { View } from "react-native";
 import Colors from "../../constants/Colors";
 import Avatar from "../avatars/Avatar";
+import MultiAvatars from "../avatars/MultiAvartar";
 import TouchableSurface from "../buttons/TouchableSurface";
 import ProgressBar from "../progress/ProgressBar";
 import Typography from "../text/Typography";
 import { styles } from "./styles";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function ProjectCard() {
+type ProjectCardProps = {
+  type: "personal" | "shared";
+};
+
+export default function ProjectCard({ type }: ProjectCardProps) {
   return (
     <TouchableSurface style={{ marginBottom: 20 }}>
       <View style={styles.container}>
@@ -25,18 +31,46 @@ export default function ProjectCard() {
               borderColor={Colors.light.background}
             />
           </View>
+
+          {
+            type === "shared" && (
+            <View
+              style={{
+                width: 30,
+                height: 30,
+                position: "absolute",
+                bottom: 10,
+                right: 20,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Ionicons
+                name="link-outline"
+                size={20}
+                color={Colors.light.secondary}
+              />
+            </View>
+            )
+          }
         </View>
 
         <View style={styles.cardBody}>
-          <View
-            style={{
-              position: "absolute",
-              top: 10,
-              right: 20,
-            }}
-          >
-            <Avatar size={30} />
-          </View>
+          {type === "shared" && (
+            <View
+              style={{
+                position: "absolute",
+                top: 10,
+                right: 20,
+              }}
+            >
+              <MultiAvatars
+                size={30}
+                borderWidth={2}
+                borderColor={Colors.light.background}
+              />
+            </View>
+          )}
 
           <View style={styles.cardBodyText}>
             <Typography
@@ -54,3 +88,7 @@ export default function ProjectCard() {
     </TouchableSurface>
   );
 }
+
+ProjectCard.defaultProps = {
+  type: "personal",
+};
