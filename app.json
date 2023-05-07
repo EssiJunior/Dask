@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "dash",
-    "slug": "dash",
+    "name": "dask",
+    "slug": "dask",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

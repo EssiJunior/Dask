@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import Avatar, { AvatarProps } from "./Avatar";
 import styles from "./styles";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 
 const image = require("../../assets/images/image1.jpeg");
@@ -25,12 +25,30 @@ export default function MultiAvatars({
 
   return (
     <View style={styles.container}>
+      {avatars.map((avatar, index) => (
+        <View
+          key={index}
+          style={[
+            styles.avatarItem,
+            {
+              zIndex: avatars.length + index,
+              transform: [
+                {
+                  translateX: (avatars.length - index) * 10,
+                }
+              ]
+            },
+          ]}
+        >
+          <Avatar source={avatar} {...props} size={size} />
+        </View>
+      ))}
+
       <View
         style={[
           styles.avatarItem,
           {
-            zIndex: avatars.length,
-            right: 0,
+            zIndex: avatars.length * 2,
           },
         ]}
       >
@@ -46,28 +64,9 @@ export default function MultiAvatars({
             borderColor: Colors.light.grayNormal,
           }}
         >
-          <Ionicons 
-            name="add"
-            size={size - 8}
-            color={Colors.light.gray}
-          />
+          <Ionicons name="add" size={size - 8} color={Colors.light.gray} />
         </View>
       </View>
-
-      {avatars.map((avatar, index) => (
-        <View
-          key={index}
-          style={[
-            styles.avatarItem,
-            {
-              zIndex: avatars.length - (index + 1),
-              right: (index + 1) * 20,
-            },
-          ]}
-        >
-          <Avatar source={avatar} {...props} size={size} />
-        </View>
-      ))}
     </View>
   );
 }
