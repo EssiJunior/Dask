@@ -7,10 +7,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-end",
     minHeight: 40,
+    width: 130,
   },
 
   avatarItem: {
-    // position: "absolute",
+    position: "absolute",
     flexDirection: "row",
     alignItems: "center",
   }
