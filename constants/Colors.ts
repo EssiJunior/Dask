@@ -16,6 +16,7 @@ export default {
     red: "#E51B1B",
     green: "#1E9F42",
     grayLight: "#F5F5F5",
+    black: "#333"
   },
   dark: {
     text: "#fff",
