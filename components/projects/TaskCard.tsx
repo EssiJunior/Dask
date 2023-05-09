@@ -28,7 +28,7 @@ export default function TaskCard({ type }: TaskCardProps) {
         </View>
 
         <View style={styles.bottom}>
-          {type === "shared" && <MultiAvatars />}
+          {type === "shared" && <MultiAvatars size={25} />}
 
           <View style={{ flexDirection: "row", marginLeft: "auto" }}>
             <TouchableSurface

@@ -26,6 +26,7 @@ export default function HeaderProject() {
         rounded
         style={{ borderRadius: 50 }}
         onPress={handleGoBack}
+        useForeground
       >
         <Ionicons
           name="chevron-back-outline"

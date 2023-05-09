@@ -19,7 +19,7 @@ export default function ProjectCard({ type }: ProjectCardProps) {
 
   // Handlers
   const handleNavigateToProject = () => {
-    router.push("/project/personal")
+    router.push("/project/shared")
   };
 
   return (
