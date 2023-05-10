@@ -30,7 +30,7 @@ export default function WelcomeScreen() {
     navigation.dispatch(CommonActions.navigate("(tabs)"));
   };
   const handleCancel = async () => {
-    router.push("/signin")
+    router.push("/tasks/1")
   };
 
   return (
@@ -60,7 +60,7 @@ export default function WelcomeScreen() {
         width={300}
         onPress={handleCancel}
       >
-        <Typography text="Cancel" color={Colors.dark.text} weight="bold" />
+        <Typography text="Try tasks" color={Colors.dark.text} weight="bold" />
       </Button>
 
       <Button
