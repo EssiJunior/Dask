@@ -8,6 +8,7 @@ type TextInputProps = {
   style: object;
   width: number | string;
   height: number | string;
+  secured: boolean;
   ph: number;
   pv: number;
   fontSize: number;
@@ -24,7 +25,8 @@ export default function TextInput({
   pv,
   ph,
   width,
-  height
+  height,
+  secured
 }: TextInputProps) {
   return (
     <Input
@@ -32,6 +34,7 @@ export default function TextInput({
       value={value}
       onChangeText={onChange}
       keyboardType={type}
+      secureTextEntry={secured}
       style={[
         style,
         {
@@ -40,9 +43,9 @@ export default function TextInput({
           borderColor: Colors.light.grayNormal,
           fontFamily: "TitilliumRegular",
           color: Colors.light.gray,
-          fontSize,
-          width,
-          height,
+          fontSize: fontSize,
+          width: width,
+          height: height,
           paddingHorizontal: ph,
           paddingVertical: pv
         },
@@ -61,5 +64,6 @@ TextInput.defaultProps = {
   pv: 14,
   width: "auto",
   height: "auto",
+  secured: false,
   onChange: () => {},
 };
