@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderText from "../../../components/layouts/headers/HeaderText";
 import Colors from "../../../constants/Colors";
-import { useSearchParams } from "expo-router";
+import { useRouter, useSearchParams } from "expo-router";
 import HeaderProject from "../../../components/layouts/headers/HeaderProject";
 import { ScrollView } from "react-native-gesture-handler";
 import Avatar from "../../../components/avatars/Avatar";
@@ -16,6 +16,12 @@ export default function Project() {
   const searchParams = useSearchParams();
 
   const projectType = searchParams.type as string;
+
+  const router = useRouter();
+
+  const handleCreateTask = () => {
+    router.push("/tasks");
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -73,7 +79,7 @@ export default function Project() {
             />
           </View>
 
-          <Button rounded pv={8}>
+          <Button rounded pv={8} onPress={handleCreateTask}>
             <Feather
               name="plus"
               size={20}
