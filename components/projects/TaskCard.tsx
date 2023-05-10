@@ -6,17 +6,25 @@ import Badge from "../badges/Badge";
 import MultiAvatars from "../avatars/MultiAvartar";
 import { Feather, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+import { useRouter } from "expo-router";
 
 type TaskCardProps = {
   type: string;
 };
 
 export default function TaskCard({ type }: TaskCardProps) {
+  const router = useRouter();
+
+  const handleNavigateToTask = () => {
+    router.push("/tasks/1");
+  }
+
   return (
     <TouchableSurface
       style={{
         marginBottom: 20,
       }}
+      onPress={handleNavigateToTask}
     >
       <View style={styles.container}>
         <View style={styles.top}>

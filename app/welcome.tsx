@@ -1,27 +1,30 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from 'react';
+import { useState } from "react";
 import Typography from "../components/text/Typography";
 import Button from "../components/buttons/Button";
 import { Dimensions, View, StyleSheet, Image } from "react-native";
-import { CheckBox } from '@rneui/themed';
+import { CheckBox } from "@rneui/themed";
+// import CheckBox from "@react-native-community/checkbox";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import storage from "../storage";
 import { READ_TERMS } from "../constants";
 import { useActions } from "@dilane3/gx";
-import {useRouter} from "expo-router" 
+import { useRouter } from "expo-router";
 
 export default function WelcomeScreen() {
   const navigation = useNavigation();
-  const router = useRouter() 
+  const router = useRouter();
 
-  const [checked, setChecked] = useState(false)
-  const toggleCheckbox = () => setChecked(!checked);
+  const [checked, setChecked] = useState(false);
+
   // Global actions
-  const { setTermsRead } = useActions('terms');
+  const { setTermsRead } = useActions("terms");
 
   // Handlers
+  const toggleCheckbox = () => setChecked(!checked);
+
   const handleContinue = async () => {
     await storage.setItem(READ_TERMS, READ_TERMS);
 
@@ -30,43 +33,56 @@ export default function WelcomeScreen() {
     navigation.dispatch(CommonActions.navigate("(tabs)"));
   };
   const handleCancel = async () => {
-    router.push("/signin")
+    router.push("/signin");
   };
 
   return (
     <SafeAreaView style={styles.container}>
-
       <View style={styles.imgContent}>
-          <Image source={require('../assets/illustrations/welcome_illustration.png')} style={styles.image} />
+        <Image
+          source={require("../assets/illustrations/welcome_illustration.png")}
+          style={styles.image}
+        />
       </View>
 
-      <Typography text="Welcome to Dask" color={Colors.light.secondary} weight="bold" style={styles.title}/>
-      <Typography text="Organize your personal tasks easily and also work with other person nicely." color={Colors.light.gray} weight="light" style={styles.paragraph}/>
+      <Typography
+        text="Welcome to Dask"
+        color={Colors.light.secondary}
+        weight="bold"
+        style={styles.title}
+      />
+      <Typography
+        text="Organize your personal tasks easily and also work with other person nicely."
+        color={Colors.light.gray}
+        weight="light"
+        style={styles.paragraph}
+      />
 
       <View style={styles.agree}>
-        
         <CheckBox
-           checked={checked}
-           onPress={toggleCheckbox}
-           iconType="material-community"
-           checkedIcon="checkbox-outline"
-           uncheckedIcon={'checkbox-blank-outline'}
-         />
-        <Typography text="Agree with the " color={Colors.light.gray} weight="bold" />
-        <Typography text="terms and conditions" color={Colors.light.primary} weight="bold" />
+          iconType="material-community"
+          checked={true}
+          checkedIcon="checkbox-outline"
+          uncheckedIcon={"checkbox-blank-outline"}
+        />
+
+        <Typography
+          text="Agree with the "
+          color={Colors.light.gray}
+          weight="bold"
+        />
+        <Typography
+          text="terms and conditions"
+          color={Colors.light.primary}
+          weight="bold"
+        />
       </View>
 
-      <Button
-        width={300}
-        onPress={handleCancel}
-      >
+      {/* <Button width={300} onPress={handleCancel}>
         <Typography text="Cancel" color={Colors.dark.text} weight="bold" />
-      </Button>
+      </Button> */}
 
-      <Button
-        width={300}
-        onPress={handleContinue}
-      >
+      <Button width={300} onPress={handleContinue}>
         <Typography text="Continue" color={Colors.dark.text} weight="bold" />
 
         <Ionicons
@@ -80,51 +96,49 @@ export default function WelcomeScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems:"center",
-      backgroundColor: "white",
-      height: Dimensions.get('screen').height,
-      width: Dimensions.get('screen').width,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "white",
+    height: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
   },
   image: {
-      width: "90%",
-      height: undefined,
-      aspectRatio: 1,
+    width: "80%",
+    height: undefined,
+    aspectRatio: 1,
   },
   imgContent: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      marginTop: 10
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
   },
   title: {
-    textAlign: 'center',
-    fontSize: 40, 
+    textAlign: "center",
+    fontSize: 35,
     padding: 5,
   },
   paragraph: {
-    textAlign: 'left',
-    fontSize: 23, 
+    textAlign: "center",
+    fontSize: 20,
     paddingLeft: 20,
     paddingRight: 20,
   },
   agree: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent:'center',
-      alignItems: 'center',
-      margin: 30,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 30,
   },
   validation: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-      width: "100%",
-  }
-})
-
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+  },
+});

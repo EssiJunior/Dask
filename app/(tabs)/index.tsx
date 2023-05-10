@@ -64,7 +64,7 @@ export default function HomeScreen() {
         ph={20}
         bottom={20}
         right={20}
-        onPress={handleCreateNewProject}
+        onPress={handleUnreadTerms}
       >
         <Feather
           name="plus"
