@@ -12,6 +12,8 @@ type TextInputProps = {
   ph: number;
   pv: number;
   fontSize: number;
+  numberOfLines?: number;
+
   onChange: (value: string) => void;
 };
 
@@ -26,7 +28,8 @@ export default function TextInput({
   pv,
   ph,
   width,
-  height
+  height,
+  numberOfLines,
 }: TextInputProps) {
   return (
     <>
@@ -36,6 +39,8 @@ export default function TextInput({
         onChangeText={onChange}
         keyboardType={type}
         selectionColor={Colors.light.primary}
+        multiline={!!numberOfLines}
+        numberOfLines={numberOfLines}
         style={[
           style,
           {
@@ -48,7 +53,8 @@ export default function TextInput({
             width,
             height,
             paddingHorizontal: ph,
-            paddingVertical: pv
+            paddingVertical: pv,
+            verticalAlign: "top",
           },
         ]}
       />

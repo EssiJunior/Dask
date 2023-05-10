@@ -12,15 +12,22 @@ import storage from "../../storage";
 import { READ_TERMS } from "../../constants";
 import { useActions } from "@dilane3/gx";
 import ProjectCard from "../../components/projects/ProjectCard";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
   // Global actions
   const { setTermsRead } = useActions("terms");
 
+  const router = useRouter();
+
   const handleUnreadTerms = async () => {
     await storage.removeItem(READ_TERMS);
 
     setTermsRead(false);
+  };
+
+  const handleCreateNewProject = () => {
+    router.push("/project");
   };
 
   return (
@@ -57,7 +64,7 @@ export default function HomeScreen() {
         ph={20}
         bottom={20}
         right={20}
-        onPress={handleUnreadTerms}
+        onPress={handleCreateNewProject}
       >
         <Feather
           name="plus"
