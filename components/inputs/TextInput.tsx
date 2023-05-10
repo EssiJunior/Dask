@@ -9,6 +9,7 @@ type TextInputProps = {
   style: object;
   width: number | string;
   height: number | string;
+  secured: boolean;
   ph: number;
   pv: number;
   fontSize: number;
@@ -26,7 +27,8 @@ export default function TextInput({
   pv,
   ph,
   width,
-  height
+  height,
+  secured
 }: TextInputProps) {
   return (
     <>
@@ -68,5 +70,6 @@ TextInput.defaultProps = {
   pv: 14,
   width: "auto",
   height: "auto",
+  secured: false,
   onChange: () => {},
 };
