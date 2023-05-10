@@ -55,7 +55,7 @@ export default function TextInput({
             height,
             paddingHorizontal: ph,
             paddingVertical: pv,
-            verticalAlign: "top",
+            verticalAlign: !!numberOfLines ? "top" : "auto",
           },
         ]}
       />
