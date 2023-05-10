@@ -28,7 +28,7 @@ export default function ProfileScreen() {
           />
           <View style={styles.myIDContainer}>
             <Typography text="Ngimdock Zemfack" weight="bold" fontSize={25} color={Colors.light.secondary} style={styles.whoAmI}/>
-            <Typography text="ngimdock@gmail.com" weight="bold" fontSize={15} color={Colors.light.gray} style={styles.whoAmI}/>
+            <Typography text="ngimdock@gmail.com" weight="normal" fontSize={15} color={Colors.light.gray} style={styles.whoAmI}/>
           </View>
 
           <View style={styles.projects}>
