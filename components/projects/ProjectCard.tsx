@@ -7,14 +7,26 @@ import ProgressBar from "../progress/ProgressBar";
 import Typography from "../text/Typography";
 import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router"
 
 type ProjectCardProps = {
   type: "personal" | "shared";
 };
 
 export default function ProjectCard({ type }: ProjectCardProps) {
+  // Navigation
+  const router = useRouter();
+
+  // Handlers
+  const handleNavigateToProject = () => {
+    router.push("/project/shared")
+  };
+
   return (
-    <TouchableSurface style={{ marginBottom: 20 }}>
+    <TouchableSurface
+      style={{ marginBottom: 20 }}
+      onPress={handleNavigateToProject}
+    >
       <View style={styles.container}>
         <View style={styles.cardHeader}>
           <View
@@ -32,8 +44,7 @@ export default function ProjectCard({ type }: ProjectCardProps) {
             />
           </View>
 
-          {
-            type === "shared" && (
+          {type === "shared" && (
             <View
               style={{
                 width: 30,
@@ -51,8 +62,7 @@ export default function ProjectCard({ type }: ProjectCardProps) {
                 color={Colors.light.secondary}
               />
             </View>
-            )
-          }
+          )}
         </View>
 
         <View style={styles.cardBody}>

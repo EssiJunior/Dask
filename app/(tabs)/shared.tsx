@@ -15,8 +15,8 @@ export default function SharedProjectScreen() {
 
       <ScrollView style={{ paddingHorizontal: 20 }}>
         <Typography
-          fontSize={26}
-          weight="semibold"
+          fontSize={30}
+          weight="bold"
           text="Shared Projects"
           color={Colors.light.secondary}
         />
