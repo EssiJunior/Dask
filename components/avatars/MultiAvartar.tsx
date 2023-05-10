@@ -1,8 +1,9 @@
 import { View } from "react-native";
 import Avatar, { AvatarProps } from "./Avatar";
 import styles from "./styles";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+import Typography from "../text/Typography";
 
 const image = require("../../assets/images/image1.jpeg");
 const image2 = require("../../assets/images/image2.jpeg");
@@ -30,7 +31,7 @@ export default function MultiAvatars({
           styles.avatarItem,
           {
             zIndex: avatars.length,
-            right: 0,
+            right: 0
           },
         ]}
       >
@@ -46,11 +47,8 @@ export default function MultiAvatars({
             borderColor: Colors.light.grayNormal,
           }}
         >
-          <Ionicons 
-            name="add"
-            size={size - 8}
-            color={Colors.light.gray}
-          />
+          {/* <Ionicons name="add" size={size - 8} color={Colors.light.gray} /> */}
+          <Typography text="+3" fontSize={12} />
         </View>
       </View>
 
@@ -60,7 +58,7 @@ export default function MultiAvatars({
           style={[
             styles.avatarItem,
             {
-              zIndex: avatars.length - (index + 1),
+              zIndex: -index + 1,
               right: (index + 1) * 20,
             },
           ]}
@@ -68,6 +66,7 @@ export default function MultiAvatars({
           <Avatar source={avatar} {...props} size={size} />
         </View>
       ))}
+
     </View>
   );
 }
