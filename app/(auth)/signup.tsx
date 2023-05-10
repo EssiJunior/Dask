@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems:"center",
-        backgroundColor: "white",
+        backgroundColor: Colors.light.background,
         height: Dimensions.get('screen').height,
         width: Dimensions.get('screen').width,
     },

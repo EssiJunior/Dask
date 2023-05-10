@@ -1,4 +1,4 @@
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Text, View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Avatar from "../../components/avatars/Avatar";
@@ -15,98 +15,114 @@ const image2 = require("../../assets/images/image2.jpeg");
 
 export default function ProfileScreen() {
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors.light.background,
-      }}
-    >
-      <HeaderText title="Profile" />
+    <SafeAreaView style={styles.container} >
 
+      <HeaderText title="Profile" />  
       <ScrollView>
-        {/* 
-            TODO: Add profile information here
-        */}
+        <View style={styles.container}>
+          <Avatar
+            source={image}
+            size={140}
+            rounded={true}
+            style={{ marginTop: 20 }}
+          />
+          <View style={styles.myIDContainer}>
+            <Typography text="Ngimdock Zemfack" weight="bold" fontSize={25} color={Colors.light.secondary} style={styles.whoAmI}/>
+            <Typography text="ngimdock@gmail.com" weight="bold" fontSize={15} color={Colors.light.gray} style={styles.whoAmI}/>
+          </View>
 
-        <Badge text="done" width={40} />
+          <View style={styles.projects}>
+            <Typography
+              fontSize={26}
+              weight="semibold"
+              text="Personal Projects"
+              color={Colors.light.secondary}
+              style={styles.projectsText}
+            />
+            <Typography
+              fontSize={16}
+              weight="light"
+              text="You have 9 personal projects"
+              color={Colors.light.secondary}
+              style={styles.projectsText}
+            />
+          </View>
+          <View style={styles.projects}>
+            <Typography
+              fontSize={26}
+              weight="semibold"
+              text="Shared Projects"
+              color={Colors.light.secondary}
+              style={styles.projectsText}
+            />
+            <Typography
+              fontSize={16}
+              weight="light"
+              text="You have 5 shared projects"
+              color={Colors.light.secondary}
+              style={styles.projectsText}
+            />
+          </View>
+        </View>
+
+
+        {/* <Badge text="done" width={40} />
         <Badge text="In process" width={70} color={Colors.light.green} />
         <Badge
           text="To do"
           width={45}
           color={Colors.light.grayNormal}
           textColor={Colors.light.text}
-        />
-
-        <View
-          style={{
-            paddingHorizontal: 20,
-            marginTop: 30,
-          }}
-        >
-          <TextInput
-            placeholder="Enter your email"
-            value="dilane3@gmail.com"
-            pv={10}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 20,
-            }}
-          >
-            <Button
-              width={120}
-              textColor={Colors.light.secondary}
-              color={Colors.light.grayLight}
-            >
-              <Typography
-                text="Cancel"
-                color={Colors.light.secondary}
-                weight="bold"
-                fontSize={16}
-              />
-            </Button>
-            <Button
-              width={Dimensions.get("window").width - 180}
-              textColor={Colors.light.secondary}
-            >
-              <Typography
-                text="Signin"
-                color={Colors.dark.text}
-                weight="bold"
-                fontSize={16}
-              />
-            </Button>
-          </View>
-        </View>
-
-        <View
-          style={{
-            position: "relative",
-            width: 40,
-          }}
-        >
-          <Avatar source={image} />
-          <Dot
-            size={10}
-            color={Colors.light.green}
-            style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-            }}
-          />
-        </View>
-        <Avatar source={image2} size={100} />
-        <Avatar
-          source={image}
-          size={140}
-          rounded={false}
-          style={{ marginTop: 20 }}
-        />
+        /> */}
+        
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems:"center",
+    backgroundColor: Colors.light.background,
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
+},
+  myIDContainer: {
+      width:"100%",
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"center",
+      alignItems:"center",
+      paddingHorizontal: 20,
+      marginTop: 20,
+      marginBottom: 20,
+  },
+  whoAmI: {
+      textAlign:"center",
+      marginLeft: 20,
+      marginRight: 20,
+      width:"100%"
+  },
+  projects: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent:'center',
+      alignItems: 'center',
+      borderTopWidth:1,
+      borderTopColor: Colors.light.grayNormal ,
+      marginTop: 30,
+      paddingTop: 30,
+      width:"100%",
+
+  },
+  projectsText: {
+      textAlign:"left",
+      marginLeft: 20,
+      marginRight: 20,
+      width:"90%",
+
+  },
+})
