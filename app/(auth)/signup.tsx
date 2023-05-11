@@ -28,6 +28,10 @@ export default function SignUp() {
     router.push("/signin");
   };
 
+  const handleCancel = () => {
+    router.replace("/");
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
@@ -80,7 +84,7 @@ export default function SignUp() {
         <View style={styles.validation}>
           <Button
             width={120}
-            // onPress={handleCancel}
+            onPress={handleCancel}
             color={Colors.light.grayLight}
             pv={12}
           >

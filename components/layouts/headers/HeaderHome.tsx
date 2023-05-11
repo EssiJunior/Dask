@@ -24,6 +24,12 @@ export default function HeaderHome() {
       </TouchableSurface> */}
 
       <Button type="text" ph={10} onPress={() => handleNavigate("/signin")}>
+        <Ionicons
+          name="person-outline"
+          size={20}
+          color={Colors.light.secondary}
+          style={{ marginRight: 5 }}
+        />
         <Typography
           fontSize={18}
           text="Connexion"
