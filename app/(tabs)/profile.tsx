@@ -21,7 +21,7 @@ export default function ProfileScreen() {
         <View style={styles.container}>
           <Avatar
             source={image}
-            size={140}
+            size={120}
             rounded={true}
             style={{ marginTop: 20 }}
           />
@@ -29,7 +29,7 @@ export default function ProfileScreen() {
             <Typography
               text="Ngimdock Zemfack"
               weight="bold"
-              fontSize={25}
+              fontSize={24}
               color={Colors.light.secondary}
               style={styles.whoAmI}
             />
@@ -44,7 +44,7 @@ export default function ProfileScreen() {
 
           <View style={styles.projects}>
             <Typography
-              fontSize={24}
+              fontSize={20}
               weight="semibold"
               text="Personal Projects"
               color={Colors.light.secondary}
@@ -60,7 +60,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.projects}>
             <Typography
-              fontSize={24}
+              fontSize={20}
               weight="semibold"
               text="Shared Projects"
               color={Colors.light.secondary}
@@ -119,8 +119,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopWidth: 1,
     borderTopColor: Colors.light.grayNormal,
-    marginTop: 20,
-    paddingTop: 20,
+    paddingVertical: 15,
     width: "100%",
     paddingHorizontal: 20
   },

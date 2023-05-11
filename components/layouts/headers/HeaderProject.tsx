@@ -24,7 +24,13 @@ export default function HeaderProject() {
     <View style={styles.header}>
       <TouchableSurface
         rounded
-        style={{ borderRadius: 50 }}
+        style={{
+          borderRadius: 50,
+          width: 40,
+          height: 40,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         onPress={handleGoBack}
         useForeground
       >
@@ -35,10 +41,7 @@ export default function HeaderProject() {
         />
       </TouchableSurface>
 
-      <TouchableSurface
-        useForeground
-        onPress={handleNavigateToMembers}
-      >
+      <TouchableSurface useForeground onPress={handleNavigateToMembers}>
         <MultiAvatars />
       </TouchableSurface>
       {/* <Typography text="Hello" /> */}
