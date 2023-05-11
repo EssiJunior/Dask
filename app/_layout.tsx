@@ -87,13 +87,5 @@ function RootLayoutNav() {
     navigation.dispatch(CommonActions.navigate("welcome"));
   };
 
-  return (
-    <>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
-        <Stack.Screen name="(project-stack)" options={{ headerShown: false }} />
-      </Stack>
-    </>
-  );
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

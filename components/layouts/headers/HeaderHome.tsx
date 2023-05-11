@@ -5,19 +5,32 @@ import styles from "./styles";
 import TouchableSurface from "../../buttons/TouchableSurface";
 import Colors from "../../../constants/Colors";
 import Dot from "../../dot/Dot";
-import { useNavigation, CommonActions } from "@react-navigation/native";
+import Button from "../../buttons/Button";
+import Typography from "../../text/Typography";
+import { useRouter } from "expo-router";
 
 export default function HeaderHome() {
-  const navigation = useNavigation();
+  const router = useRouter();
 
   // Some handlers
-  const handleNavigate = (screen: string) => {
-    navigation.dispatch(CommonActions.navigate(screen));
+  const handleNavigate = (path: string) => {
+    router.push(path);
   };
 
   return (
     <View style={styles.header}>
-      <Avatar onPress={() => handleNavigate("profile")} />
+      {/* <TouchableSurface onPress={() => handleNavigate("/profile")}>
+        <Avatar />
+      </TouchableSurface> */}
+
+      <Button type="text" ph={10} onPress={() => handleNavigate("/signin")}>
+        <Typography
+          fontSize={18}
+          text="Connexion"
+          color={Colors.light.secondary}
+          weight="semibold"
+        />
+      </Button>
 
       <View style={styles.headerIcons}>
         <TouchableSurface rounded style={{ borderRadius: 50 }}>

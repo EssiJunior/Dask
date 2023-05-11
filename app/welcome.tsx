@@ -33,7 +33,7 @@ export default function WelcomeScreen() {
     navigation.dispatch(CommonActions.navigate("(tabs)"));
   };
   const handleCancel = async () => {
-    router.push("/signin");
+    router.push("/tasks/1")
   };
 
   return (

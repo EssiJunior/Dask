@@ -17,4 +17,4 @@ web-build/
 .metro-health-check*
 
 # Configuration files
-google-services.json
+firebase/config.json
