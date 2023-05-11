@@ -1,25 +1,30 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "../../components/text/Typography";
 import Button from "../../components/buttons/Button";
 import {
   Dimensions,
   View,
   StyleSheet,
-  Image,
-  Pressable,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, CommonActions } from "@react-navigation/native";
-import storage from "../../storage";
-import { READ_TERMS } from "../../constants";
 import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
 import TouchableSurface from "../../components/buttons/TouchableSurface";
+import { object, string } from "yup";
+import { createUser } from "../../api/auth";
+import { sleep } from "../../utils";
+
+let schema = object({
+  name: string().min(2).max(20).required(),
+  email: string().email().required(),
+  password: string().min(6).required(),
+});
 
 export default function SignUp() {
   const router = useRouter();
@@ -29,6 +34,17 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [seePassword, setSeePassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  //   UseEffects
+  useEffect(() => {
+    if (success) {
+      sleep(1500).then(() => {
+        router.replace("/");
+      });
+    }
+  }, [success]);
 
   // Handlers
   const signIn = async () => {
@@ -47,6 +63,37 @@ export default function SignUp() {
 
   const handleSeePassword = () => {
     setSeePassword(!seePassword);
+  };
+
+  const handleSubmit = async () => {
+    const { value, error: checkError } = await checkForm();
+
+    if (value) {
+      setLoading(true);
+
+      const { data, error } = await createUser({ name, email, password });
+
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(data);
+        setSuccess(true);
+      }
+
+      setLoading(false);
+    } else {
+      console.log(checkError);
+    }
+  };
+
+  const checkForm = async () => {
+    try {
+      const value = await schema.validate({ name, email, password });
+
+      return { value };
+    } catch (err: any) {
+      return { error: err.message };
+    }
   };
 
   return (
@@ -161,8 +208,25 @@ export default function SignUp() {
             width={Dimensions.get("window").width - 180}
             // onPress={handleSignUp}
             pv={12}
+            onPress={handleSubmit}
+            disabled={loading}
+            color={success ? Colors.light.green : Colors.light.primary}
           >
-            <Typography text="Sign Up" color={Colors.dark.text} weight="bold" />
+            {loading ? (
+              <ActivityIndicator color={Colors.dark.text} size={23} />
+            ) : success ? (
+              <Ionicons
+                name="checkmark-outline"
+                size={22}
+                color={Colors.dark.text}
+              />
+            ) : (
+              <Typography
+                text="Sign Up"
+                color={Colors.dark.text}
+                weight="bold"
+              />
+            )}
           </Button>
         </View>
 

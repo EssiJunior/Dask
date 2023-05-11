@@ -41,7 +41,7 @@ const Button = ({
           borderColor: type === "outlined" ? color : "transparent",
           borderWidth: type === "outlined" ? 2 : 0,
           borderRadius: rounded ? 50 : 8,
-          opacity: disabled ? 0.5 : 1,
+          opacity: disabled ? 0.7 : 1,
           width,
           elevation,
         },
@@ -52,6 +52,7 @@ const Button = ({
         onPress={onPress}
         rippleColor={rippleColor}
         useForeground
+        disabled={disabled}
       >
         <View
           style={{

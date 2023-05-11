@@ -9,6 +9,7 @@ type ButtonProps = {
   rippleColor: string;
   useForeground?: boolean;
   rounded: boolean;
+  disabled?: boolean;
 };
 
 export default function TouchableSurface({
@@ -18,6 +19,7 @@ export default function TouchableSurface({
   rippleColor,
   useForeground,
   rounded,
+  disabled,
 }: ButtonProps) {
   return (
     <TouchableNativeFeedback
@@ -27,6 +29,7 @@ export default function TouchableSurface({
         rounded
       )}
       useForeground={useForeground}
+      disabled={disabled}
     >
       <View style={[styles.touchableSurface, style]}>{children}</View>
     </TouchableNativeFeedback>
@@ -39,4 +42,5 @@ TouchableSurface.defaultProps = {
   style: {},
   useForground: false,
   rounded: false,
+  disabled: false
 };
