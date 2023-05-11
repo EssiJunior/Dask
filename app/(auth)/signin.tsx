@@ -19,9 +19,24 @@ import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
+import TouchableSurface from "../../components/buttons/TouchableSurface";
 
 export default function SignIn() {
   const router = useRouter();
+
+  //   Local state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [seePassword, setSeePassword] = useState(false);
+
+  const handleChange = (value: string, name: string) => {
+    if (name === "email") setEmail(value);
+    if (name === "password") setPassword(value);
+  };
+
+  const handleSeePassword = () => {
+    setSeePassword(!seePassword);
+  };
 
   // Handlers
   const signUp = () => {
@@ -43,16 +58,52 @@ export default function SignIn() {
         />
 
         <View style={styles.inputsContainer}>
-          <TextInput placeholder="Email" style={styles.inputs} pv={10} />
-
-          <TextInput
-            placeholder="Password"
+        <TextInput
+            value={email}
+            onChange={(value) => handleChange(value, "email")}
+            placeholder="Email"
             style={styles.inputs}
-            type="visible-password"
-            value="kiopo"
-            secured={true}
             pv={10}
           />
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <TextInput
+              value={password}
+              onChange={(value) => handleChange(value, "password")}
+              placeholder="Password"
+              style={styles.inputs}
+              secured={!seePassword}
+              pv={10}
+              width="100%"
+            />
+
+            <TouchableSurface
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 20,
+                width: 30,
+                height: 30,
+                borderRadius: 50,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              rounded
+              onPress={handleSeePassword}
+            >
+              <Ionicons
+                name={seePassword ? "eye-outline" : "eye-off-outline"}
+                size={24}
+                color={Colors.light.gray}
+              />
+            </TouchableSurface>
+          </View>
 
           {/* <TouchableOpacity activeOpacity={0.8} style={{ marginTop: 25 }}>
             <Typography

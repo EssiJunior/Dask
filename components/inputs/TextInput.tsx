@@ -42,6 +42,7 @@ export default function TextInput({
         selectionColor={Colors.light.primary}
         multiline={!!numberOfLines}
         numberOfLines={numberOfLines}
+        secureTextEntry={secured}
         style={[
           style,
           {

@@ -19,9 +19,16 @@ import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
+import TouchableSurface from "../../components/buttons/TouchableSurface";
 
 export default function SignUp() {
   const router = useRouter();
+
+  //   Local state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [seePassword, setSeePassword] = useState(false);
 
   // Handlers
   const signIn = async () => {
@@ -30,7 +37,17 @@ export default function SignUp() {
 
   const handleCancel = () => {
     router.replace("/");
-  }
+  };
+
+  const handleChange = (value: string, name: string) => {
+    if (name === "email") setEmail(value);
+    if (name === "password") setPassword(value);
+    if (name === "name") setName(value);
+  };
+
+  const handleSeePassword = () => {
+    setSeePassword(!seePassword);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,14 +60,59 @@ export default function SignUp() {
         />
 
         <View style={styles.inputsContainer}>
-          <TextInput placeholder="Name" style={styles.inputs} pv={10} />
-          <TextInput placeholder="Email" style={styles.inputs} pv={10} />
           <TextInput
-            placeholder="Password"
+            value={name}
+            onChange={(value) => handleChange(value, "name")}
+            placeholder="Name"
             style={styles.inputs}
-            secured={true}
             pv={10}
           />
+          <TextInput
+            value={email}
+            onChange={(value) => handleChange(value, "email")}
+            placeholder="Email"
+            style={styles.inputs}
+            pv={10}
+          />
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <TextInput
+              value={password}
+              onChange={(value) => handleChange(value, "password")}
+              placeholder="Password"
+              style={styles.inputs}
+              secured={!seePassword}
+              pv={10}
+              width="100%"
+            />
+
+            <TouchableSurface
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 20,
+                width: 30,
+                height: 30,
+                borderRadius: 50,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              rounded
+              onPress={handleSeePassword}
+            >
+              <Ionicons
+                name={seePassword ? "eye-outline" : "eye-off-outline"}
+                size={24}
+                color={Colors.light.gray}
+              />
+            </TouchableSurface>
+          </View>
         </View>
 
         {/* <View style={styles.otherMethods}>
@@ -96,7 +158,7 @@ export default function SignUp() {
           </Button>
 
           <Button
-            width={Dimensions.get('window').width - 180}
+            width={Dimensions.get("window").width - 180}
             // onPress={handleSignUp}
             pv={12}
           >
