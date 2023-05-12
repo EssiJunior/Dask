@@ -13,6 +13,7 @@ import { useNavigation, CommonActions } from "@react-navigation/native";
 import { sleep } from "../utils";
 import GXProvider, { useActions, useSignal } from "@dilane3/gx";
 import store from "../gx/store";
+import useAuth from "../hooks/useAuth";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,6 +64,9 @@ function RootLayoutNav() {
 
   // Navigation
   const navigation = useNavigation();
+
+  // Custom hooks
+  useAuth();
 
   useEffect(() => {
     const getTermsRead = async () => {

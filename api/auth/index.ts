@@ -5,6 +5,7 @@ import { getDocumentReference } from "..";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signInWithCustomToken,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
@@ -12,57 +13,50 @@ import { CreateUserDto, LoginUserDto } from "./type";
 // import { sleep } from "app/utils/time";
 
 /**
- * Get the current user
- * @param {(user: Admin) => void} globalStateLogin
+ * Find an admin
+ * @param {String} uid
  */
-// const getCurrentUser = (globalStateLogin: (user: Admin) => void) => {
-//   onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       const uid = user.uid;
+const findUser = async (uid: string) => {
+  try {
+    const userDocumentRef = getDocumentReference(uid, "users");
 
-//       try {
-//         const getUserData = async () => {
-//           // Get info of the current user basing on his user id
-//           const { data } = await findAdmin(uid);
+    const userDoc = await getDoc(userDocumentRef);
 
-//           console.log({ data, uid });
+    if (userDoc.exists()) {
+      return { data: userDoc.data() };
+    }
 
-//           if (data) {
-//             // Get the user data
-//             const { name, email, createdAt } = data;
+    return { error: "User not found" };
+  } catch (err) {
+    console.log(err);
 
-//             // Create a new instance of a user
-//             const user = new Admin(uid, email, name, createdAt);
+    return { error: "Something went wrong while trying to find the admin" };
+  }
+};
 
-//             // Set the user in the global state
-//             globalStateLogin(user);
+/**
+ * Get the current user
+ * @param {Function} login
+ */
+const getCurrentUser = async (login: (user: any) => void) => {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const { uid } = user;
 
-//             return;
-//           }
+      const { data: userData, error } = await findUser(uid);
 
-//           // Redirect to the login page
-//           window.location.href = "/auth/signin";
+      if (userData) {
+        console.log(userData);
 
-//           return;
-//         };
-
-//         getUserData();
-//       } catch (err) {
-//         console.log({ error: "Something went wrong" });
-
-//         // Redirect to the login page
-//         window.location.href = "/auth/signin";
-//       }
-//     } else {
-//       console.log({ error: "No admin user connected" });
-
-//       sleep(2000).then(() => {
-//         // Redirect to the login page
-//         window.location.href = "/auth/signin";
-//       });
-//     }
-//   });
-// };
+        login(userData);
+      } else {
+        console.log(error);
+      }
+    } else {
+      console.log("No user is signed in");
+    }
+  });
+};
 
 /**
  * Create a user
@@ -104,7 +98,9 @@ const createUser = async (payload: CreateUserDto) => {
       avatar: "",
     });
 
-    return { data: true };
+    if (credentials) {
+      return { data: uid };
+    }
   } catch (err) {
     console.error(err);
 
@@ -129,10 +125,8 @@ const loginUser = async (payload: LoginUserDto) => {
     // Login the user
     const credentials = await signInWithEmailAndPassword(auth, email, password);
 
-    console.log({ credentials });
-
     if (credentials) {
-      return { data: true };
+      return { data: credentials.user.uid };
     }
 
     return { error: "User not found" };
@@ -162,4 +156,4 @@ const logoutUser = async (): Promise<any> => {
   }
 };
 
-export { createUser, loginUser, logoutUser };
+export { findUser, createUser, loginUser, logoutUser, getCurrentUser };

@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "../../components/text/Typography";
 import Button from "../../components/buttons/Button";
 import {
@@ -9,6 +9,7 @@ import {
   Image,
   Pressable,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,6 +21,14 @@ import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
 import TouchableSurface from "../../components/buttons/TouchableSurface";
+import { object, string } from "yup";
+import { findUser, getCurrentUser, loginUser } from "../../api/auth";
+import { sleep } from "../../utils";
+
+let schema = object({
+  email: string().email().required(),
+  password: string().min(6).required(),
+});
 
 export default function SignIn() {
   const router = useRouter();
@@ -28,6 +37,17 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [seePassword, setSeePassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  //   UseEffects
+  useEffect(() => {
+    if (success) {
+      sleep(1000).then(() => {
+        router.replace("/");
+      });
+    }
+  }, [success]);
 
   const handleChange = (value: string, name: string) => {
     if (name === "email") setEmail(value);
@@ -45,7 +65,37 @@ export default function SignIn() {
 
   const handleCancel = () => {
     router.replace("/");
-  }
+  };
+
+  const handleSubmit = async () => {
+    const { value, error: checkError } = await checkForm();
+
+    if (value) {
+      setLoading(true);
+
+      const { data, error } = await loginUser({ email, password });
+
+      if (data) {
+        setSuccess(true);
+      } else {
+        console.log(error);
+      }
+
+      setLoading(false);
+    } else {
+      console.log(checkError);
+    }
+  };
+
+  const checkForm = async () => {
+    try {
+      const value = await schema.validate({ email, password });
+
+      return { value };
+    } catch (err: any) {
+      return { error: err.message };
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,7 +108,7 @@ export default function SignIn() {
         />
 
         <View style={styles.inputsContainer}>
-        <TextInput
+          <TextInput
             value={email}
             onChange={(value) => handleChange(value, "email")}
             placeholder="Email"
@@ -157,11 +207,28 @@ export default function SignIn() {
           </Button>
 
           <Button
-            width={Dimensions.get("screen").width - 170}
+            width={Dimensions.get("window").width - 180}
+            // onPress={handleSignUp}
             pv={12}
-            // onPress={handleSignIn}
+            onPress={handleSubmit}
+            disabled={loading}
+            color={success ? Colors.light.green : Colors.light.primary}
           >
-            <Typography text="Sign In" color={Colors.dark.text} weight="bold" />
+            {loading ? (
+              <ActivityIndicator color={Colors.dark.text} size={23} />
+            ) : success ? (
+              <Ionicons
+                name="checkmark-outline"
+                size={22}
+                color={Colors.dark.text}
+              />
+            ) : (
+              <Typography
+                text="Sign In"
+                color={Colors.dark.text}
+                weight="bold"
+              />
+            )}
           </Button>
         </View>
 
@@ -171,7 +238,7 @@ export default function SignIn() {
             justifyContent: "flex-start",
             width: "100%",
             marginTop: 20,
-            marginBottom: 30
+            marginBottom: 30,
           }}
         >
           <Typography
@@ -200,7 +267,7 @@ export default function SignIn() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background
+    backgroundColor: Colors.light.background,
   },
   inputsContainer: {
     width: "100%",
