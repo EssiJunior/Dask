@@ -10,6 +10,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { CreateUserDto, LoginUserDto } from "./type";
+import User from "../../entities/user";
 // import { sleep } from "app/utils/time";
 
 /**
@@ -46,9 +47,17 @@ const getCurrentUser = async (login: (user: any) => void) => {
       const { data: userData, error } = await findUser(uid);
 
       if (userData) {
-        console.log(userData);
+        const payload = {
+          uid,
+          name: userData.name,
+          email: userData.email,
+          avatar: userData.avatar,
+          createdAt: new Date(userData.createdAt),
+        };
 
-        login(userData);
+        const currentUser = new User(payload);
+
+        login(currentUser);
       } else {
         console.log(error);
       }

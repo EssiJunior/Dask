@@ -8,9 +8,14 @@ import Dot from "../../dot/Dot";
 import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
 import { useRouter } from "expo-router";
+import { useSignal } from "@dilane3/gx";
+import { UserDataType } from "../../../gx/signals";
 
 export default function HeaderHome() {
   const router = useRouter();
+
+  // Global state
+  const { user } = useSignal<UserDataType>("currentUser");
 
   // Some handlers
   const handleNavigate = (path: string) => {
@@ -19,24 +24,26 @@ export default function HeaderHome() {
 
   return (
     <View style={styles.header}>
-      {/* <TouchableSurface onPress={() => handleNavigate("/profile")}>
-        <Avatar />
-      </TouchableSurface> */}
-
-      <Button type="text" ph={10} onPress={() => handleNavigate("/signin")}>
-        <Ionicons
-          name="person-outline"
-          size={20}
-          color={Colors.light.secondary}
-          style={{ marginRight: 5 }}
-        />
-        <Typography
-          fontSize={18}
-          text="Connexion"
-          color={Colors.light.secondary}
-          weight="semibold"
-        />
-      </Button>
+      {user ? (
+        <TouchableSurface onPress={() => handleNavigate("/profile")}>
+          <Avatar />
+        </TouchableSurface>
+      ) : (
+        <Button type="text" ph={10} onPress={() => handleNavigate("/signin")}>
+          <Ionicons
+            name="person-outline"
+            size={20}
+            color={Colors.light.secondary}
+            style={{ marginRight: 5 }}
+          />
+          <Typography
+            fontSize={18}
+            text="Connexion"
+            color={Colors.light.secondary}
+            weight="semibold"
+          />
+        </Button>
+      )}
 
       <View style={styles.headerIcons}>
         <TouchableSurface rounded style={{ borderRadius: 50 }}>

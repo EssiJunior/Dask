@@ -1,3 +1,4 @@
+import { useSignal } from "@dilane3/gx";
 import { Dimensions, Text, View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,82 +10,90 @@ import TextInput from "../../components/inputs/TextInput";
 import HeaderText from "../../components/layouts/headers/HeaderText";
 import Typography from "../../components/text/Typography";
 import Colors from "../../constants/Colors";
+import { UserDataType } from "../../gx/signals";
 
 const image = require("../../assets/images/image1.jpeg");
 const image2 = require("../../assets/images/image2.jpeg");
 
 export default function ProfileScreen() {
+  // Global state
+  const { user } = useSignal<UserDataType>("currentUser");
+
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderText title="Profile" />
-      <ScrollView>
-        <View style={styles.container}>
-          <Avatar
-            source={image}
-            size={120}
-            rounded={true}
-            style={{ marginTop: 20 }}
-          />
-          <View style={styles.myIDContainer}>
-            <Typography
-              text="Ngimdock Zemfack"
-              weight="bold"
-              fontSize={24}
-              color={Colors.light.secondary}
-              style={styles.whoAmI}
-            />
-            <Typography
-              text="ngimdock@gmail.com"
-              weight="normal"
-              fontSize={15}
-              color={Colors.light.gray}
-              style={styles.whoAmI}
-            />
-          </View>
+      {user && (
+        <>
+          <HeaderText title="Profile" />
+          <ScrollView>
+            <View style={styles.container}>
+              <Avatar
+                source={image}
+                size={120}
+                rounded={true}
+                style={{ marginTop: 20 }}
+              />
+              <View style={styles.myIDContainer}>
+                <Typography
+                  text={user.name}
+                  weight="bold"
+                  fontSize={24}
+                  color={Colors.light.secondary}
+                  style={styles.whoAmI}
+                />
+                <Typography
+                  text={user.email}
+                  weight="normal"
+                  fontSize={15}
+                  color={Colors.light.gray}
+                  style={styles.whoAmI}
+                />
+              </View>
 
-          <View style={styles.projects}>
-            <Typography
-              fontSize={20}
-              weight="semibold"
-              text="Personal Projects"
-              color={Colors.light.secondary}
-              style={styles.projectsText}
-            />
-            <Typography
-              fontSize={16}
-              weight="light"
-              text="You have 9 personal projects"
-              color={Colors.light.secondary}
-              style={styles.projectsText}
-            />
-          </View>
-          <View style={styles.projects}>
-            <Typography
-              fontSize={20}
-              weight="semibold"
-              text="Shared Projects"
-              color={Colors.light.secondary}
-              style={styles.projectsText}
-            />
-            <Typography
-              fontSize={16}
-              weight="light"
-              text="You have 5 shared projects"
-              color={Colors.light.secondary}
-              style={styles.projectsText}
-            />
-          </View>
-        </View>
+              <View style={styles.projects}>
+                <Typography
+                  fontSize={20}
+                  weight="semibold"
+                  text="Personal Projects"
+                  color={Colors.light.secondary}
+                  style={styles.projectsText}
+                />
+                <Typography
+                  fontSize={16}
+                  weight="light"
+                  text="You have 9 personal projects"
+                  color={Colors.light.secondary}
+                  style={styles.projectsText}
+                />
+              </View>
+              <View style={styles.projects}>
+                <Typography
+                  fontSize={20}
+                  weight="semibold"
+                  text="Shared Projects"
+                  color={Colors.light.secondary}
+                  style={styles.projectsText}
+                />
+                <Typography
+                  fontSize={16}
+                  weight="light"
+                  text="You have 5 shared projects"
+                  color={Colors.light.secondary}
+                  style={styles.projectsText}
+                />
+              </View>
+            </View>
 
-        {/* <Badge text="done" width={40} />
-        <Badge text="In process" width={70} color={Colors.light.green} />
-        <Badge
-          text="To do"
-          width={45}
-          color={Colors.light.grayNormal}
-          textColor={Colors.light.text}
-        /> */}
-      </ScrollView>
+            {/* <Badge text="done" width={40} />
+              <Badge text="In process" width={70} color={Colors.light.green} />
+              <Badge
+                text="To do"
+                width={45}
+                color={Colors.light.grayNormal}
+                textColor={Colors.light.text}
+              /> */}
+          </ScrollView>
+        </>
+      )}
     </SafeAreaView>
   );
 }
@@ -121,7 +130,7 @@ const styles = StyleSheet.create({
     borderTopColor: Colors.light.grayNormal,
     paddingVertical: 15,
     width: "100%",
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   projectsText: {
     textAlign: "left",
