@@ -4,6 +4,7 @@ export type UserData = {
   name: string;
   avatar: string;
   createdAt: Date;
+  projects: any[];
 }
 
 export default class User {
@@ -12,6 +13,7 @@ export default class User {
   private _name: string;
   private _avatar: string;
   private _createdAt: Date;
+  private _projects: any[];
 
   constructor(userData: UserData) {
     this._uid = userData.uid;
@@ -19,6 +21,7 @@ export default class User {
     this._name = userData.name;
     this._avatar = userData.avatar;
     this._createdAt = userData.createdAt;
+    this._projects = userData.projects || [];
   }
 
   get uid(): string {
@@ -39,5 +42,9 @@ export default class User {
 
   get createdAt(): Date {
     return this._createdAt;
+  }
+
+  get projects(): any[] {
+    return this._projects;
   }
 }

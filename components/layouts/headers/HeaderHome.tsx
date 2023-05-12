@@ -8,7 +8,7 @@ import Dot from "../../dot/Dot";
 import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
 import { useRouter } from "expo-router";
-import { useSignal } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
 import { UserDataType } from "../../../gx/signals";
 
 export default function HeaderHome() {
@@ -16,11 +16,16 @@ export default function HeaderHome() {
 
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
+  const { show: toast } = useActions("toast");
 
   // Some handlers
   const handleNavigate = (path: string) => {
     router.push(path);
   };
+
+  const handleToast = () => {
+    toast({ message: "Hello world", type: "info" });
+  }
 
   return (
     <View style={styles.header}>
@@ -46,7 +51,7 @@ export default function HeaderHome() {
       )}
 
       <View style={styles.headerIcons}>
-        <TouchableSurface rounded style={{ borderRadius: 50 }}>
+        <TouchableSurface rounded style={{ borderRadius: 50 }} onPress={handleToast}>
           <Ionicons name="search-outline" size={24} color={Colors.light.gray} />
         </TouchableSurface>
 

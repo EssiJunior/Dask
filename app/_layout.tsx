@@ -14,6 +14,7 @@ import { sleep } from "../utils";
 import GXProvider, { useActions, useSignal } from "@dilane3/gx";
 import store from "../gx/store";
 import useAuth from "../hooks/useAuth";
+import ToastContainer from "../components/toast/ToastContainer";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -91,5 +92,9 @@ function RootLayoutNav() {
     navigation.dispatch(CommonActions.navigate("welcome"));
   };
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <ToastContainer>
+      <Stack screenOptions={{ headerShown: false }} />
+    </ToastContainer>
+  );
 }
