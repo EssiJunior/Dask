@@ -9,11 +9,11 @@ type TextInputProps = {
   style: object;
   width: number | string;
   height: number | string;
+  secured: boolean;
   ph: number;
   pv: number;
   fontSize: number;
   numberOfLines?: number;
-
   onChange: (value: string) => void;
 };
 
@@ -29,6 +29,7 @@ export default function TextInput({
   ph,
   width,
   height,
+  secured,
   numberOfLines,
 }: TextInputProps) {
   return (
@@ -41,6 +42,7 @@ export default function TextInput({
         selectionColor={Colors.light.primary}
         multiline={!!numberOfLines}
         numberOfLines={numberOfLines}
+        secureTextEntry={secured}
         style={[
           style,
           {
@@ -54,7 +56,7 @@ export default function TextInput({
             height,
             paddingHorizontal: ph,
             paddingVertical: pv,
-            verticalAlign: "top",
+            verticalAlign: !!numberOfLines ? "top" : "auto",
           },
         ]}
       />
@@ -74,5 +76,6 @@ TextInput.defaultProps = {
   pv: 14,
   width: "auto",
   height: "auto",
+  secured: false,
   onChange: () => {},
 };

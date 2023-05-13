@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "start:dev": "npx expo start --dev-client",
     "start:clean": "expo start -c",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "build:android:dev": "eas build --profile development --platform android"
   },
   "jest": {
     "preset": "jest-expo"
@@ -16,8 +18,12 @@
     "@dilane3/gx": "^1.2.6",
     "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "1.17.11",
+    "@react-native-community/checkbox": "^0.5.15",
     "@react-navigation/native": "^6.0.2",
+    "@rneui/base": "^4.0.0-rc.7",
+    "@rneui/themed": "^4.0.0-rc.7",
     "expo": "~48.0.15",
+    "expo-dev-client": "~2.2.1",
     "expo-font": "~11.1.1",
     "expo-linking": "~4.0.1",
     "expo-router": "^1.5.2",
@@ -25,6 +31,7 @@
     "expo-status-bar": "~1.4.4",
     "expo-system-ui": "~2.2.1",
     "expo-web-browser": "~12.1.1",
+    "firebase": "^9.21.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.7",
@@ -32,13 +39,15 @@
     "react-native-reanimated": "2.14.4",
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
-    "react-native-web": "~0.18.10"
+    "react-native-web": "~0.18.10",
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.0.14",
     "jest": "^29.2.1",
     "jest-expo": "~48.0.0",
+    "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "18.2.0",
     "typescript": "^4.9.4"
   },

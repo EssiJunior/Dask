@@ -13,6 +13,8 @@ import { useNavigation, CommonActions } from "@react-navigation/native";
 import { sleep } from "../utils";
 import GXProvider, { useActions, useSignal } from "@dilane3/gx";
 import store from "../gx/store";
+import useAuth from "../hooks/useAuth";
+import ToastContainer from "../components/toast/ToastContainer";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -64,6 +66,9 @@ function RootLayoutNav() {
   // Navigation
   const navigation = useNavigation();
 
+  // Custom hooks
+  useAuth();
+
   useEffect(() => {
     const getTermsRead = async () => {
       const termsRead = await storage.getItem(READ_TERMS);
@@ -88,12 +93,8 @@ function RootLayoutNav() {
   };
 
   return (
-    <>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
-        <Stack.Screen name="(project-stack)" options={{ headerShown: false }} />
-      </Stack>
-    </>
+    <ToastContainer>
+      <Stack screenOptions={{ headerShown: false }} />
+    </ToastContainer>
   );
 }
