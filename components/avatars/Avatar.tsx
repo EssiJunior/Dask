@@ -1,34 +1,36 @@
-import { Image, ImageSourcePropType } from "react-native";
-import TouchableSurface from "../buttons/TouchableSurface";
+import { Image, ImageSourcePropType, View } from "react-native";
 
 const image = require("../../assets/images/image1.jpeg");
 
-type AvatarProps = {
+export type AvatarProps = {
   source: ImageSourcePropType;
   size: number;
-  onPress?: () => void;
   style?: object;
   rounded?: boolean;
+  borderWidth?: number;
+  borderColor?: string;
 };
 
 export default function Avatar({
   size,
-  onPress,
   style,
   rounded,
   source,
+  borderWidth,
+  borderColor,
 }: AvatarProps) {
   return (
-    <TouchableSurface
+    <View
       style={[
         {
           width: size,
           height: size,
           borderRadius: rounded ? 200 : 8,
+          borderWidth,
+          borderColor,
         },
         style,
       ]}
-      onPress={onPress}
       // rounded
     >
       <Image
@@ -39,7 +41,7 @@ export default function Avatar({
           borderRadius: rounded ? 200 : 8,
         }}
       />
-    </TouchableSurface>
+    </View>
   );
 }
 
@@ -47,4 +49,6 @@ Avatar.defaultProps = {
   size: 40,
   rounded: true,
   source: image,
+  borderWidth: 0,
+  borderColor: "transparent",
 };

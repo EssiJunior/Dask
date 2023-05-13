@@ -1,9 +1,10 @@
 import { Feather } from "@expo/vector-icons";
 import React from "react";
-import { ScrollView, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FloatingButton from "../../components/buttons/FloattingButton";
 import HeaderHome from "../../components/layouts/headers/HeaderHome";
+import ProjectCard from "../../components/projects/ProjectCard";
 import Typography from "../../components/text/Typography";
 import Colors from "../../constants/Colors";
 
@@ -14,15 +15,24 @@ export default function SharedProjectScreen() {
 
       <ScrollView style={{ paddingHorizontal: 20 }}>
         <Typography
-          fontSize={26}
-          weight="semibold"
+          fontSize={30}
+          weight="bold"
           text="Shared Projects"
           color={Colors.light.secondary}
         />
+        <Typography
+          fontSize={16}
+          weight="light"
+          text="You have 5 shared projects"
+          color={Colors.light.secondary}
+        />
 
-        {
-          // TODO: Add projects list
-        }
+        <View style={{ marginTop: 20 }}>
+          <ProjectCard type="shared" />
+          <ProjectCard type="shared" />
+          <ProjectCard type="shared" />
+          <ProjectCard type="shared" />
+        </View>
       </ScrollView>
 
       <FloatingButton

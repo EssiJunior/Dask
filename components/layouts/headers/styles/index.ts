@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     backgroundColor: Colors.light.background,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.grayLight,
   },
 
   headerIcons: {
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: 80,
-  }
+  },
 });
 
 export default styles;

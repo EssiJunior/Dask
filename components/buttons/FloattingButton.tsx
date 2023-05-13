@@ -1,5 +1,6 @@
 import Button, { ButtonProps } from "./Button";
 import { View } from "react-native";
+import Animated from "react-native-reanimated"
 
 type FloatingButtonProps = ButtonProps & {
   bottom?: number;

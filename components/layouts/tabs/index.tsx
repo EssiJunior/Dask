@@ -5,7 +5,7 @@ import {
   ParamListBase,
   NavigationHelpers,
 } from "@react-navigation/native";
-import { Link } from "expo-router";
+import { Link, useRouter } from 'expo-router';
 import React from "react";
 import {
   MaterialIcons,
@@ -20,6 +20,8 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
 } from "react-native-reanimated";
+import { UserDataType } from "../../../gx/signals";
+import { useSignal } from "@dilane3/gx";
 
 type TabBarProps = {
   state: TabNavigationState<ParamListBase>;
@@ -30,9 +32,22 @@ export function TabBar({ state, navigation }: TabBarProps) {
   const tabIndex = state.index;
   const tabName = state.routeNames[tabIndex];
 
+  const router = useRouter();
+
+  // Global state
+  const { user } = useSignal<UserDataType>("currentUser");
+
   // Handlers
   const handleTabPress = (tabName: string) => {
-    navigation.navigate(tabName);
+    if (tabName === "profile" || tabName === "shared") {
+      if (user) {
+        navigation.navigate(tabName);
+      } else {
+        router.push("/signin");
+      }
+    } else {
+      navigation.navigate(tabName);
+    }
   };
 
   return (
