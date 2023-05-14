@@ -1,7 +1,7 @@
 // Users operations
 import { auth } from "../../firebase";
-import { getDoc, setDoc } from "firebase/firestore";
-import { getDocumentReference } from "..";
+import { getDoc, addDoc } from "firebase/firestore";
+import { getCollectionReference, getDocumentReference } from "..";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -11,3 +11,44 @@ import {
 } from "firebase/auth";
 import { CreateProjectDto, UpdateProjectDto } from "./type";
 import User from "../../entities/user";
+import Project from "../../entities/project/index";
+
+/**
+ * Create project and save it to firestore
+ * @param project
+ */
+export const createProject = async (project: CreateProjectDto) => {
+  const projectRef = getCollectionReference("projects");
+  const userDocRef = getDocumentReference("users", project.owner.uid);
+
+  try {
+    const payload = {
+      name: project.name,
+      description: project.description,
+      avatar: "",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      color: "red",
+      members: [],
+      owner: userDocRef,
+    };
+
+    const docRef = await addDoc(projectRef, payload);
+
+    const projectId = docRef.id;
+
+    // Create a new project object
+    const newProject = new Project({
+      id: projectId,
+      ...payload,
+      owner: project.owner,
+      type: "shared"
+    });
+
+    return { data: newProject };
+  } catch (error) {
+    console.error(error);
+
+    return { error };
+  }
+};

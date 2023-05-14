@@ -15,7 +15,7 @@ import ProgressBar from "../../../components/progress/ProgressBar";
 export default function Project() {
   const searchParams = useSearchParams();
 
-  const projectType = searchParams.type as string;
+  const projectId = searchParams.id as string;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -91,7 +91,7 @@ export default function Project() {
         </View>
 
         <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-          <TaskCard type={projectType} />
+          <TaskCard type={projectId} />
         </View>
       </ScrollView>
 

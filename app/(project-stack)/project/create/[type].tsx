@@ -15,8 +15,10 @@ import { useRouter, useSearchParams } from "expo-router";
 import { object, string } from "yup";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { useActions } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
 import { sleep } from "../../../../utils/index";
+import { createProject } from "../../../../api/projects";
+import { UserDataType } from '../../../../gx/signals/current-user';
 
 let schema = object({
   title: string().min(5).required(),
@@ -36,6 +38,7 @@ export default function CreateProject() {
 
   // Global state
   const { show: toast } = useActions("toast");
+  const { user } = useSignal<UserDataType>("currentUser");
 
   useEffect(() => {
     const check = async () => {
@@ -82,13 +85,35 @@ export default function CreateProject() {
       return;
     }
 
-    setLoading(true);
+    if (value) {
+      // Start loading
+      setLoading(true);
+  
+      // Create shared project
+      if (type === "shared" && user) {
+        // Create project in firebase
+        const { data, error: projectError } = await createProject({
+          name: value.title,
+          description: value.description || "",
+          owner: user,
+        });
+        
+        if (data) {
+          console.log(data);
+          toast({ message: "Project has been created.", type: "success" });
 
-    await sleep(2000);
+          // Empty inputs
+          setTitle("");
+          setDescription("");
 
-    setLoading(false);
-
-    toast({ message: "Project has been created.", type: "success" });
+          // Go to project
+          router.push(`/project/${data.id}`);
+        }
+      }
+      
+      // Stop loading
+      setLoading(false);
+    }
   };
 
   /**

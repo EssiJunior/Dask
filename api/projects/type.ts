@@ -1,4 +1,7 @@
+import User from "../../entities/user";
+
 export type CreateProjectDto = {
+  owner: User;
   name: string;
   description: string;
 }

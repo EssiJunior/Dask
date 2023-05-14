@@ -9,7 +9,9 @@ export type ProjectData = {
   updatedAt: Date;
   color: string;
   members: User[];
+  owner: User;
   tasks?: any[];
+  type: string;
 }
 
 export default class Project {
@@ -22,6 +24,8 @@ export default class Project {
   private _color: string;
   private _members: User[];
   private _tasks: any[];
+  private _owner: User;
+  private _type: string;
 
   constructor(projectData: ProjectData) {
     this._id = projectData.id;
@@ -33,6 +37,8 @@ export default class Project {
     this._color = projectData.color;
     this._members = projectData.members;
     this._tasks = projectData.tasks || [];
+    this._owner = projectData.owner;
+    this._type = projectData.type;
   }
 
   get id(): string {
@@ -69,5 +75,13 @@ export default class Project {
 
   get tasks(): any[] {
     return this._tasks;
+  }
+
+  get owner(): User {
+    return this._owner;
+  }
+
+  get type(): string {
+    return this._type;
   }
 }
