@@ -1,9 +1,10 @@
-import { View } from "react-native";
+import { ImageSourcePropType, View } from "react-native";
 import Avatar, { AvatarProps } from "./Avatar";
 import styles from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import Typography from "../text/Typography";
+import { useMemo } from "react";
 
 const image = require("../../assets/images/image1.jpeg");
 const image2 = require("../../assets/images/image2.jpeg");
@@ -15,42 +16,48 @@ const image7 = require("../../assets/images/image7.jpeg");
 
 type MultiAvatarsProps = AvatarProps & {
   size?: number;
+  sources?: string[];
 };
 
 export default function MultiAvatars({
   size,
   source,
+  sources,
   ...props
 }: MultiAvatarsProps) {
-  const avatars = [image3, image4, image5, image6, image7];
+  const avatars = sources || [];
+
+  const hasMore = useMemo(() => avatars.length > 3, [sources]);
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.avatarItem,
-          {
-            zIndex: avatars.length,
-            right: 0
-          },
-        ]}
-      >
+      {hasMore && (
         <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: size,
-            height: size,
-            borderRadius: size,
-            backgroundColor: Colors.light.background,
-            borderWidth: 1,
-            borderColor: Colors.light.grayNormal,
-          }}
+          style={[
+            styles.avatarItem,
+            {
+              zIndex: avatars.length,
+              right: 0,
+            },
+          ]}
         >
-          {/* <Ionicons name="add" size={size - 8} color={Colors.light.gray} /> */}
-          <Typography text="+3" fontSize={12} />
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              width: size,
+              height: size,
+              borderRadius: size,
+              backgroundColor: Colors.light.background,
+              borderWidth: 1,
+              borderColor: Colors.light.grayNormal,
+            }}
+          >
+            {/* <Ionicons name="add" size={size - 8} color={Colors.light.gray} /> */}
+            <Typography text={`+${avatars.length - 3}`} fontSize={12} />
+          </View>
         </View>
-      </View>
+      )}
 
       {avatars.map((avatar, index) => (
         <View
@@ -66,7 +73,6 @@ export default function MultiAvatars({
           <Avatar source={avatar} {...props} size={size} />
         </View>
       ))}
-
     </View>
   );
 }

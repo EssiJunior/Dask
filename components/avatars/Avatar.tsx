@@ -2,8 +2,10 @@ import { Image, ImageSourcePropType, View } from "react-native";
 
 const image = require("../../assets/images/image1.jpeg");
 
+const randomUriImage = "https://picsum.photos/200/300";
+
 export type AvatarProps = {
-  source: ImageSourcePropType;
+  source: string;
   size: number;
   style?: object;
   rounded?: boolean;
@@ -34,7 +36,7 @@ export default function Avatar({
       // rounded
     >
       <Image
-        source={source}
+        source={{ uri: randomUriImage }}
         style={{
           width: "100%",
           height: "100%",

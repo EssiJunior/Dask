@@ -15,6 +15,7 @@ import GXProvider, { useActions, useSignal } from "@dilane3/gx";
 import store from "../gx/store";
 import useAuth from "../hooks/useAuth";
 import ToastContainer from "../components/toast/ToastContainer";
+import useLoadProjects from "../hooks/useLoadProjects";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -68,6 +69,7 @@ function RootLayoutNav() {
 
   // Custom hooks
   useAuth();
+  useLoadProjects();
 
   useEffect(() => {
     const getTermsRead = async () => {

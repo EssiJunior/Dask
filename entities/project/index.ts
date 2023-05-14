@@ -84,4 +84,16 @@ export default class Project {
   get type(): string {
     return this._type;
   }
+
+  getAvatarsMembers(): string[] {
+    const avatars = [];
+
+    this._members.forEach(member => {
+      avatars.push(member.avatar);
+    });
+
+    avatars.push(this._owner.avatar);
+
+    return avatars;
+  }
 }

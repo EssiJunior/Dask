@@ -49,10 +49,10 @@ export default function HomeScreen() {
         />
 
         <View style={{ marginTop: 20 }}>
+          {/* <ProjectCard />
           <ProjectCard />
           <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
+          <ProjectCard /> */}
         </View>
       </ScrollView>
 

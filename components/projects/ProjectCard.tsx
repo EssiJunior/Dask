@@ -8,12 +8,14 @@ import Typography from "../text/Typography";
 import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"
+import Project from "../../entities/project";
+import { formatDate } from "../../utils";
 
 type ProjectCardProps = {
-  type: "personal" | "shared";
+  project: Project
 };
 
-export default function ProjectCard({ type }: ProjectCardProps) {
+export default function ProjectCard({ project }: ProjectCardProps) {
   // Navigation
   const router = useRouter();
 
@@ -44,7 +46,7 @@ export default function ProjectCard({ type }: ProjectCardProps) {
             />
           </View>
 
-          {type === "shared" && (
+          {project.type === "shared" && (
             <View
               style={{
                 width: 30,
@@ -66,30 +68,31 @@ export default function ProjectCard({ type }: ProjectCardProps) {
         </View>
 
         <View style={styles.cardBody}>
-          {type === "shared" && (
+          {project.type === "shared" && (
             <View
               style={{
                 position: "absolute",
-                top: 10,
+                top: 0,
                 right: 20,
               }}
             >
               <MultiAvatars
-                size={30}
+                size={26}
                 borderWidth={2}
                 borderColor={Colors.light.background}
+                sources={project.getAvatarsMembers()}
               />
             </View>
           )}
 
           <View style={styles.cardBodyText}>
             <Typography
-              text="Project Name"
+              text={project.name}
               weight="bold"
               fontSize={20}
               color={Colors.light.black}
             />
-            <Typography text="Since yesterday" weight="light" fontSize={14} />
+            <Typography text={formatDate(project.createdAt)} weight="light" fontSize={14} />
           </View>
 
           <ProgressBar />
