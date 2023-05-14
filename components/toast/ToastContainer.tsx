@@ -72,7 +72,7 @@ export default function ToastContainer({ children }: ToastContainerProps) {
           animatedStyle,
         ]}
       >
-        <Toast message="User connected" type={type} />
+        <Toast message={message} type={type} />
       </Animated.View>
     </View>
   );

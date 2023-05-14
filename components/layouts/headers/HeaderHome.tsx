@@ -43,7 +43,7 @@ export default function HeaderHome() {
           />
           <Typography
             fontSize={18}
-            text="Connexion"
+            text="Sign in"
             color={Colors.light.secondary}
             weight="semibold"
           />

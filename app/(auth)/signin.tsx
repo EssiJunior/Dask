@@ -99,7 +99,13 @@ export default function SignIn() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
+      <ScrollView
+        style={{
+          flex: 1,
+          paddingHorizontal: 20,
+          backgroundColor: Colors.light.background,
+        }}
+      >
         <Typography
           text="Sign In"
           color={Colors.light.secondary}

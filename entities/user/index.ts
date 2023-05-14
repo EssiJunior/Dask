@@ -4,7 +4,7 @@ export type UserData = {
   name: string;
   avatar: string;
   createdAt: Date;
-  projects: any[];
+  projects?: any[];
 }
 
 export default class User {

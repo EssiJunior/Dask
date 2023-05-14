@@ -8,10 +8,17 @@ import {
   signInWithCustomToken,
   signInWithEmailAndPassword,
   signOut,
+  User as UserCredential,
 } from "firebase/auth";
 import { CreateUserDto, LoginUserDto } from "./type";
 import User from "../../entities/user";
-// import { sleep } from "app/utils/time";
+import storage from "../../storage";
+
+interface IUser extends UserCredential {
+  stsTokenManager: {
+    accessToken: string;
+  };
+}
 
 /**
  * Find an admin
@@ -42,7 +49,8 @@ const findUser = async (uid: string) => {
 const getCurrentUser = async (login: (user: any) => void) => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const { uid } = user;
+      const userCredential = user as IUser;
+      const { uid } = userCredential;
 
       const { data: userData, error } = await findUser(uid);
 
@@ -57,6 +65,7 @@ const getCurrentUser = async (login: (user: any) => void) => {
 
         const currentUser = new User(payload);
 
+        // Login the user
         login(currentUser);
       } else {
         console.log(error);
@@ -149,6 +158,50 @@ const loginUser = async (payload: LoginUserDto) => {
 };
 
 /**
+ * Login a user with a token
+ * @param {String} token
+ **/
+const loginWithToken = async (token: string) => {
+  try {
+    const credentials = await signInWithCustomToken(auth, token);
+
+    if (credentials) {
+      const { uid } = credentials.user;
+
+      const { data: userData, error } = await findUser(uid);
+
+      if (userData) {
+        const payload = {
+          uid,
+          name: userData.name,
+          email: userData.email,
+          avatar: userData.avatar,
+          createdAt: new Date(userData.createdAt),
+        };
+
+        console.log({ payload });
+
+        const currentUser = new User(payload);
+
+        return { data: currentUser };
+      } else {
+        console.log(error);
+
+        return { error };
+      }
+    }
+
+    return { error: "User not found" };
+  } catch (err) {
+    console.log(err);
+
+    return {
+      error: "Something went wrong while trying to connect the admin",
+    };
+  }
+};
+
+/**
  * Signout a user
  * @returns {any}
  */
@@ -165,4 +218,11 @@ const logoutUser = async (): Promise<any> => {
   }
 };
 
-export { findUser, createUser, loginUser, logoutUser, getCurrentUser };
+export {
+  findUser,
+  createUser,
+  loginUser,
+  loginWithToken,
+  logoutUser,
+  getCurrentUser,
+};
