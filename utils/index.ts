@@ -3,33 +3,35 @@ export const sleep = (ms: number) =>
 
 export const capitalize = (name: string) => {
   return name.charAt(0).toUpperCase() + name.slice(1);
-}
+};
 
 export const formatDate = (date: Date) => {
-  console.log({date});
+  console.log({ date });
 
   // Get relative date
   const day = date.getDate();
   const month = date.getMonth();
   const year = date.getFullYear();
 
-  let time = date.getTime();
+  const time = Math.floor(date.getTime() / 1000);
+  const now = Math.floor(Date.now() / 1000);
+  let diff = now - time;
 
   let seconds = 0;
   let minutes = 0;
   let hours = 0;
 
-  while (time > 60) {
-    if (time > 3600) {
+  while (diff > 60) {
+    if (diff > 3600) {
       hours++;
-      time -= 3600;
+      diff -= 3600;
     } else {
       minutes++;
-      time -= 60;
+      diff -= 60;
     }
   }
 
-  seconds = time;
+  seconds = diff;
 
   if (hours < 1 && minutes < 1) {
     return `Just now`;
@@ -41,5 +43,20 @@ export const formatDate = (date: Date) => {
     return `Since Yesterday`;
   }
 
-  return `${day}/${month}/${year}`;
-}
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "Novemeber",
+    "December",
+  ];
+
+  return `Since ${months[month]} ${day}, ${year}`;
+};

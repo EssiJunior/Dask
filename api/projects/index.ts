@@ -26,8 +26,8 @@ export const createProject = async (project: CreateProjectDto) => {
       name: project.name,
       description: project.description,
       avatar: "",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
       color: "red",
       members: [],
       owner: userDocRef,
@@ -42,7 +42,9 @@ export const createProject = async (project: CreateProjectDto) => {
       id: projectId,
       ...payload,
       owner: project.owner,
-      type: "shared"
+      type: "shared",
+      createdAt: new Date(payload.createdAt),
+      updatedAt: new Date(payload.updatedAt),
     });
 
     return { data: newProject };

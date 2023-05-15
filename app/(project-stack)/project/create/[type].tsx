@@ -18,10 +18,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useActions, useSignal } from "@dilane3/gx";
 import { sleep } from "../../../../utils/index";
 import { createProject } from "../../../../api/projects";
-import { UserDataType } from '../../../../gx/signals/current-user';
+import { UserDataType } from "../../../../gx/signals/current-user";
 
 let schema = object({
-  title: string().min(5).required(),
+  title: string().min(5).max(30).required(),
   description: string(),
 });
 
@@ -37,8 +37,10 @@ export default function CreateProject() {
   const [formError, setFormError] = useState(true);
 
   // Global state
-  const { show: toast } = useActions("toast");
   const { user } = useSignal<UserDataType>("currentUser");
+
+  const { show: toast } = useActions("toast");
+  const { addProject } = useActions("projects");
 
   useEffect(() => {
     const check = async () => {
@@ -88,7 +90,7 @@ export default function CreateProject() {
     if (value) {
       // Start loading
       setLoading(true);
-  
+
       // Create shared project
       if (type === "shared" && user) {
         // Create project in firebase
@@ -97,9 +99,13 @@ export default function CreateProject() {
           description: value.description || "",
           owner: user,
         });
-        
+
+        // Stop loading
+        setLoading(false);
+
         if (data) {
-          console.log(data);
+          addProject(data);
+
           toast({ message: "Project has been created.", type: "success" });
 
           // Empty inputs
@@ -107,12 +113,9 @@ export default function CreateProject() {
           setDescription("");
 
           // Go to project
-          router.push(`/project/${data.id}`);
+          router.replace(`/project/${data.id}`);
         }
       }
-      
-      // Stop loading
-      setLoading(false);
     }
   };
 

@@ -29,6 +29,10 @@ export default function MultiAvatars({
 
   const hasMore = useMemo(() => avatars.length > 3, [sources]);
 
+  const gap = () => {
+    return hasMore ? 1 : 0;
+  }
+
   return (
     <View style={styles.container}>
       {hasMore && (
@@ -65,8 +69,8 @@ export default function MultiAvatars({
           style={[
             styles.avatarItem,
             {
-              zIndex: -index + 1,
-              right: (index + 1) * 20,
+              zIndex: -index + gap(),
+              right: (index + gap()) * 20,
             },
           ]}
         >

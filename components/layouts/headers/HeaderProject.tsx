@@ -8,7 +8,11 @@ import MultiAvatars from "../../avatars/MultiAvartar";
 import { useRouter } from "expo-router";
 import Typography from "../../text/Typography";
 
-export default function HeaderProject() {
+type HeaderProjectProps = {
+  membersAvatars?: string[];
+}
+
+export default function HeaderProject({ membersAvatars }: HeaderProjectProps) {
   const router = useRouter();
 
   // Some handlers
@@ -42,9 +46,8 @@ export default function HeaderProject() {
       </TouchableSurface>
 
       <TouchableSurface useForeground onPress={handleNavigateToMembers}>
-        <MultiAvatars />
+        <MultiAvatars sources={membersAvatars}/>
       </TouchableSurface>
-      {/* <Typography text="Hello" /> */}
     </View>
   );
 }

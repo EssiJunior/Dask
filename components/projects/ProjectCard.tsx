@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"
 import Project from "../../entities/project";
 import { formatDate } from "../../utils";
+import { useActions } from "@dilane3/gx";
 
 type ProjectCardProps = {
   project: Project
@@ -19,9 +20,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   // Navigation
   const router = useRouter();
 
+  // Global state
+  const { selectProject } = useActions("projects");
+
   // Handlers
   const handleNavigateToProject = () => {
-    router.push("/project/shared")
+    router.push(`/project/${project.id}`);
   };
 
   return (
@@ -92,7 +96,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               fontSize={20}
               color={Colors.light.black}
             />
-            <Typography text={formatDate(project.createdAt)} weight="light" fontSize={14} />
+            <Typography text={formatDate(project.createdAt)} weight="light" fontSize={14} style={{ marginTop: 5 }} />
           </View>
 
           <ProgressBar />

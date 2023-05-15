@@ -43,7 +43,7 @@ export default function SharedProjectScreen() {
         <Typography
           fontSize={16}
           weight="light"
-          text="You have 5 shared projects"
+          text={`You have ${filterProjects().length} shared projects`}
           color={Colors.light.secondary}
         />
 
