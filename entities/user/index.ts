@@ -1,10 +1,12 @@
+import Project from "../project";
+
 export type UserData = {
   uid: string;
   email: string;
   name: string;
   avatar: string;
   createdAt: Date;
-  projects?: any[];
+  projects?: Project[];
 }
 
 export default class User {
@@ -13,7 +15,7 @@ export default class User {
   private _name: string;
   private _avatar: string;
   private _createdAt: Date;
-  private _projects: any[];
+  private _projects: Project[];
 
   constructor(userData: UserData) {
     this._uid = userData.uid;
@@ -44,7 +46,7 @@ export default class User {
     return this._createdAt;
   }
 
-  get projects(): any[] {
+  get projects(): Project[] {
     return this._projects;
   }
 }

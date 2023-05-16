@@ -21,7 +21,7 @@ import { createProject } from "../../../../api/projects";
 import { UserDataType } from "../../../../gx/signals/current-user";
 
 let schema = object({
-  title: string().min(5).max(30).required(),
+  title: string().min(5).max(40).required(),
   description: string(),
 });
 

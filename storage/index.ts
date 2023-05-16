@@ -24,3 +24,5 @@ class CustomStorage {
 }
 
 export default new CustomStorage();
+
+export * from "./db";

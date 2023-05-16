@@ -17,7 +17,7 @@ export default function TaskCard({ type }: TaskCardProps) {
 
   const handleNavigateToTask = () => {
     router.push("/tasks/1");
-  }
+  };
 
   return (
     <TouchableSurface
@@ -29,10 +29,15 @@ export default function TaskCard({ type }: TaskCardProps) {
       <View style={styles.container}>
         <View style={styles.top}>
           <View style={{ flex: 1 }}>
-            <Typography text="Acheter les cahiers" />
+            <Typography text="Acheter les cahiers et toutes les fournitures scolaires, sac, ardoise, craies, stylos a billet et ram de format" />
           </View>
 
-          <Badge width={60} text="Pending" />
+          <Badge
+            width={40}
+            text="Todo"
+            textColor={Colors.light.black}
+            color={Colors.light.grayNormal}
+          />
         </View>
 
         <View style={styles.bottom}>
