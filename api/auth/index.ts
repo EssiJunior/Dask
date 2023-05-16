@@ -13,12 +13,7 @@ import {
 import { CreateUserDto, LoginUserDto } from "./type";
 import User from "../../entities/user";
 import storage from "../../storage";
-
-interface IUser extends UserCredential {
-  stsTokenManager: {
-    accessToken: string;
-  };
-}
+import UsersRepository from "../../storage/db/users";
 
 /**
  * Find an admin
@@ -49,8 +44,7 @@ const findUser = async (uid: string) => {
 const getCurrentUser = async (login: (user: any) => void) => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const userCredential = user as IUser;
-      const { uid } = userCredential;
+      const uid = user.uid;
 
       const { data: userData, error } = await findUser(uid);
 
@@ -67,6 +61,15 @@ const getCurrentUser = async (login: (user: any) => void) => {
 
         // Login the user
         login(currentUser);
+
+        // Save uid into the local storage
+        await storage.setItem("dask-uid", uid);
+
+        // Save user into the local database
+        UsersRepository.insert({
+          ...payload,
+          createdAt: payload.createdAt.getTime(),
+        });
       } else {
         console.log(error);
       }

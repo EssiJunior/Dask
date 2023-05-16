@@ -71,13 +71,19 @@ export default function SignUp() {
     if (value) {
       setLoading(true);
 
-      const { data, error } = await createUser({ name, email, password });
+      const response = await createUser({ name, email, password });
 
-      if (error) {
-        console.log(error);
+      if (response) {
+        const { data, error } = response;
+
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(data);
+          setSuccess(true);
+        }
       } else {
-        console.log(data);
-        setSuccess(true);
+        console.log("Something went wrong")
       }
 
       setLoading(false);

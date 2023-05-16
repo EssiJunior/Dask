@@ -7,7 +7,7 @@ import ProjectsRepository from "../projects";
 
 export default class UsersRepository {
   private static db: SQLite.WebSQLDatabase = db;
-  private static projectRepository = ProjectsRepository
+  private static projectRepository = ProjectsRepository;
 
   /**
    * Creates the users table
@@ -34,7 +34,7 @@ export default class UsersRepository {
             if (results) {
               const data = results[0] as ResultSet;
 
-              console.log(data)
+              console.log(data);
 
               if (data && data.rows) {
                 console.log("Users table created");
@@ -188,18 +188,17 @@ export default class UsersRepository {
                   name: userData.name,
                   email: userData.email,
                   avatar: userData.avatar,
-                  createdAt: new Date(userData.createdAt),
+                  createdAt: new Date(userData.created_at),
+                  projects,
                 });
 
-                resolve(user);
+                console.log("User retrieved succesfully");
 
-                return;
+                resolve(user);
               } else {
                 console.log("User not found");
 
                 resolve(null);
-
-                return;
               }
             }
 

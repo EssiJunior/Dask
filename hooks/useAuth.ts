@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { getCurrentUser } from "../api/auth";
 import { useActions, useSignal } from "@dilane3/gx";
 import { UserDataType } from "../gx/signals";
+import storage from "../storage";
+import UsersRepository from "../storage/db/users";
 
 export default function useAuth() {
   // Global state
@@ -14,6 +16,21 @@ export default function useAuth() {
   }, []);
 
   const handleGetCurrentUser = async () => {
-    getCurrentUser(login);
+    const uid = await storage.getItem("dask-uid");
+
+    console.log({ uid })
+
+    if (uid) {
+      console.log("dedans")
+      const user = await UsersRepository.findByUid(uid);
+
+      console.log({ users: user })
+
+      if (user) {
+        login(user);
+      }
+    } else {
+      getCurrentUser(login);
+    }
   };
 }

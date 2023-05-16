@@ -164,7 +164,7 @@ export default class Projects {
   /**
    * Find all projects
    */
-  static async findAll(): Promise<Project[] | null> {
+  static async findAll(): Promise<Project[]> {
     try {
       return new Promise((resolve, reject) => {
         this.db.exec(
@@ -202,6 +202,8 @@ export default class Projects {
                 }
 
                 resolve(projects);
+              } else {
+                resolve([]);
               }
             }
 
