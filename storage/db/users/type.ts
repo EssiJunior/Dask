@@ -3,5 +3,5 @@ export type CreateUserDto = {
   name: string;
   email: string;
   avatar: string;
-  createdAt: Date;
+  createdAt: number;
 };

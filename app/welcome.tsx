@@ -1,26 +1,48 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "../components/text/Typography";
 import Button from "../components/buttons/Button";
-import { Dimensions, View, StyleSheet, Image } from "react-native";
+import {
+  Dimensions,
+  View,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { CheckBox } from "@rneui/themed";
 // import CheckBox from "@react-native-community/checkbox";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, CommonActions } from "@react-navigation/native";
-import storage from "../storage";
+import storage, { initDBSchema } from "../storage";
 import { READ_TERMS } from "../constants";
 import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
+import { sleep } from "../utils";
 
 export default function WelcomeScreen() {
-  const navigation = useNavigation();
   const router = useRouter();
 
   const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Global actions
   const { setTermsRead } = useActions("terms");
+
+  // Use Effect
+  useEffect(() => {
+    const initializeDbSchema = async () => {
+      // Initialize the database schema
+      await initDBSchema();
+      
+      setLoading(false);
+
+      router.replace("/");
+    };
+
+    if (loading) {
+      initializeDbSchema();
+    }
+  }, [loading]);
 
   // Handlers
   const toggleCheckbox = () => setChecked(!checked);
@@ -29,11 +51,7 @@ export default function WelcomeScreen() {
     await storage.setItem(READ_TERMS, READ_TERMS);
 
     setTermsRead(true);
-
-    navigation.dispatch(CommonActions.navigate("(tabs)"));
-  };
-  const handleCancel = async () => {
-    router.push("/tasks/1")
+    setLoading(true);
   };
 
   return (
@@ -61,7 +79,8 @@ export default function WelcomeScreen() {
       <View style={styles.agree}>
         <CheckBox
           iconType="material-community"
-          checked={true}
+          checked={checked}
+          onPress={toggleCheckbox}
           checkedIcon="checkbox-outline"
           uncheckedIcon={"checkbox-blank-outline"}
         />
@@ -78,19 +97,25 @@ export default function WelcomeScreen() {
         />
       </View>
 
-      {/* <Button width={300} onPress={handleCancel}>
-        <Typography text="Cancel" color={Colors.dark.text} weight="bold" />
-      </Button> */}
+      <Button width={200} onPress={handleContinue} disabled={!checked}>
+        {loading ? (
+          <ActivityIndicator size={25} color={Colors.light.background} />
+        ) : (
+          <>
+            <Typography
+              text="Continue"
+              color={Colors.dark.text}
+              weight="bold"
+            />
 
-      <Button width={300} onPress={handleContinue}>
-        <Typography text="Continue" color={Colors.dark.text} weight="bold" />
-
-        <Ionicons
-          name="arrow-forward-outline"
-          size={24}
-          color={Colors.dark.text}
-          style={{ marginLeft: 15 }}
-        />
+            <Ionicons
+              name="arrow-forward-outline"
+              size={24}
+              color={Colors.dark.text}
+              style={{ marginLeft: 15 }}
+            />
+          </>
+        )}
       </Button>
     </SafeAreaView>
   );

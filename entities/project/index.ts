@@ -9,10 +9,10 @@ export type ProjectData = {
   updatedAt: Date;
   color: string;
   members: User[];
-  owner: User;
+  owner?: User;
   tasks?: any[];
   type: string;
-}
+};
 
 export default class Project {
   private _id: string;
@@ -24,7 +24,7 @@ export default class Project {
   private _color: string;
   private _members: User[];
   private _tasks: any[];
-  private _owner: User;
+  private _owner: User | undefined;
   private _type: string;
 
   constructor(projectData: ProjectData) {
@@ -37,7 +37,7 @@ export default class Project {
     this._color = projectData.color;
     this._members = projectData.members;
     this._tasks = projectData.tasks || [];
-    this._owner = projectData.owner;
+    this._owner = projectData.owner || undefined;
     this._type = projectData.type;
   }
 
@@ -77,7 +77,7 @@ export default class Project {
     return this._tasks;
   }
 
-  get owner(): User {
+  get owner(): User | undefined {
     return this._owner;
   }
 
@@ -88,11 +88,11 @@ export default class Project {
   getAvatarsMembers(): string[] {
     const avatars = [];
 
-    this._members.forEach(member => {
+    this._members.forEach((member) => {
       avatars.push(member.avatar);
     });
 
-    avatars.push(this._owner.avatar);
+    if (this._owner) avatars.push(this._owner.avatar);
 
     return avatars;
   }
