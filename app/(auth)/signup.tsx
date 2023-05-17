@@ -29,6 +29,9 @@ let schema = object({
 export default function SignUp() {
   const router = useRouter();
 
+  // Global actions
+  const { setReady } = useActions("currentUser");
+
   //   Local state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -79,7 +82,8 @@ export default function SignUp() {
         if (error) {
           console.log(error);
         } else {
-          console.log(data);
+          // Set global state
+          setReady(true);
           setSuccess(true);
         }
       } else {

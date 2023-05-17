@@ -13,16 +13,13 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, CommonActions } from "@react-navigation/native";
-import storage from "../../storage";
-import { READ_TERMS } from "../../constants";
 import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
 import TouchableSurface from "../../components/buttons/TouchableSurface";
 import { object, string } from "yup";
-import { findUser, getCurrentUser, loginUser } from "../../api/auth";
+import { loginUser } from "../../api/auth";
 import { sleep } from "../../utils";
 
 let schema = object({
@@ -32,6 +29,10 @@ let schema = object({
 
 export default function SignIn() {
   const router = useRouter();
+
+
+  // Global actions
+  const { setReady } = useActions("currentUser");
 
   //   Local state
   const [email, setEmail] = useState("");
@@ -76,6 +77,7 @@ export default function SignIn() {
       const { data, error } = await loginUser({ email, password });
 
       if (data) {
+        setReady(true);
         setSuccess(true);
       } else {
         console.log(error);

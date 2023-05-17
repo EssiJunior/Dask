@@ -98,7 +98,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 size={26}
                 borderWidth={2}
                 borderColor={Colors.light.background}
-                sources={project.getAvatarsMembers()}
+                sources={project.getMembers()}
               />
             </View>
           )}

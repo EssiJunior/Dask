@@ -1,22 +1,16 @@
-import { ImageSourcePropType, View } from "react-native";
+import { View } from "react-native";
 import Avatar, { AvatarProps } from "./Avatar";
 import styles from "./styles";
-import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import Typography from "../text/Typography";
 import { useMemo } from "react";
+import User from "../../entities/user";
 
 const image = require("../../assets/images/image1.jpeg");
-const image2 = require("../../assets/images/image2.jpeg");
-const image3 = require("../../assets/images/image3.jpg");
-const image4 = require("../../assets/images/image4.jpg");
-const image5 = require("../../assets/images/image5.jpeg");
-const image6 = require("../../assets/images/image6.jpg");
-const image7 = require("../../assets/images/image7.jpeg");
 
 type MultiAvatarsProps = AvatarProps & {
   size?: number;
-  sources?: string[];
+  sources?: User[];
 };
 
 export default function MultiAvatars({
@@ -25,13 +19,13 @@ export default function MultiAvatars({
   sources,
   ...props
 }: MultiAvatarsProps) {
-  const avatars = sources || [];
+  const users = sources || [];
 
-  const hasMore = useMemo(() => avatars.length > 3, [sources]);
+  const hasMore = useMemo(() => users.length > 3, [sources]);
 
   const gap = () => {
     return hasMore ? 1 : 0;
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -40,7 +34,7 @@ export default function MultiAvatars({
           style={[
             styles.avatarItem,
             {
-              zIndex: avatars.length,
+              zIndex: users.length,
               right: 0,
             },
           ]}
@@ -58,12 +52,12 @@ export default function MultiAvatars({
             }}
           >
             {/* <Ionicons name="add" size={size - 8} color={Colors.light.gray} /> */}
-            <Typography text={`+${avatars.length - 3}`} fontSize={12} />
+            <Typography text={`+${users.length - 3}`} fontSize={12} />
           </View>
         </View>
       )}
 
-      {avatars.map((avatar, index) => (
+      {users.map((user, index) => (
         <View
           key={index}
           style={[
@@ -74,7 +68,13 @@ export default function MultiAvatars({
             },
           ]}
         >
-          <Avatar source={avatar} {...props} size={size} />
+          <Avatar
+            source={user.avatar}
+            {...props}
+            size={size}
+            bgColor={user.color || "blue"}
+            letter={user.name[0]}
+          />
         </View>
       ))}
     </View>

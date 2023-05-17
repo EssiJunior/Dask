@@ -15,6 +15,7 @@ import User from "../../entities/user";
 import storage from "../../storage";
 import UsersRepository from "../../storage/db/users";
 import { DASK_USER_ID } from "../../constants";
+import { generateColor } from '../../utils/index';
 
 /**
  * Find an admin
@@ -53,12 +54,15 @@ const getCurrentUser = async (login: (user: any) => void) => {
         const payload = {
           uid,
           name: userData.name,
+          color: userData.color,
           email: userData.email,
           avatar: userData.avatar,
           createdAt: new Date(userData.createdAt),
         };
 
         const currentUser = new User(payload);
+
+        console.log({currentUser})
 
         // Login the user
         login(currentUser);
@@ -67,7 +71,7 @@ const getCurrentUser = async (login: (user: any) => void) => {
         await storage.setItem(DASK_USER_ID, uid);
 
         // Save user into the local database
-        UsersRepository.insert({
+        await UsersRepository.insert({
           ...payload,
           createdAt: payload.createdAt.getTime(),
         });
@@ -116,6 +120,7 @@ const createUser = async (payload: CreateUserDto) => {
     await setDoc(userDocument, {
       name,
       email,
+      color: generateColor(),
       createdAt,
       avatar: "",
     });
@@ -178,6 +183,7 @@ const loginWithToken = async (token: string) => {
         const payload = {
           uid,
           name: userData.name,
+          color: userData.color,
           email: userData.email,
           avatar: userData.avatar,
           createdAt: new Date(userData.createdAt),

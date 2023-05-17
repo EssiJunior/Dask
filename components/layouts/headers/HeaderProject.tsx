@@ -23,7 +23,7 @@ export default function HeaderProject({ project }: HeaderProjectProps) {
 
   // Some handlers
   const handleNavigateToMembers = () => {
-    router.push("/project/members");
+    router.push(`/project/members/${project.id}`);
   };
 
   const handleNavigateToProfile = () => {
@@ -34,7 +34,7 @@ export default function HeaderProject({ project }: HeaderProjectProps) {
     router.back();
   };
 
-  const membersAvatars = project.getAvatarsMembers();
+  const members = project.getMembers();
 
   return (
     <View style={styles.header}>
@@ -59,12 +59,12 @@ export default function HeaderProject({ project }: HeaderProjectProps) {
 
       {project.type === "shared" ? (
         <TouchableSurface useForeground onPress={handleNavigateToMembers}>
-          <MultiAvatars sources={membersAvatars} />
+          <MultiAvatars sources={members} />
         </TouchableSurface>
       ) : (
         user && (
           <TouchableSurface onPress={handleNavigateToProfile}>
-            <Avatar size={30} bgColor={"red"} letter={user.name[0]} />
+            <Avatar size={30} bgColor={user.color || "blue"} letter={user.name[0]} />
           </TouchableSurface>
         )
       )}

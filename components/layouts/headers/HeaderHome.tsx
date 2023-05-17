@@ -31,7 +31,10 @@ export default function HeaderHome() {
     <View style={styles.header}>
       {user ? (
         <TouchableSurface onPress={() => handleNavigate("/profile")}>
-          <Avatar />
+          <Avatar 
+            bgColor={user.color || Colors.light.primary}
+            letter={user.name[0]}
+          />
         </TouchableSurface>
       ) : (
         <Button type="text" ph={10} onPress={() => handleNavigate("/signin")}>

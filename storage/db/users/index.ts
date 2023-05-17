@@ -41,7 +41,7 @@ export default class UsersRepository {
 
                 return;
               } else {
-                console.log("An error occured");
+                console.log(" while creating users table");
 
                 reject(false);
 
@@ -86,7 +86,7 @@ export default class UsersRepository {
 
                 return;
               } else {
-                console.log("An error occured");
+                console.log("An error occured while dropping users table");
 
                 reject(false);
 
@@ -137,7 +137,7 @@ export default class UsersRepository {
 
                 return;
               } else {
-                console.log("An error occured");
+                console.log("An error occured while inserting user");
 
                 reject(false);
 
@@ -183,6 +183,7 @@ export default class UsersRepository {
                   uid,
                   name: userData.name,
                   email: userData.email,
+                  color: userData.color,
                   avatar: userData.avatar,
                   createdAt: new Date(userData.created_at)
                 });
