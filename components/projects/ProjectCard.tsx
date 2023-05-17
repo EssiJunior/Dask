@@ -59,6 +59,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               rounded={false}
               borderWidth={2}
               borderColor={Colors.light.background}
+              bgColor={project.color}
+              letter={project.name[0]}
             />
           </View>
 

@@ -48,7 +48,7 @@ export default function Project() {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
       {project && (
         <>
-          <HeaderProject membersAvatars={project.getAvatarsMembers()} />
+          <HeaderProject project={project} />
           
           <ScrollView style={{ flex: 1 }}>
             <View
@@ -61,7 +61,12 @@ export default function Project() {
                 marginTop: 20,
               }}
             >
-              <Avatar rounded={false} size={80} />
+              <Avatar 
+                rounded={false} 
+                size={80} 
+                bgColor={project.color}
+                letter={project.name[0]}  
+              />
 
               <View style={{ flex: 1, marginLeft: 20 }}>
                 <Typography
@@ -79,22 +84,26 @@ export default function Project() {
               </View>
             </View>
 
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingHorizontal: 20,
-                marginTop: 20,
-              }}
-            >
-              <Typography
-                text={project.description}
-                weight="normal"
-                color={Colors.light.gray}
-              />
-            </View>
+            {
+              project.description && (
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingHorizontal: 20,
+                    marginTop: 20,
+                  }}
+                >
+                  <Typography
+                    text={project.description}
+                    weight="normal"
+                    color={Colors.light.gray}
+                  />
+                </View>
+              )
+            }
 
             <View
               style={{
@@ -138,7 +147,7 @@ export default function Project() {
             </View>
 
             <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-              <TaskCard type={projectId} />
+              {/* <TaskCard type={projectId} /> */}
             </View>
           </ScrollView>
 

@@ -22,6 +22,7 @@ export default class ProjectsRepository {
                 id TEXT PRIMARY KEY, 
                 name TEXT NOT NULL,
                 description TEXT,
+                color TEXT,
                 avatar TEXT,
                 created_at INTEGER NOT NULL,
                 updated_at INTEGER NOT NULL
@@ -121,11 +122,12 @@ export default class ProjectsRepository {
         this.db.exec(
           [
             {
-              sql: `INSERT INTO projects (id, name, description, avatar, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)`,
+              sql: `INSERT INTO projects (id, name, description, color, avatar, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
               args: [
                 payload.id,
                 payload.name,
                 payload.description,
+                payload.color,
                 payload.avatar,
                 payload.createdAt,
                 payload.updatedAt,
@@ -134,6 +136,7 @@ export default class ProjectsRepository {
           ],
           false,
           (_, results) => {
+            console.log({results})
             if (results) {
               const data = results[0] as ResultSet;
 
@@ -181,13 +184,13 @@ export default class ProjectsRepository {
             if (results) {
               const data = results[0] as ResultSet;
 
+              console.log(data);
+
               if (data && data.rows.length) {
                 const projects: Project[] = [];
                 
                 for (let p of data.rows) {
                   // Todo: Load tasks here
-
-                  console.log({p})
 
                   const project = new Project({
                     id: p.id,

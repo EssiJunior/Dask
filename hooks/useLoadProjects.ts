@@ -13,27 +13,29 @@ export default function useLoadProjects() {
   const { loadProjects } = useActions("projects");
 
   useEffect(() => {
-    if (user) {
-      // Load projects
-      handleLoadProjects(user);
-    }
+    // Load projects
+    handleLoadProjects(user);
   }, [user]);
 
-  const handleLoadProjects = async (user: User) => {
+  const handleLoadProjects = async (user: User | null) => {
     // Load projects from local database
     const personalProjects = await ProjectsRepository.findAll();
 
-    // Load projects from firebase
-    const { data, error } = await findAllProjects(user);
+    if (user) {
+      // Load projects from firebase
+      const { data, error } = await findAllProjects(user);
 
-    if (data) {
-      // Dispatch action to update projects
-      loadProjects([...data, ...personalProjects]);
-    } else {
-      toast({
-        type: "error",
-        message: error,
-      });
+      if (data) {
+        personalProjects.push(...data);
+      } else {
+        toast({
+          type: "error",
+          message: error,
+        });
+      }
     }
+
+    // Update projects state
+    loadProjects(personalProjects);
   };
 }

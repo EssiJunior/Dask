@@ -16,7 +16,7 @@ import { object, string } from "yup";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useActions, useSignal } from "@dilane3/gx";
-import { sleep, generateUID, capitalize } from "../../../../utils";
+import { sleep, generateUID, capitalize, generateColor } from "../../../../utils";
 import { createProject } from "../../../../api/projects";
 import { UserDataType } from "../../../../gx/signals/current-user";
 import ProjectsRepository from "../../../../storage/db/projects";
@@ -125,13 +125,14 @@ export default function CreateProject() {
         const projectId = generateUID();
         const projectCreatedAt = Date.now();
         const projectUpdatedAt = Date.now();
+        const projectColor = generateColor()
 
         const isCreated = await ProjectsRepository.insert({
           id: projectId,
           name: value.title,
           description: value.description || "",
           avatar: "",
-          color: "blue",
+          color:projectColor,
           createdAt: projectCreatedAt,
           updatedAt: projectUpdatedAt,
         });
@@ -145,7 +146,7 @@ export default function CreateProject() {
             name: value.title,
             description: value.description || "",
             avatar: "",
-            color: "blue",
+            color: projectColor,
             createdAt: new Date(projectCreatedAt),
             updatedAt: new Date(projectUpdatedAt),
             type: "personal",

@@ -1,17 +1,10 @@
 // Users operations
-import { auth } from "../../firebase";
-import { getDoc, addDoc, onSnapshot, getDocs, query, where } from "firebase/firestore";
+import { addDoc, getDocs, query, where } from "firebase/firestore";
 import { getCollectionReference, getDocumentReference } from "..";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithCustomToken,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import { CreateProjectDto, UpdateProjectDto } from "./type";
+import { CreateProjectDto } from "./type";
 import User from "../../entities/user";
-import Project from "../../entities/project/index";
+import Project from "../../entities/project";
+import { generateColor } from '../../utils';
 
 /**
  * Create project and save it to firestore
@@ -28,7 +21,7 @@ export const createProject = async (project: CreateProjectDto) => {
       avatar: "",
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      color: "red",
+      color: generateColor(),
       members: [],
       owner: userDocRef,
     };

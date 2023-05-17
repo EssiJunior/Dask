@@ -67,3 +67,38 @@ export const formatDate = (date: Date) => {
 export const generateUID = () => {
   return uuid.v4() as string;
 };
+
+export const generateColor = () => {
+  const colors = [
+    "#093044",
+    "#14506c",
+    "#2994bd",
+    "#d84654",
+    "#4f9d69",
+    "#5b629a",
+    "#706677",
+    "#13262b",
+    "#b80600",
+    "#bd632f",
+    "#0f0e1c",
+    "#3aa99f",
+    "#cc144b",
+    "#2e2709",
+    "#8a120b",
+    "#72727e",
+    "#468c81",
+    "#267ce9",
+    "#22181c",
+    "#a4243b",
+    "#668f80",
+    "#3f37c9",
+    "#7209b7",
+    "#f72585",
+    "#03045e",
+    "#5390d9",
+    "#780000",
+    "#ff6b35",
+  ]
+
+  return colors[Math.floor(Math.random() * colors.length)];
+}

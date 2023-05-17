@@ -7,7 +7,7 @@ export default function ProgressBar() {
     <View style={styles.container}>
       <View style={styles.progressText}>
         <Typography
-          text="2/3"
+          text="0/0"
           fontSize={14}
           weight="light"
           style={{ marginLeft: "auto" }}

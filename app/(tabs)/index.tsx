@@ -57,7 +57,7 @@ export default function HomeScreen() {
         <Typography
           fontSize={16}
           weight="light"
-          text="You have 5 projects"
+          text={`You have ${projects.length} project${projects.length > 1 ? "s" : ""}`}
           color={Colors.light.secondary}
         />
 
