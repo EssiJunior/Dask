@@ -4,6 +4,7 @@ import { useActions, useSignal } from "@dilane3/gx";
 import { UserDataType } from "../gx/signals";
 import storage from "../storage";
 import UsersRepository from "../storage/db/users";
+import { DASK_USER_ID } from "../constants";
 
 export default function useAuth() {
   // Global state
@@ -16,12 +17,11 @@ export default function useAuth() {
   }, []);
 
   const handleGetCurrentUser = async () => {
-    const uid = await storage.getItem("dask-uid");
+    const uid = await storage.getItem(DASK_USER_ID);
 
     console.log({ uid })
 
     if (uid) {
-      console.log("dedans")
       const user = await UsersRepository.findByUid(uid);
 
       console.log({ users: user })

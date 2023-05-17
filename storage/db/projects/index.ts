@@ -5,7 +5,7 @@ import Project from "../../../entities/project";
 import User from "../../../entities/user";
 import { CreateProjectDto } from "./type";
 
-export default class Projects {
+export default class ProjectsRepository {
   private static db: SQLite.WebSQLDatabase = db;
 
   /**
@@ -114,12 +114,14 @@ export default class Projects {
    * @param {CreateProjectDto} payload
    */
   static async insert(payload: CreateProjectDto): Promise<boolean> {
+    console.log({payload})
+
     try {
       return new Promise((resolve, reject) => {
         this.db.exec(
           [
             {
-              sql: `INSERT INTO project (id, name, description, avatar, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)`,
+              sql: `INSERT INTO projects (id, name, description, avatar, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)`,
               args: [
                 payload.id,
                 payload.name,
@@ -185,6 +187,8 @@ export default class Projects {
                 for (let p of data.rows) {
                   // Todo: Load tasks here
 
+                  console.log({p})
+
                   const project = new Project({
                     id: p.id,
                     name: p.name,
@@ -194,8 +198,8 @@ export default class Projects {
                     members: [],
                     tasks: [],
                     type: "personal",
-                    createdAt: new Date(p.createdAt),
-                    updatedAt: new Date(p.updatedAt),
+                    createdAt: new Date(p.created_at),
+                    updatedAt: new Date(p.updated_at),
                   });
 
                   projects.push(project);

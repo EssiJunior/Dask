@@ -11,6 +11,7 @@ import { useRouter } from "expo-router"
 import Project from "../../entities/project";
 import { formatDate } from "../../utils";
 import { useActions } from "@dilane3/gx";
+import { useEffect, useState } from "react";
 
 type ProjectCardProps = {
   project: Project
@@ -20,8 +21,19 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   // Navigation
   const router = useRouter();
 
-  // Global state
-  const { selectProject } = useActions("projects");
+  const [projectDate, setProjectDate] = useState(formatDate(project.createdAt));
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      console.log("Updating date", project.createdAt)
+
+      setProjectDate(formatDate(project.createdAt));
+    }, 60000);
+
+    return () => {
+      clearInterval(timer);
+    }
+  }, []);
 
   // Handlers
   const handleNavigateToProject = () => {
@@ -96,7 +108,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               fontSize={20}
               color={Colors.light.black}
             />
-            <Typography text={formatDate(project.createdAt)} weight="light" fontSize={14} style={{ marginTop: 5 }} />
+            <Typography text={projectDate} weight="light" fontSize={14} style={{ marginTop: 5 }} />
           </View>
 
           <ProgressBar />

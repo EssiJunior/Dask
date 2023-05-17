@@ -2,12 +2,10 @@ import * as SQLite from "expo-sqlite";
 import { ResultSet } from "expo-sqlite";
 import { db } from "..";
 import User from "../../../entities/user";
-import { CreateUserDto } from "./type";
-import ProjectsRepository from "../projects";
+import { CreateUserDto } from "./type"
 
 export default class UsersRepository {
   private static db: SQLite.WebSQLDatabase = db;
-  private static projectRepository = ProjectsRepository;
 
   /**
    * Creates the users table
@@ -181,15 +179,12 @@ export default class UsersRepository {
               if (data && data.rows.length) {
                 const userData = data.rows[0];
 
-                const projects = await this.projectRepository.findAll();
-
                 const user = new User({
                   uid,
                   name: userData.name,
                   email: userData.email,
                   avatar: userData.avatar,
-                  createdAt: new Date(userData.created_at),
-                  projects,
+                  createdAt: new Date(userData.created_at)
                 });
 
                 console.log("User retrieved succesfully");

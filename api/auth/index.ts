@@ -14,6 +14,7 @@ import { CreateUserDto, LoginUserDto } from "./type";
 import User from "../../entities/user";
 import storage from "../../storage";
 import UsersRepository from "../../storage/db/users";
+import { DASK_USER_ID } from "../../constants";
 
 /**
  * Find an admin
@@ -63,7 +64,7 @@ const getCurrentUser = async (login: (user: any) => void) => {
         login(currentUser);
 
         // Save uid into the local storage
-        await storage.setItem("dask-uid", uid);
+        await storage.setItem(DASK_USER_ID, uid);
 
         // Save user into the local database
         UsersRepository.insert({

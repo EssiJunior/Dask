@@ -11,7 +11,7 @@ import Button from "../../../components/buttons/Button";
 import { Feather } from "@expo/vector-icons";
 import TaskCard from "../../../components/projects/TaskCard";
 import ProgressBar from "../../../components/progress/ProgressBar";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSignal } from "@dilane3/gx";
 import { ProjectsDataType } from "../../../gx/signals";
 import { formatDate } from "../../../utils";
@@ -26,6 +26,23 @@ export default function Project() {
   const project = useMemo(() => {
     return projects.find((project) => project.id === projectId);
   }, [projectId]);
+
+  const [projectDate, setProjectDate] = useState(formatDate(project ? project.createdAt : new Date()));
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      if (project) {
+        console.log("Updating date", project.createdAt)
+  
+        setProjectDate(formatDate(project.createdAt));
+      }
+    }, 60000);
+
+    return () => {
+      clearInterval(timer);
+    }
+  }, []);
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -55,7 +72,7 @@ export default function Project() {
                   lineHeight={25}
                 />
                 <Typography
-                  text={formatDate(project.createdAt)}
+                  text={projectDate}
                   weight="light"
                   color={Colors.light.gray}
                 />

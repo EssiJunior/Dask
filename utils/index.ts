@@ -1,3 +1,5 @@
+import uuid from "react-native-uuid";
+
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -35,7 +37,8 @@ export const formatDate = (date: Date) => {
 
   if (hours < 1 && minutes < 1) {
     return `Just now`;
-  } if (hours < 1) {
+  }
+  if (hours < 1) {
     return `${minutes}min ago`;
   } else if (hours >= 1 && hours < 24) {
     return `${hours}h ago`;
@@ -59,4 +62,8 @@ export const formatDate = (date: Date) => {
   ];
 
   return `Since ${months[month]} ${day}, ${year}`;
+};
+
+export const generateUID = () => {
+  return uuid.v4() as string;
 };

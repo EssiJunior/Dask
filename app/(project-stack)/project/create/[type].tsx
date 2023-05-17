@@ -16,9 +16,12 @@ import { object, string } from "yup";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useActions, useSignal } from "@dilane3/gx";
-import { sleep } from "../../../../utils/index";
+import { sleep, generateUID, capitalize } from "../../../../utils";
 import { createProject } from "../../../../api/projects";
 import { UserDataType } from "../../../../gx/signals/current-user";
+import ProjectsRepository from "../../../../storage/db/projects";
+import Project from "../../../../entities/project";
+import { projectSignal } from "../../../../gx/signals/projects";
 
 let schema = object({
   title: string().min(5).max(40).required(),
@@ -114,6 +117,53 @@ export default function CreateProject() {
 
           // Go to project
           router.replace(`/project/${data.id}`);
+        } else {
+          toast({ message: "Something went wrong.", type: "error" });
+        }
+      } else {
+        // Create a personal project
+        const projectId = generateUID();
+        const projectCreatedAt = Date.now();
+        const projectUpdatedAt = Date.now();
+
+        const isCreated = await ProjectsRepository.insert({
+          id: projectId,
+          name: value.title,
+          description: value.description || "",
+          avatar: "",
+          color: "blue",
+          createdAt: projectCreatedAt,
+          updatedAt: projectUpdatedAt,
+        });
+
+        // Stop loading
+        setLoading(false);
+
+        if (isCreated) {
+          const project = new Project({
+            id: projectId,
+            name: value.title,
+            description: value.description || "",
+            avatar: "",
+            color: "blue",
+            createdAt: new Date(projectCreatedAt),
+            updatedAt: new Date(projectUpdatedAt),
+            type: "personal",
+            members: []
+          });
+
+          addProject(project);
+
+          toast({ message: "Project has been created.", type: "success" });
+
+          // Empty inputs
+          setTitle("");
+          setDescription("");
+
+          // Go to project
+          router.replace(`/project/${projectId}`);
+        } else {
+          toast({ message: "Something went wrong.", type: "error" });
         }
       }
     }
@@ -134,7 +184,7 @@ export default function CreateProject() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
-      <HeaderText title="Create Project" />
+      <HeaderText title={`${capitalize(type)} Project`} />
 
       <ScrollView style={styles.container}>
         <View style={styles.inputsBox}>
