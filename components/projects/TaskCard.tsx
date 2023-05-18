@@ -7,17 +7,60 @@ import MultiAvatars from "../avatars/MultiAvartar";
 import { Feather, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { useRouter } from "expo-router";
+import Task from "../../entities/task";
+import { capitalize } from "../../utils";
+import { useMemo } from 'react';
 
 type TaskCardProps = {
-  type: string;
+  task: Task,
+  type: string
 };
 
-export default function TaskCard({ type }: TaskCardProps) {
+export default function TaskCard({ task, type }: TaskCardProps) {
   const router = useRouter();
 
   const handleNavigateToTask = () => {
-    router.push("/tasks/1");
+    router.push(`/tasks/${task.id}`);
   };
+
+  const {
+    badgeText,
+    badgeColor,
+    badgeTextColor,
+    badgeWidth,
+  } = useMemo(() => {
+    let badgeWidth = 0;
+    let badgeText = "";
+    let badgeColor = Colors.light.grayNormal;
+    let badgeTextColor = Colors.light.black;
+
+    switch (task.status.toLowerCase()) {
+      case "done":
+        badgeText = "Done";
+        badgeColor = Colors.light.green;
+        badgeTextColor = Colors.dark.text;
+        badgeWidth = 40;
+        break;
+      case "to do":
+        badgeText = "To do";
+        badgeColor = Colors.light.grayNormal;
+        badgeWidth = 40;
+        break;
+      case "pending":
+        badgeText = "Pending";
+        badgeColor = Colors.light.secondary;
+        badgeTextColor = Colors.dark.text;
+        badgeWidth = 60
+        break;
+    }
+
+    return {
+      badgeText,
+      badgeColor,
+      badgeTextColor,
+      badgeWidth,
+    };
+  }, [task])
 
   return (
     <TouchableSurface
@@ -29,14 +72,14 @@ export default function TaskCard({ type }: TaskCardProps) {
       <View style={styles.container}>
         <View style={styles.top}>
           <View style={{ flex: 1 }}>
-            <Typography text="Acheter les cahiers et toutes les fournitures scolaires, sac, ardoise, craies, stylos a billet et ram de format" />
+            <Typography text={task.title} />
           </View>
 
           <Badge
-            width={40}
-            text="Todo"
-            textColor={Colors.light.black}
-            color={Colors.light.grayNormal}
+            width={badgeWidth}
+            text={capitalize(badgeText)}
+            textColor={badgeTextColor}
+            color={badgeColor}
           />
         </View>
 

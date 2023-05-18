@@ -1,18 +1,19 @@
 import { createSignal } from "@dilane3/gx";
 import Project from "../../entities/project";
+import Task from "../../entities/task";
 
 export type ProjectsDataType = {
-  projects: Project[],
-  selectedProject: Project | null
-  loading: boolean
-}
+  projects: Project[];
+  selectedProject: Project | null;
+  loading: boolean;
+};
 
 export const projectSignal = createSignal<ProjectsDataType>({
   name: "projects",
   state: {
     projects: [],
     selectedProject: null,
-    loading: false
+    loading: false,
   },
   actions: {
     loadProjects: (state, payload: Project[]) => {
@@ -35,9 +36,36 @@ export const projectSignal = createSignal<ProjectsDataType>({
     },
 
     removeProject: (state, payload: string) => {
-      state.projects = state.projects.filter(project => project.id !== payload);
+      state.projects = state.projects.filter(
+        (project) => project.id !== payload
+      );
+
+      return state;
+    },
+
+    // Tasks
+    addTask: (state, payload: { projectId: string; task: Task }) => {
+      const project = state.projects.find(
+        (project) => project.id === payload.projectId
+      );
+
+      if (project) {
+        project.addTask(payload.task);
+      }
+
+      return state;
+    },
+
+    removeTask: (state, payload: { projectId: string; taskId: string }) => {
+      const project = state.projects.find(
+        (project) => project.id === payload.projectId
+      );
+
+      if (project) {
+        project.removeTask(payload.taskId);
+      }
 
       return state;
     }
-  }
-})
+  },
+});

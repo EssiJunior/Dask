@@ -63,4 +63,8 @@ export default class Task {
   get workers(): User[] {
     return this._workers;
   }
+
+  addWorker(worker: User): void {
+    this._workers.push(worker);
+  }
 }

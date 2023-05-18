@@ -1,3 +1,4 @@
+import Task from "../task";
 import User from "../user";
 
 export type ProjectData = {
@@ -10,7 +11,7 @@ export type ProjectData = {
   color: string;
   members: User[];
   owner?: User;
-  tasks?: any[];
+  tasks?: Task[];
   type: string;
 };
 
@@ -23,7 +24,7 @@ export default class Project {
   private _updatedAt: Date;
   private _color: string;
   private _members: User[];
-  private _tasks: any[];
+  private _tasks: Task[];
   private _owner: User | undefined;
   private _type: string;
 
@@ -73,7 +74,7 @@ export default class Project {
     return this._members;
   }
 
-  get tasks(): any[] {
+  get tasks(): Task[] {
     return this._tasks;
   }
 
@@ -91,5 +92,21 @@ export default class Project {
     if (this._owner) members.push(this._owner);
 
     return members;
+  }
+
+  addTask(task: Task) {
+    this._tasks.push(task);
+  }
+
+  removeTask(taskId: string) {
+    this._tasks = this._tasks.filter((task) => task.id !== taskId);
+  }
+
+  updateTask(task: Task) {
+    const taskIndex = this._tasks.findIndex((t) => t.id === task.id);
+
+    if (taskIndex !== -1) {
+      this._tasks[taskIndex] = task;
+    }
   }
 }

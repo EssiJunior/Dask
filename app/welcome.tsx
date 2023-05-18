@@ -57,7 +57,7 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center" }}>
         <View style={styles.imgContent}>
           <Image
             source={require("../assets/illustrations/welcome_illustration.png")}
@@ -131,7 +131,6 @@ export default function WelcomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "white",

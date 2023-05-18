@@ -168,7 +168,7 @@ export default class TasksRepository {
    * @params {string} projectId
    * @returns {Promise<Task[]>}
    */
-  static async findAll(projectId: string): Promise<Task[]> {
+  static async findAllByProjectId(projectId: string): Promise<Task[]> {
     try {
       return new Promise((resolve, reject) => {
         this.db.exec(

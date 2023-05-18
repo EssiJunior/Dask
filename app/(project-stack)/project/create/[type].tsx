@@ -220,7 +220,7 @@ export default function CreateProject() {
             width={Dimensions.get("screen").width - 180}
             pv={15}
             onPress={handleSubmit}
-            disabled={formError}
+            disabled={formError || loading}
           >
             {loading ? (
               <ActivityIndicator color={Colors.dark.text} size={23} />

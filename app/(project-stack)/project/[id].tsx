@@ -15,10 +15,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useSignal } from "@dilane3/gx";
 import { ProjectsDataType } from "../../../gx/signals";
 import { formatDate } from "../../../utils";
+import { useRouter } from "expo-router";
 
 export default function Project() {
   const searchParams = useSearchParams();
   const projectId = searchParams.id as string;
+  const router = useRouter();
 
   // Global state
   const { projects } = useSignal<ProjectsDataType>("projects");
@@ -27,29 +29,34 @@ export default function Project() {
     return projects.find((project) => project.id === projectId);
   }, [projectId]);
 
-  const [projectDate, setProjectDate] = useState(formatDate(project ? project.createdAt : new Date()));
+  const [projectDate, setProjectDate] = useState(
+    formatDate(project ? project.createdAt : new Date())
+  );
 
   useEffect(() => {
     let timer = setInterval(() => {
       if (project) {
-        console.log("Updating date", project.createdAt)
-  
+        console.log("Updating date", project.createdAt);
+
         setProjectDate(formatDate(project.createdAt));
       }
     }, 60000);
 
     return () => {
       clearInterval(timer);
-    }
+    };
   }, []);
 
+  const handleCreateTask = () => {
+    router.push(`/tasks/create/${projectId}`);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
       {project && (
         <>
           <HeaderProject project={project} />
-          
+
           <ScrollView style={{ flex: 1 }}>
             <View
               style={{
@@ -61,11 +68,11 @@ export default function Project() {
                 marginTop: 20,
               }}
             >
-              <Avatar 
-                rounded={false} 
-                size={80} 
+              <Avatar
+                rounded={false}
+                size={80}
                 bgColor={project.color}
-                letter={project.name[0]}  
+                letter={project.name[0]}
               />
 
               <View style={{ flex: 1, marginLeft: 20 }}>
@@ -84,26 +91,24 @@ export default function Project() {
               </View>
             </View>
 
-            {
-              project.description && (
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    paddingHorizontal: 20,
-                    marginTop: 20,
-                  }}
-                >
-                  <Typography
-                    text={project.description}
-                    weight="normal"
-                    color={Colors.light.gray}
-                  />
-                </View>
-              )
-            }
+            {project.description && (
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingHorizontal: 20,
+                  marginTop: 20,
+                }}
+              >
+                <Typography
+                  text={project.description}
+                  weight="normal"
+                  color={Colors.light.gray}
+                />
+              </View>
+            )}
 
             <View
               style={{
@@ -129,7 +134,7 @@ export default function Project() {
                 />
               </View>
 
-              <Button rounded pv={8}>
+              <Button rounded pv={8} onPress={handleCreateTask}>
                 <Feather
                   name="plus"
                   size={20}
@@ -147,7 +152,9 @@ export default function Project() {
             </View>
 
             <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-              {/* <TaskCard type={projectId} /> */}
+              {project.tasks.map((task) => (
+                <TaskCard key={task.id} type={project.type} task={task} />
+              ))}
             </View>
           </ScrollView>
 

@@ -3,6 +3,7 @@ import { ResultSet } from "expo-sqlite";
 import { db } from "..";
 import Project from "../../../entities/project";
 import User from "../../../entities/user";
+import TasksRepository from "../tasks";
 import { CreateProjectDto } from "./type";
 
 export default class ProjectsRepository {
@@ -180,7 +181,7 @@ export default class ProjectsRepository {
             },
           ],
           false,
-          (_, results) => {
+          async (_, results) => {
             if (results) {
               const data = results[0] as ResultSet;
 
@@ -190,7 +191,8 @@ export default class ProjectsRepository {
                 const projects: Project[] = [];
                 
                 for (let p of data.rows) {
-                  // Todo: Load tasks here
+                  // Load tasks
+                  const tasks = await TasksRepository.findAllByProjectId(p.id);
 
                   const project = new Project({
                     id: p.id,
@@ -199,7 +201,7 @@ export default class ProjectsRepository {
                     avatar: p.avatar,
                     color: p.color,
                     members: [],
-                    tasks: [],
+                    tasks,
                     type: "personal",
                     createdAt: new Date(p.created_at),
                     updatedAt: new Date(p.updated_at),
