@@ -2,7 +2,7 @@ import User from "../user";
 
 export type TaskData = {
   id: string;
-  name: string;
+  title: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
@@ -13,7 +13,7 @@ export type TaskData = {
 
 export default class Task {
   private _id: string;
-  private _name: string;
+  private _title: string;
   private _description: string;
   private _createdAt: Date;
   private _updatedAt: Date;
@@ -23,7 +23,7 @@ export default class Task {
 
   constructor(taskData: TaskData) {
     this._id = taskData.id;
-    this._name = taskData.name;
+    this._title = taskData.title;
     this._description = taskData.description;
     this._createdAt = taskData.createdAt;
     this._updatedAt = taskData.updatedAt;
@@ -36,8 +36,8 @@ export default class Task {
     return this._id;
   }
 
-  get name(): string {
-    return this._name;
+  get title(): string {
+    return this._title;
   }
 
   get description(): string {

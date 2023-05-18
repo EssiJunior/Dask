@@ -18,6 +18,7 @@ import { READ_TERMS } from "../constants";
 import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import { sleep } from "../utils";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function WelcomeScreen() {
     const initializeDbSchema = async () => {
       // Initialize the database schema
       await initDBSchema();
-      
+
       setLoading(false);
 
       router.replace("/");
@@ -56,67 +57,74 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.imgContent}>
-        <Image
-          source={require("../assets/illustrations/welcome_illustration.png")}
-          style={styles.image}
-        />
-      </View>
-
-      <Typography
-        text="Welcome to Dask"
-        color={Colors.light.secondary}
-        weight="bold"
-        style={styles.title}
-      />
-      <Typography
-        text="Organize your personal tasks easily and also work with other person nicely."
-        color={Colors.light.gray}
-        weight="light"
-        style={styles.paragraph}
-      />
-
-      <View style={styles.agree}>
-        <CheckBox
-          iconType="material-community"
-          checked={checked}
-          onPress={toggleCheckbox}
-          checkedIcon="checkbox-outline"
-          uncheckedIcon={"checkbox-blank-outline"}
-        />
+      <ScrollView style={{ flex: 1 }}>
+        <View style={styles.imgContent}>
+          <Image
+            source={require("../assets/illustrations/welcome_illustration.png")}
+            style={styles.image}
+          />
+        </View>
 
         <Typography
-          text="Agree with the "
+          text="Welcome to Dask"
+          color={Colors.light.secondary}
+          weight="bold"
+          style={styles.title}
+        />
+        <Typography
+          text="Organize your personal tasks easily and also work with other person nicely."
           color={Colors.light.gray}
-          weight="bold"
+          weight="light"
+          style={styles.paragraph}
         />
-        <Typography
-          text="terms and conditions"
-          color={Colors.light.primary}
-          weight="bold"
-        />
-      </View>
 
-      <Button width={200} onPress={handleContinue} disabled={!checked}>
-        {loading ? (
-          <ActivityIndicator size={25} color={Colors.light.background} />
-        ) : (
-          <>
-            <Typography
-              text="Continue"
-              color={Colors.dark.text}
-              weight="bold"
-            />
+        <View style={styles.agree}>
+          <CheckBox
+            iconType="material-community"
+            checked={checked}
+            onPress={toggleCheckbox}
+            checkedIcon="checkbox-outline"
+            uncheckedIcon={"checkbox-blank-outline"}
+          />
 
-            <Ionicons
-              name="arrow-forward-outline"
-              size={24}
-              color={Colors.dark.text}
-              style={{ marginLeft: 15 }}
-            />
-          </>
-        )}
-      </Button>
+          <Typography
+            text="Agree with the "
+            color={Colors.light.gray}
+            weight="bold"
+          />
+          <Typography
+            text="terms and conditions"
+            color={Colors.light.primary}
+            weight="bold"
+          />
+        </View>
+
+        <Button
+          width={200}
+          onPress={handleContinue}
+          disabled={!checked}
+          style={{ marginBottom: 30 }}
+        >
+          {loading ? (
+            <ActivityIndicator size={25} color={Colors.light.background} />
+          ) : (
+            <>
+              <Typography
+                text="Continue"
+                color={Colors.dark.text}
+                weight="bold"
+              />
+
+              <Ionicons
+                name="arrow-forward-outline"
+                size={24}
+                color={Colors.dark.text}
+                style={{ marginLeft: 15 }}
+              />
+            </>
+          )}
+        </Button>
+      </ScrollView>
     </SafeAreaView>
   );
 }
