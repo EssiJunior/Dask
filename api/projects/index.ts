@@ -1,5 +1,5 @@
 // Users operations
-import { addDoc, getDocs, query, where } from "firebase/firestore";
+import { addDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
 import { getCollectionReference, getDocumentReference } from "..";
 import { CreateProjectDto } from "./type";
 import User from "../../entities/user";
@@ -14,7 +14,7 @@ import { findAllTasksByProjectId } from "../tasks";
  */
 export const createProject = async (project: CreateProjectDto) => {
   const projectRef = getCollectionReference("projects");
-  const userDocRef = getDocumentReference("users", project.owner.uid);
+  const userDocRef = getDocumentReference(project.owner.uid, "users");
 
   try {
     const payload = {
@@ -56,7 +56,7 @@ export const createProject = async (project: CreateProjectDto) => {
  */
 export const findAllProjects = async (user: User) => {
   const projectsRef = getCollectionReference("projects");
-  const userDocRef = getDocumentReference("users", user.uid);
+  const userDocRef = getDocumentReference(user.uid, "users");
 
   try {
     // Make a query to get all projects where the user is a member
@@ -94,5 +94,31 @@ export const findAllProjects = async (user: User) => {
     console.error(error);
 
     return { error: "Something went wrong while fetching all projects" };
+  }
+};
+
+/**
+ * Delete project from firestore
+ * @param {Project} project
+ */
+export const deleteProject = async (project: Project) => {
+  const projectRef = getDocumentReference(project.id, "projects");
+
+  try {
+    // Delete tasks of the project
+    for (const task of project.tasks) {
+      const taskRef = getDocumentReference(task.id, "tasks");
+
+      await deleteDoc(taskRef);
+    }
+
+    // Delete project
+    await deleteDoc(projectRef);
+
+    return { data: true };
+  } catch (error) {
+    console.error(error);
+
+    return { error: "Something went wrong while deleting project" };
   }
 };

@@ -47,18 +47,18 @@ export const formatDate = (date: Date) => {
   }
 
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
+    "Jan.",
+    "Feb.",
+    "Mar.",
+    "Apr.",
     "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "Novemeber",
-    "December",
+    "Jun.",
+    "Jul.",
+    "Aug.",
+    "Sept.",
+    "Oct.",
+    "Nov.",
+    "Dec.",
   ];
 
   return `Since ${months[month]} ${day}, ${year}`;
@@ -98,7 +98,7 @@ export const generateColor = () => {
     "#5390d9",
     "#780000",
     "#ff6b35",
-  ]
+  ];
 
   return colors[Math.floor(Math.random() * colors.length)];
-}
+};

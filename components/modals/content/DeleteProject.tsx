@@ -2,8 +2,10 @@ import { useSignal, useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { deleteProject } from "../../../api/projects";
 import Colors from "../../../constants/Colors";
-import { ModalStateType } from "../../../gx/signals";
+import Project from "../../../entities/project";
+import { ModalStateType, UserDataType } from "../../../gx/signals";
 import ProjectsRepository from "../../../storage/db/projects";
 import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
@@ -14,8 +16,10 @@ export default function DeleteProject() {
 
   // Global state
   const {
-    data: { projectType, projectId },
-  } = useSignal<ModalStateType>("modal");
+    data: { project },
+  } = useSignal<ModalStateType>("modal") as { data: { project: Project } };
+  const { user } = useSignal<UserDataType>("currentUser");
+
   const { close } = useActions("modal");
   const { show: toast } = useActions("toast");
   const { removeProject } = useActions("projects");
@@ -31,18 +35,17 @@ export default function DeleteProject() {
   const handleDelete = async () => {
     setLoading(true);
 
-    console.log({ projectType, projectId })
 
-    if (projectType === "personal") {
+    if (project.type === "personal") {
       // Delete project
-      const isDeleted = await ProjectsRepository.delete(projectId);
+      const isDeleted = await ProjectsRepository.delete(project.id);
 
       setLoading(false);
 
       if (isDeleted) {
         // Delete project from global state
-        removeProject(projectId);
-        
+        removeProject(project.id);
+
         // Navigate to home
         router.replace("/");
 
@@ -56,7 +59,45 @@ export default function DeleteProject() {
         close();
       }
     } else {
-      // Delete task from a shared project
+      // Verify if the user is the owner of the project
+      const owner = project.owner;
+
+      if (user && owner) {
+        if (owner.uid === user.uid) {
+          console.log("delete project");
+          // Delete shared project
+          const { data, error } = await deleteProject(project);
+
+          setLoading(false);
+
+          if (data) {
+            // Delete project from global state
+            removeProject(project.id);
+
+            // Navigate to home
+            router.replace("/shared");
+
+            // Show toast
+            toast({
+              type: "success",
+              message: "Project deleted successfully",
+            });
+
+            // Close modal
+            close();
+          } else {
+            toast({
+              type: "error",
+              message: "An error occurred while deleting the project",
+            });
+          }
+        } else {
+          toast({
+            type: "error",
+            message: "You are not the owner of this project",
+          });
+        }
+      }
     }
   };
 
@@ -76,7 +117,12 @@ export default function DeleteProject() {
       />
 
       <View style={{ flexDirection: "row", marginTop: 32 }}>
-        <Button width={100} type="text" style={{ marginRight: 20 }} onPress={close}>
+        <Button
+          width={100}
+          type="text"
+          style={{ marginRight: 20 }}
+          onPress={close}
+        >
           <Typography
             text="Cancel"
             fontSize={16}

@@ -1,5 +1,5 @@
 // Users operations
-import { addDoc, getDocs, query, where } from "firebase/firestore";
+import { addDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
 import { getCollectionReference, getDocumentReference } from "..";
 import { CreateTaskDto } from "./type";
 import User from "../../entities/user";
@@ -13,7 +13,7 @@ import { findUser } from "../auth";
  */
 export const createTask = async (task: CreateTaskDto) => {
   const tasksRef = getCollectionReference("tasks");
-  const userDocRef = getDocumentReference("projects", task.projectId);
+  const userDocRef = getDocumentReference(task.projectId, "projects");
 
   try {
     const now = Date.now();
@@ -26,12 +26,11 @@ export const createTask = async (task: CreateTaskDto) => {
       updatedAt: new Date(now),
       project: userDocRef,
       workers: [],
-    }
+    };
 
     const docRef = await addDoc(tasksRef, payload);
 
     if (!docRef) return { error: "Error creating task" };
-
 
     const taskId = docRef.id;
 
@@ -53,7 +52,7 @@ export const createTask = async (task: CreateTaskDto) => {
 
     return { error };
   }
-}
+};
 
 /**
  * Find all tasks by project id
@@ -61,7 +60,7 @@ export const createTask = async (task: CreateTaskDto) => {
  */
 export const findAllTasksByProjectId = async (projectId: string) => {
   const tasksRef = getCollectionReference("tasks");
-  const projectRef = getDocumentReference("projects", projectId)
+  const projectRef = getDocumentReference(projectId, "projects");
 
   try {
     const q = query(tasksRef, where("project", "==", projectRef));
@@ -92,7 +91,7 @@ export const findAllTasksByProjectId = async (projectId: string) => {
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
         projectId,
-        workers
+        workers,
       });
 
       tasks.push(task);
@@ -104,4 +103,23 @@ export const findAllTasksByProjectId = async (projectId: string) => {
 
     return { error };
   }
-}
+};
+
+/**
+ * Delete task by id
+ * @param {string} taskId
+ */
+export const deleteTaskById = async (taskId: string) => {
+  console.log("deleteTaskById", taskId);
+  const taskRef = getDocumentReference(taskId, "tasks");
+
+  try {
+    await deleteDoc(taskRef);
+
+    return { data: true };
+  } catch (error) {
+    console.error(error);
+
+    return { error };
+  }
+};

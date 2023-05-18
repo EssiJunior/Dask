@@ -7,6 +7,7 @@ import TasksRepository from "../../../storage/db/tasks";
 import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
 import { ProjectsDataType } from "../../../gx/signals/projects";
+import { deleteTaskById } from "../../../api/tasks";
 
 export default function DeleteTask() {
   // Global state
@@ -45,9 +46,35 @@ export default function DeleteTask() {
 
         // Close modal
         close();
+      } else {
+        toast({
+          type: "error",
+          message: "An error occurred while deleting the task",
+        });
       }
     } else {
       // Delete task from a shared project
+      const { data, error } = await deleteTaskById(taskId);
+
+      setLoading(false);
+
+      if (error) {
+        toast({
+          type: "error",
+          message: "An error occurred while deleting the task",
+        });
+      } else {
+        toast({
+          type: "success",
+          message: "Task deleted successfully",
+        });
+
+        // Delete task from global state
+        removeTask({ taskId, projectId });
+
+        // Close modal
+        close();
+      }
     }
   };
 

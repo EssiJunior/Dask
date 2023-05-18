@@ -1,6 +1,5 @@
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HeaderText from "../../../components/layouts/headers/HeaderText";
 import Colors from "../../../constants/Colors";
 import { useSearchParams } from "expo-router";
 import HeaderProject from "../../../components/layouts/headers/HeaderProject";
@@ -59,8 +58,7 @@ export default function Project() {
       open({
         name: ModalTypes.DeleteProject,
         data: {
-          projectType: project.type,
-          projectId,
+          project
         }
       })
     }
@@ -115,7 +113,7 @@ export default function Project() {
                         height: 30,
                         alignItems: "center",
                         justifyContent: "center",
-                        marginRight: 20,
+                        marginRight: 10,
                       }}
                     >
                       <SimpleLineIcons
