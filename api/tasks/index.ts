@@ -1,5 +1,12 @@
 // Users operations
-import { addDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { getCollectionReference, getDocumentReference } from "..";
 import { CreateTaskDto } from "./type";
 import User from "../../entities/user";
@@ -124,3 +131,23 @@ export const deleteTaskById = async (taskId: string) => {
   }
 };
 
+/**
+ * Update task status
+ * @param {string} taskId
+ * @param {TaskStatus} status
+ */
+export const updateTaskStatus = async (taskId: string, status: TaskStatus) => {
+  const taskRef = getDocumentReference(taskId, "tasks");
+
+  try {
+    await updateDoc(taskRef, {
+      status,
+    });
+
+    return { data: true };
+  } catch (error) {
+    console.error(error);
+
+    return { error };
+  }
+};

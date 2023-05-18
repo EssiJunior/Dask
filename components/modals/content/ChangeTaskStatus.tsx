@@ -6,9 +6,9 @@ import { ModalStateType } from "../../../gx/signals";
 import TasksRepository from "../../../storage/db/tasks";
 import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
-import { deleteTaskById } from "../../../api/tasks";
 import { RadioButton } from "react-native-paper";
 import { TaskStatus } from "../../../entities/task/index";
+import { updateTaskStatus } from "../../../api/tasks";
 
 export default function ChangeTaskStatus() {
   // Global state
@@ -50,6 +50,27 @@ export default function ChangeTaskStatus() {
         });
       } else {
         // Update the status for shared project
+        const { error } = await updateTaskStatus(taskId, status);
+
+        setLoading(false);
+
+        if (error) {
+          console.log(error);
+
+          toast({
+            type: "error",
+            message: "Status could not be changed",
+          });
+        } else {
+          changeTaskStatus({ projectId, taskId, status });
+
+          close();
+
+          toast({
+            type: "success",
+            message: "The status has been changed",
+          });
+        }
       }
     } catch (error) {
       console.log(error);
