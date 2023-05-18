@@ -25,6 +25,36 @@ export default function ProgressBar({ project }: ProgressBarProps) {
     return `${completedTasks}/${totalTasks}`;
   };
 
+  const getProgress = () => {
+    const progress = [];
+
+    // Get stats
+    const totalTasks = project.tasks.length;
+    const completedTasks = project.tasks.filter(
+      (task) => task.status === TaskStatus.DONE
+    ).length;
+    const pendingTasks = project.tasks.filter(
+      (task) => task.status === TaskStatus.PENDING
+    ).length;
+
+    // Calculate percentages
+    const completedPercentage = (completedTasks / totalTasks) * 100;
+    const pendingPercentage = (pendingTasks / totalTasks) * 100;
+
+    // Push to progress array
+    progress.push({
+      value: completedPercentage,
+      color: Colors.light.green,
+    });
+
+    progress.push({
+      value: pendingPercentage,
+      color: Colors.light.primary,
+    });
+
+    return progress;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.progressText}>
@@ -37,8 +67,9 @@ export default function ProgressBar({ project }: ProgressBarProps) {
       </View>
 
       <View style={styles.progressBody}>
-        <ProgressValue value={30} color={Colors.light.green} />
-        <ProgressValue value={50} color={Colors.light.primary} />
+        {getProgress().map((item, index) => (
+          <ProgressValue key={index} value={item.value} color={item.color} />
+        ))}
       </View>
     </View>
   );
