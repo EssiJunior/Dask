@@ -16,7 +16,7 @@ import TasksRepository from "../../../../storage/db/tasks/index";
 import Task from "../../../../entities/task";
 
 let schema = object({
-  title: string().min(5).max(40).required(),
+  title: string().min(5).required(),
   description: string(),
 });
 

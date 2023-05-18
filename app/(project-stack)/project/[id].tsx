@@ -8,14 +8,16 @@ import { ScrollView } from "react-native-gesture-handler";
 import Avatar from "../../../components/avatars/Avatar";
 import Typography from "../../../components/text/Typography";
 import Button from "../../../components/buttons/Button";
-import { Feather } from "@expo/vector-icons";
+import { Feather, SimpleLineIcons } from "@expo/vector-icons";
 import TaskCard from "../../../components/projects/TaskCard";
 import ProgressBar from "../../../components/progress/ProgressBar";
 import { useEffect, useMemo, useState } from "react";
-import { useSignal } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
 import { ProjectsDataType } from "../../../gx/signals";
 import { formatDate } from "../../../utils";
 import { useRouter } from "expo-router";
+import TouchableSurface from "../../../components/buttons/TouchableSurface";
+import { ModalTypes } from "../../../components/modals/type";
 
 export default function Project() {
   const searchParams = useSearchParams();
@@ -24,6 +26,7 @@ export default function Project() {
 
   // Global state
   const { projects } = useSignal<ProjectsDataType>("projects");
+  const { open } = useActions("modal");
 
   const project = useMemo(() => {
     return projects.find((project) => project.id === projectId);
@@ -50,6 +53,18 @@ export default function Project() {
   const handleCreateTask = () => {
     router.push(`/tasks/create/${projectId}`);
   };
+
+  const handleOpenDeleteProjectModal = () => {
+    if (project) {
+      open({
+        name: ModalTypes.DeleteProject,
+        data: {
+          projectType: project.type,
+          projectId,
+        }
+      })
+    }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -83,11 +98,52 @@ export default function Project() {
                   color={Colors.light.secondary}
                   lineHeight={25}
                 />
-                <Typography
-                  text={projectDate}
-                  weight="light"
-                  color={Colors.light.gray}
-                />
+
+                <View style={{ flexDirection: "row" }}>
+                  <Typography
+                    text={projectDate}
+                    weight="light"
+                    color={Colors.light.gray}
+                  />
+
+                  <View style={{ flexDirection: "row", marginLeft: "auto" }}>
+                    <TouchableSurface
+                      rounded
+                      style={{
+                        borderRadius: 50,
+                        width: 30,
+                        height: 30,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginRight: 20,
+                      }}
+                    >
+                      <SimpleLineIcons
+                        name="pencil"
+                        size={20}
+                        color={Colors.light.gray}
+                      />
+                    </TouchableSurface>
+
+                    <TouchableSurface
+                      rounded
+                      style={{
+                        borderRadius: 50,
+                        width: 30,
+                        height: 30,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onPress={handleOpenDeleteProjectModal}
+                    >
+                      <Feather
+                        name="trash-2"
+                        size={20}
+                        color={Colors.light.red}
+                      />
+                    </TouchableSurface>
+                  </View>
+                </View>
               </View>
             </View>
 

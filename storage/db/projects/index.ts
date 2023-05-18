@@ -116,7 +116,7 @@ export default class ProjectsRepository {
    * @param {CreateProjectDto} payload
    */
   static async insert(payload: CreateProjectDto): Promise<boolean> {
-    console.log({payload})
+    console.log({ payload });
 
     try {
       return new Promise((resolve, reject) => {
@@ -137,7 +137,7 @@ export default class ProjectsRepository {
           ],
           false,
           (_, results) => {
-            console.log({results})
+            console.log({ results });
             if (results) {
               const data = results[0] as ResultSet;
 
@@ -189,7 +189,7 @@ export default class ProjectsRepository {
 
               if (data && data.rows.length) {
                 const projects: Project[] = [];
-                
+
                 for (let p of data.rows) {
                   // Load tasks
                   const tasks = await TasksRepository.findAllByProjectId(p.id);
@@ -231,17 +231,43 @@ export default class ProjectsRepository {
    * Delete project
    * @params {string} id
    */
-  // static async delete(id: string): Promise<boolean> {
-  //   try {
-  //     this.db.exec([
-  //       {
-  //         sql: `DELETE`
-  //       }
-  //     ])
-  //   } catch (error) {
-  //     console.log(error);
+  static async delete(id: string): Promise<boolean> {
+    try {
+      return new Promise((resolve, reject) => {
+        this.db.exec(
+          [
+            {
+              sql: `DELETE FROM projects WHERE id = ?`,
+              args: [id],
+            },
+          ],
+          false,
+          (_, results) => {
+            console.log({ results })
+            if (results) {
+              const data = results[0] as ResultSet;
 
-  //     return new Promise((_, reject) => reject(false))
-  //   }
-  // }
+              console.log({ data })
+
+              if (data && data.rowsAffected) {
+                console.log("Project deleted");
+
+                resolve(true);
+              } else {
+                console.log("An error occured");
+
+                reject(false);
+              }
+            }
+
+            reject(false);
+          }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+
+      return new Promise((_, reject) => reject(false));
+    }
+  }
 }
