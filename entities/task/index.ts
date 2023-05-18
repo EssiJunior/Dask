@@ -6,9 +6,15 @@ export type TaskData = {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-  status: string;
+  status: TaskStatus;
   projectId: string;
   workers: User[];
+}
+
+export enum TaskStatus {
+  TODO = "to do",
+  PENDING = "pending",
+  DONE = "done",
 }
 
 export default class Task {
@@ -17,7 +23,7 @@ export default class Task {
   private _description: string;
   private _createdAt: Date;
   private _updatedAt: Date;
-  private _status: string;
+  private _status: TaskStatus;
   private _projectId: string;
   private _workers: User[];
 
@@ -52,7 +58,7 @@ export default class Task {
     return this._updatedAt;
   }
 
-  get status(): string {
+  get status(): TaskStatus {
     return this._status;
   }
 

@@ -7,7 +7,7 @@ import MultiAvatars from "../avatars/MultiAvartar";
 import { Feather, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { useRouter } from "expo-router";
-import Task from "../../entities/task";
+import Task, { TaskStatus } from "../../entities/task";
 import { capitalize } from "../../utils";
 import { useMemo } from 'react';
 import { useActions } from "@dilane3/gx";
@@ -37,18 +37,18 @@ export default function TaskCard({ task, type }: TaskCardProps) {
     let badgeTextColor = Colors.light.black;
 
     switch (task.status.toLowerCase()) {
-      case "done":
+      case TaskStatus.DONE:
         badgeText = "Done";
         badgeColor = Colors.light.green;
         badgeTextColor = Colors.dark.text;
         badgeWidth = 40;
         break;
-      case "to do":
+      case TaskStatus.TODO:
         badgeText = "To do";
         badgeColor = Colors.light.grayNormal;
         badgeWidth = 40;
         break;
-      case "pending":
+      case TaskStatus.PENDING:
         badgeText = "Pending";
         badgeColor = Colors.light.secondary;
         badgeTextColor = Colors.dark.text;

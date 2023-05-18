@@ -4,7 +4,7 @@ import { getCollectionReference, getDocumentReference } from "..";
 import { CreateTaskDto } from "./type";
 import User from "../../entities/user";
 import Project from "../../entities/project";
-import Task from "../../entities/task";
+import Task, { TaskStatus } from "../../entities/task";
 import { findUser } from "../auth";
 
 /**
@@ -21,7 +21,7 @@ export const createTask = async (task: CreateTaskDto) => {
     const payload = {
       title: task.title,
       description: task.description,
-      status: "to do",
+      status: TaskStatus.TODO,
       createdAt: new Date(now),
       updatedAt: new Date(now),
       project: userDocRef,

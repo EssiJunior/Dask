@@ -223,7 +223,7 @@ export default function Project() {
               alignItems: "center",
             }}
           >
-            <ProgressBar />
+            <ProgressBar project={project} />
           </View>
         </>
       )}

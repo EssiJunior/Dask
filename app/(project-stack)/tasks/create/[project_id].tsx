@@ -13,7 +13,7 @@ import { useActions, useSignal } from "@dilane3/gx";
 import { ProjectsDataType, UserDataType } from "../../../../gx/signals";
 import { generateUID } from "../../../../utils";
 import TasksRepository from "../../../../storage/db/tasks/index";
-import Task from "../../../../entities/task";
+import Task, { TaskStatus } from "../../../../entities/task";
 import { createTask } from "../../../../api/tasks";
 
 let schema = object({
@@ -101,7 +101,7 @@ export default function Tasks() {
             title: value.title,
             description: value.description || "",
             projectId,
-            status: "to do",
+            status: TaskStatus.TODO,
             createdAt: taskCreatedAt,
             updatedAt: taskUpdatedAt,
           };

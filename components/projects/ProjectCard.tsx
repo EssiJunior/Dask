@@ -113,7 +113,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             <Typography text={projectDate} weight="light" fontSize={14} style={{ marginTop: 5 }} />
           </View>
 
-          <ProgressBar />
+          <ProgressBar project={project} />
         </View>
       </View>
     </TouchableSurface>

@@ -22,9 +22,7 @@ export const styles = StyleSheet.create({
   },
 
   progress: {
-    width: "0%",
     height: 5,
     borderRadius: 10,
-    backgroundColor: Colors.light.green,
   },
 })
