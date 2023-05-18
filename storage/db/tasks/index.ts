@@ -228,21 +228,6 @@ export default class TasksRepository {
   }
 
   /**
-   * Change the status of a task
-   * @param {string} taskId
-   * @param {string} status
-   * @returns {Promise<boolean>}
-   */
-  static async changeStatus(taskId: string, status: string): Promise<boolean> {
-    try {
-    } catch (error) {
-      console.log(error);
-
-      return new Promise((_, reject) => reject(false));
-    }
-  }
-
-  /**
    * Delete a task
    * @param {string} taskId
    * @returns {Promise<boolean>}
@@ -273,6 +258,55 @@ export default class TasksRepository {
                 return;
               } else {
                 console.log("An error occured while deleting the task");
+
+                reject(false);
+
+                return;
+              }
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+
+      return new Promise((_, reject) => reject(false));
+    }
+  }
+
+  /**
+   * Update a status
+   * @param {string} taskId
+   * @param {string} status
+   * @returns {Promise<boolean>}
+   */
+  static async updateStatus(taskId: string, status: string): Promise<boolean> {
+    try {
+      return new Promise((resolve, reject) => {
+        this.db.exec(
+          [
+            {
+              sql: `
+              UPDATE tasks
+              SET status = ?
+              WHERE id = ?
+            `,
+              args: [status, taskId],
+            },
+          ],
+          false,
+          (_, results) => {
+            if (results) {
+              const data = results[0] as ResultSet;
+
+              if (data && data.rowsAffected) {
+                console.log("Task status updated");
+
+                resolve(true);
+
+                return;
+              } else {
+                console.log("An error occured while updating the task status");
 
                 reject(false);
 

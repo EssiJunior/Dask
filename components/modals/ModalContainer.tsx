@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
+import ChangeTaskStatus from "./content/ChangeTaskStatus";
 
 export default function ModalContainer() {
   // Global state
@@ -47,6 +48,9 @@ export default function ModalContainer() {
       }
       case ModalTypes.DeleteProject: {
         return <DeleteProject />;
+      }
+      case ModalTypes.ChangeTaskStatus: {
+        return <ChangeTaskStatus />
       }
       default:
         return null;

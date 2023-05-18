@@ -10,14 +10,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { CheckBox } from "@rneui/themed";
-// import CheckBox from "@react-native-community/checkbox";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import storage, { initDBSchema } from "../storage";
 import { READ_TERMS } from "../constants";
 import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
-import { sleep } from "../utils";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function WelcomeScreen() {

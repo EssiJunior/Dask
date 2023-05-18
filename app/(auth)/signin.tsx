@@ -40,6 +40,7 @@ export default function SignIn() {
   const [seePassword, setSeePassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   //   UseEffects
   useEffect(() => {
@@ -49,6 +50,20 @@ export default function SignIn() {
       });
     }
   }, [success]);
+
+  useEffect(() => {
+    const check = async () => {
+      const { error } = await checkForm();
+
+      if (error) {
+        setError(true);
+      } else {
+        setError(false);
+      }
+    };
+
+    check();
+  }, [email, password]);
 
   const handleChange = (value: string, name: string) => {
     if (name === "email") setEmail(value);
@@ -162,6 +177,13 @@ export default function SignIn() {
               />
             </TouchableSurface>
           </View>
+          <Typography
+            text="Provide at least 6 characters"
+            color={Colors.light.black}
+            weight="light"
+            fontSize={12}
+            style={{ marginBottom: 10 }}
+          />
 
           {/* <TouchableOpacity activeOpacity={0.8} style={{ marginTop: 25 }}>
             <Typography
@@ -219,7 +241,7 @@ export default function SignIn() {
             // onPress={handleSignUp}
             pv={12}
             onPress={handleSubmit}
-            disabled={loading}
+            disabled={error || loading}
             color={success ? Colors.light.green : Colors.light.primary}
           >
             {loading ? (

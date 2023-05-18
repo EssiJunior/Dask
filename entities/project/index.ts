@@ -1,5 +1,6 @@
 import Task from "../task";
 import User from "../user";
+import { TaskStatus } from '../task/index';
 
 export type ProjectData = {
   id: string;
@@ -107,6 +108,14 @@ export default class Project {
 
     if (taskIndex !== -1) {
       this._tasks[taskIndex] = task;
+    }
+  }
+
+  changeTaskStatus(taskId: string, status: TaskStatus) {
+    const task = this._tasks.find((task) => task.id === taskId);
+
+    if (task) {
+      task.status = status;
     }
   }
 }

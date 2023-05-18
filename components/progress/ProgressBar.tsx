@@ -2,13 +2,14 @@ import { View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import Project from "../../entities/project";
 import { TaskStatus } from "../../entities/task";
 import Typography from "../text/Typography";
 import { styles } from "./styles";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import Colors from "../../constants/Colors";
 
 type ProgressBarProps = {
@@ -22,10 +23,10 @@ export default function ProgressBar({ project }: ProgressBarProps) {
       (task) => task.status === TaskStatus.DONE
     ).length;
 
-    return `${completedTasks}/${totalTasks}`;
+    return `${completedTasks}/${totalTasks} completed`;
   };
 
-  const getProgress = () => {
+  const getProgress = useCallback(() => {
     const progress = [];
 
     // Get stats
@@ -53,7 +54,7 @@ export default function ProgressBar({ project }: ProgressBarProps) {
     });
 
     return progress;
-  };
+  }, [project.tasks]);
 
   return (
     <View style={styles.container}>
@@ -80,14 +81,20 @@ const ProgressValue = ({ value, color }: { value: number; color: string }) => {
   const width = useSharedValue(value);
 
   useEffect(() => {
-    width.value = withTiming(value, { duration: 300 });
+    handleUpdateWidth(value);
   }, [value]);
 
   // Animated style
   const animatedStyle = useAnimatedStyle(() => ({
     width: `${width.value}%`,
     backgroundColor: color,
-  }));
+  }), [value]);
+
+  const handleUpdateWidth = (value: number) => {
+    "worklet";
+
+    width.value = withSpring(value, { damping: 10 });
+  }
 
   return <Animated.View style={[animatedStyle, styles.progress]} />;
 };
