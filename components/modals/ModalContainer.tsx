@@ -41,7 +41,7 @@ export default function ModalContainer() {
    * Render the content of the modal
    * @returns {React.ReactNode}
    */
-  const renderContent = () => {
+  const renderContent = (): React.ReactNode => {
     switch (name) {
       case ModalTypes.DeleteTask: {
         return <DeleteTask />;

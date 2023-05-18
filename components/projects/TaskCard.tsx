@@ -9,6 +9,7 @@ import Colors from "../../constants/Colors";
 import { useRouter } from "expo-router";
 import Task from "../../entities/task";
 import { capitalize } from "../../utils";
+import { useMemo } from "react";
 import { useActions } from "@dilane3/gx";
 import { ModalTypes } from "../modals/type";
 import Animated, {
