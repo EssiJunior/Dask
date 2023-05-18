@@ -62,8 +62,6 @@ const getCurrentUser = async (login: (user: any) => void) => {
 
         const currentUser = new User(payload);
 
-        console.log({currentUser})
-
         // Login the user
         login(currentUser);
 
