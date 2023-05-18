@@ -4,7 +4,9 @@ import { getCollectionReference, getDocumentReference } from "..";
 import { CreateProjectDto } from "./type";
 import User from "../../entities/user";
 import Project from "../../entities/project";
-import { generateColor } from '../../utils';
+import { generateColor } from "../../utils";
+import Task from "../../entities/task";
+import { findAllTasksByProjectId } from "../tasks";
 
 /**
  * Create project and save it to firestore
@@ -64,7 +66,10 @@ export const findAllProjects = async (user: User) => {
 
     const projects: Project[] = [];
 
-    snapshot.forEach((doc) => {
+    for (const doc of snapshot.docs) {
+      // Load tasks
+      const { data: tasks } = await findAllTasksByProjectId(doc.id);
+
       const project = new Project({
         id: doc.id,
         name: doc.data().name,
@@ -75,16 +80,19 @@ export const findAllProjects = async (user: User) => {
         color: doc.data().color,
         members: doc.data().members,
         owner: user,
-        type: "shared"
+        type: "shared",
+        tasks: tasks || [],
       });
 
       projects.push(project);
-    });
+    }
+
+    console.log({ projects });
 
     return { data: projects };
-  } catch(error) {
+  } catch (error) {
     console.error(error);
 
     return { error: "Something went wrong while fetching all projects" };
   }
-}
+};

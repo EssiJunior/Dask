@@ -14,6 +14,7 @@ import { ProjectsDataType, UserDataType } from "../../../../gx/signals";
 import { generateUID } from "../../../../utils";
 import TasksRepository from "../../../../storage/db/tasks/index";
 import Task from "../../../../entities/task";
+import { createTask } from "../../../../api/tasks";
 
 let schema = object({
   title: string().min(5).required(),
@@ -128,6 +129,22 @@ export default function Tasks() {
           }
         } else {
           // Create task in a shared project
+          const { data: task } = await createTask({
+            title: value.title,
+            description: value.description || "",
+            projectId,
+          });
+
+          if (task) {
+            // Add task to project
+            addTask({ projectId, task });
+
+            // show toast
+            toast({ message: "Task created successfully", type: "success" });
+
+            // Redirect to project
+            router.back();
+          }
         }
       } else {
         toast({ message: "Project not found", type: "error" });

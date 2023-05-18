@@ -15,7 +15,7 @@ import User from "../../entities/user";
 import storage from "../../storage";
 import UsersRepository from "../../storage/db/users";
 import { DASK_USER_ID } from "../../constants";
-import { generateColor } from '../../utils/index';
+import { generateColor } from "../../utils/index";
 
 /**
  * Find an admin
@@ -28,7 +28,18 @@ const findUser = async (uid: string) => {
     const userDoc = await getDoc(userDocumentRef);
 
     if (userDoc.exists()) {
-      return { data: userDoc.data() };
+      const data = userDoc.data();
+
+      const payload = {
+        uid,
+        name: data.name,
+        color: data.color,
+        email: data.email,
+        avatar: data.avatar,
+        createdAt: new Date(data.createdAt),
+      };
+
+      return { data: new User(payload) };
     }
 
     return { error: "User not found" };
@@ -48,20 +59,11 @@ const getCurrentUser = async (login: (user: any) => void) => {
     if (user) {
       const uid = user.uid;
 
-      const { data: userData, error } = await findUser(uid);
+      const { data: currentUser, error } = await findUser(uid);
 
-      if (userData) {
-        const payload = {
-          uid,
-          name: userData.name,
-          color: userData.color,
-          email: userData.email,
-          avatar: userData.avatar,
-          createdAt: new Date(userData.createdAt),
-        };
+      console.log({currentUser});
 
-        const currentUser = new User(payload);
-
+      if (currentUser) {
         // Login the user
         login(currentUser);
 
@@ -70,8 +72,12 @@ const getCurrentUser = async (login: (user: any) => void) => {
 
         // Save user into the local database
         await UsersRepository.insert({
-          ...payload,
-          createdAt: payload.createdAt.getTime(),
+          uid: currentUser.uid,
+          name: currentUser.name,
+          color: currentUser.color || generateColor(),
+          email: currentUser.email,
+          avatar: currentUser.avatar,
+          createdAt: currentUser.createdAt.getTime(),
         });
       } else {
         console.log(error);

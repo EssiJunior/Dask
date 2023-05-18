@@ -2,7 +2,7 @@ import * as SQLite from "expo-sqlite";
 import { ResultSet } from "expo-sqlite";
 import { db } from "..";
 import User from "../../../entities/user";
-import { CreateUserDto } from "./type"
+import { CreateUserDto } from "./type";
 
 export default class UsersRepository {
   private static db: SQLite.WebSQLDatabase = db;
@@ -21,6 +21,7 @@ export default class UsersRepository {
                 uid TEXT PRIMARY KEY, 
                 name TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
+                color TEXT NOT NULL,
                 avatar TEXT,
                 created_at INTEGER NOT NULL
               )`,
@@ -111,44 +112,53 @@ export default class UsersRepository {
    */
   static async insert(payload: CreateUserDto): Promise<boolean> {
     try {
-      return new Promise((resolve, reject) => {
-        this.db.exec(
-          [
-            {
-              sql: `INSERT INTO users (uid, name, email, avatar, created_at) VALUES (?, ?, ?, ?, ?)`,
-              args: [
-                payload.uid,
-                payload.name,
-                payload.email,
-                payload.avatar,
-                payload.createdAt,
-              ],
-            },
-          ],
-          false,
-          (_, results) => {
-            if (results) {
-              const data = results[0] as ResultSet;
+      const user = await UsersRepository.findByUid(payload.uid);
 
-              if (data && data.rowsAffected) {
-                console.log("User inserted");
+      if (!user) {
+        return new Promise((resolve, reject) => {
+          this.db.exec(
+            [
+              {
+                sql: `INSERT INTO users (uid, name, email, color, avatar, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
+                args: [
+                  payload.uid,
+                  payload.name,
+                  payload.email,
+                  payload.color,
+                  payload.avatar,
+                  payload.createdAt,
+                ],
+              },
+            ],
+            false,
+            (_, results) => {
+              if (results) {
+                const data = results[0] as ResultSet;
 
-                resolve(true);
+                console.log({ data });
 
-                return;
-              } else {
-                console.log("An error occured while inserting user");
+                if (data && data.rowsAffected) {
+                  console.log("User inserted");
 
-                reject(false);
+                  resolve(true);
 
-                return;
+                  return;
+                } else {
+                  console.log("An error occured while inserting user");
+
+                  reject(false);
+
+                  return;
+                }
               }
-            }
 
-            reject(false);
-          }
-        );
-      });
+              reject(false);
+            }
+          );
+        });
+      }
+
+      return new Promise((resolve) => resolve(true));
     } catch (error) {
       console.log(error);
 
@@ -185,7 +195,7 @@ export default class UsersRepository {
                   email: userData.email,
                   color: userData.color,
                   avatar: userData.avatar,
-                  createdAt: new Date(userData.created_at)
+                  createdAt: new Date(userData.created_at),
                 });
 
                 console.log("User retrieved succesfully");
