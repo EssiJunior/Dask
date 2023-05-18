@@ -16,6 +16,7 @@ import store from "../gx/store";
 import useAuth from "../hooks/useAuth";
 import ToastContainer from "../components/toast/ToastContainer";
 import useLoadProjects from "../hooks/useLoadProjects";
+import ModalContainer from "../components/modals/ModalContainer";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -96,7 +97,11 @@ function RootLayoutNav() {
 
   return (
     <ToastContainer>
-      <Stack screenOptions={{ headerShown: false }} />
+      <>
+        <Stack screenOptions={{ headerShown: false }} />
+
+        <ModalContainer />
+      </>
     </ToastContainer>
   );
 }

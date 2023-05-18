@@ -10,6 +10,8 @@ import { useRouter } from "expo-router";
 import Task from "../../entities/task";
 import { capitalize } from "../../utils";
 import { useMemo } from 'react';
+import { useActions } from "@dilane3/gx";
+import { ModalTypes } from '../modals/type';
 
 type TaskCardProps = {
   task: Task,
@@ -17,11 +19,11 @@ type TaskCardProps = {
 };
 
 export default function TaskCard({ task, type }: TaskCardProps) {
+  // Router
   const router = useRouter();
 
-  const handleNavigateToTask = () => {
-    router.push(`/tasks/${task.id}`);
-  };
+  // Global state
+  const { open } = useActions("modal");
 
   const {
     badgeText,
@@ -61,6 +63,23 @@ export default function TaskCard({ task, type }: TaskCardProps) {
       badgeWidth,
     };
   }, [task])
+
+  // Handlers
+
+  const handleNavigateToTask = () => {
+    router.push(`/tasks/${task.id}`);
+  };
+
+  const handleOpenDeleteTaskModal = () => {
+    open({
+      name: ModalTypes.DeleteTask,
+      data: {
+        taskId: task.id,
+        projectType: type,
+        projectId: task.projectId,
+      }
+    })
+  }
 
   return (
     <TouchableSurface
@@ -114,6 +133,7 @@ export default function TaskCard({ task, type }: TaskCardProps) {
                 alignItems: "center",
                 justifyContent: "center",
               }}
+              onPress={handleOpenDeleteTaskModal}
             >
               <Feather name="trash-2" size={20} color={Colors.light.red} />
             </TouchableSurface>

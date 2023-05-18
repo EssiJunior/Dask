@@ -235,10 +235,56 @@ export default class TasksRepository {
    */
   static async changeStatus(taskId: string, status: string): Promise<boolean> {
     try {
-
     } catch (error) {
       console.log(error);
-      
+
+      return new Promise((_, reject) => reject(false));
+    }
+  }
+
+  /**
+   * Delete a task
+   * @param {string} taskId
+   * @returns {Promise<boolean>}
+   */
+  static async delete(taskId: string): Promise<boolean> {
+    try {
+      return new Promise((resolve, reject) => {
+        this.db.exec(
+          [
+            {
+              sql: `
+              DELETE FROM tasks
+              WHERE id = ?
+            `,
+              args: [taskId],
+            },
+          ],
+          false,
+          (_, results) => {
+            if (results) {
+              const data = results[0] as ResultSet;
+
+              if (data && data.rowsAffected) {
+                console.log("Task deleted");
+
+                resolve(true);
+
+                return;
+              } else {
+                console.log("An error occured while deleting the task");
+
+                reject(false);
+
+                return;
+              }
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+
       return new Promise((_, reject) => reject(false));
     }
   }

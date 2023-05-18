@@ -1,6 +1,7 @@
 import { createStore } from "@dilane3/gx";
 import {
   currentUserSignal,
+  modalSignal,
   projectSignal,
   termsSignal,
   toastSignal,
@@ -9,6 +10,7 @@ import {
 export default createStore([
   termsSignal,
   currentUserSignal,
-  toastSignal,
   projectSignal,
+  toastSignal,
+  modalSignal,
 ]);
