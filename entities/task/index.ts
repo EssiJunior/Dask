@@ -102,7 +102,7 @@ export default class Task {
         break;
       case TaskStatus.PENDING:
         badgeText = "Pending";
-        badgeColor = Colors.light.secondary;
+        badgeColor = Colors.light.primary;
         badgeTextColor = Colors.dark.text;
         badgeWidth = 60;
         break;

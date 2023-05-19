@@ -37,6 +37,7 @@ export default function TaskCard({ task, type }: TaskCardProps) {
   const END_POSITION = 100;
   const onLeft = useSharedValue(true);
   const position = useSharedValue(0);
+  const isDragging = useSharedValue(false);
 
   // Memo
   const { badgeText, badgeColor, badgeTextColor, badgeWidth } = useMemo(
@@ -59,36 +60,54 @@ export default function TaskCard({ task, type }: TaskCardProps) {
   }));
 
   // Animated Gestures
-  const panGesture = Gesture.Simultaneous(
-    Gesture.Pan()
-      .onUpdate((e) => {
-        if (onLeft.value) {
-          position.value = e.translationX;
-        } else {
-          position.value = END_POSITION + e.translationX;
-        }
-      })
-      .onEnd((e) => {
-        console.log(position.value);
-        if (position.value < -END_POSITION) {
-          position.value = withTiming(END_POSITION, { duration: 100 });
-          onLeft.value = false;
+  const longPressGesture = Gesture.LongPress()
+    .onStart(() => {
+      isDragging.value = true;
+    })
+    .minDuration(150);
 
-          runOnJS(open)({
-            name: ModalTypes.ChangeTaskStatus,
-            data: {
-              taskId: task.id,
-              projectType: type,
-              projectId: task.projectId,
-              currentStatus: task.status,
-            },
-          });
-        } else {
-          position.value = withTiming(0, { duration: 100 });
-          onLeft.value = true;
-        }
-      })
-  );
+  const panGesture = Gesture.Pan()
+    .manualActivation(true)
+    .onTouchesMove((_e, state) => {
+      if (isDragging.value) {
+        state.activate();
+      } else {
+        state.fail();
+      }
+    })
+    .onUpdate((e) => {
+      if (onLeft.value) {
+        position.value = e.translationX;
+      } else {
+        position.value = END_POSITION + e.translationX;
+      }
+    })
+    .onEnd((e) => {
+      console.log(position.value);
+      if (position.value < -END_POSITION) {
+        position.value = withTiming(END_POSITION, { duration: 100 });
+        onLeft.value = false;
+
+        runOnJS(open)({
+          name: ModalTypes.ChangeTaskStatus,
+          data: {
+            taskId: task.id,
+            projectType: type,
+            projectId: task.projectId,
+            currentStatus: task.status,
+          },
+        });
+      } else {
+        position.value = withTiming(0, { duration: 100 });
+        onLeft.value = true;
+      }
+    })
+    .onFinalize(() => {
+      isDragging.value = false;
+    })
+    .simultaneousWithExternalGesture(longPressGesture);
+
+    const composedGesture = Gesture.Race(panGesture, longPressGesture);
 
   // Handlers
 
@@ -128,7 +147,7 @@ export default function TaskCard({ task, type }: TaskCardProps) {
       }}
       onPress={handleNavigateToTask}
     >
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={composedGesture}>
         <Animated.View style={animatedStyles}>
           <View style={styles.container}>
             <View style={styles.top}>

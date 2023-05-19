@@ -9,6 +9,7 @@ import Typography from "../../text/Typography";
 import { RadioButton } from "react-native-paper";
 import { TaskStatus } from "../../../entities/task/index";
 import { updateTaskStatus } from "../../../api/tasks";
+import { sleep } from "../../../utils";
 
 export default function ChangeTaskStatus() {
   // Global state
@@ -38,16 +39,25 @@ export default function ChangeTaskStatus() {
 
     try {
       if (projectType === "personal") {
-        await TasksRepository.updateStatus(taskId, status);
+        const isUpdated = await TasksRepository.updateStatus(taskId, status);
 
-        changeTaskStatus({ projectId, taskId, status });
+        setLoading(false);
 
-        close();
-
-        toast({
-          type: "success",
-          message: "The status has been changed",
-        });
+        if (isUpdated) {
+          close();
+  
+          changeTaskStatus({ projectId, taskId, status });
+  
+          toast({
+            type: "success",
+            message: "The status has been changed",
+          });
+        } else {
+          toast({
+            type: "error",
+            message: "Status could not be changed",
+          });
+        }
       } else {
         // Update the status for shared project
         const { error } = await updateTaskStatus(taskId, status);
