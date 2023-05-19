@@ -7,6 +7,7 @@ export type ProjectsDataType = {
   projects: Project[];
   selectedProject: Project | null;
   loading: boolean;
+  sharedPostsLoaded: boolean;
 };
 
 export const projectSignal = createSignal<ProjectsDataType>({
@@ -15,11 +16,18 @@ export const projectSignal = createSignal<ProjectsDataType>({
     projects: [],
     selectedProject: null,
     loading: false,
+    sharedPostsLoaded: false,
   },
   actions: {
     loadProjects: (state, payload: Project[]) => {
       state.projects = payload;
       state.loading = false;
+
+      return state;
+    },
+
+    setSharedPostsLoaded: (state, payload: boolean) => {
+      state.sharedPostsLoaded = payload;
 
       return state;
     },

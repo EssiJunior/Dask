@@ -12,6 +12,7 @@ import { useSearchParams } from "expo-router";
 import { ProjectsDataType } from "../../../../gx/signals";
 import { useSignal } from "@dilane3/gx";
 import { useMemo } from "react";
+import SearchResultCard from "../../../../components/projects/SearchResultCard";
 
 export default function Members() {
   const params = useSearchParams();
@@ -75,6 +76,16 @@ export default function Members() {
                 weight="bold"
               />
             </Button>
+
+            <View style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              alignItems: "center",
+            }}>
+              <SearchResultCard />
+            </View>
           </View>
 
           <View

@@ -1,5 +1,5 @@
 import { useActions, useSignal } from "@dilane3/gx";
-import { NetworkDataType, UserDataType } from "../gx/signals";
+import { NetworkDataType, ProjectsDataType, UserDataType } from "../gx/signals";
 import { useEffect } from "react";
 import { findAllProjects } from "../api/projects";
 import User from "../entities/user";
@@ -9,14 +9,17 @@ export default function useLoadProjects() {
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
   const { isInternetReachable } = useSignal<NetworkDataType>("network");
+  const { sharedPostsLoaded } = useSignal<ProjectsDataType>("projects")
 
   const { show: toast } = useActions("toast");
-  const { loadProjects } = useActions("projects");
+  const { loadProjects, setSharedPostsLoaded } = useActions("projects");
 
   useEffect(() => {
-    // Load projects
-    handleLoadProjects(user);
-  }, [user]);
+    if (!sharedPostsLoaded) {
+      // Load projects
+      handleLoadProjects(user);
+    }
+  }, [user, sharedPostsLoaded, isInternetReachable]);
 
   const handleLoadProjects = async (user: User | null) => {
     // Load projects from local database
@@ -34,6 +37,7 @@ export default function useLoadProjects() {
   
         if (data) {
           personalProjects.push(...data);
+          setSharedPostsLoaded(true);
         } else {
           toast({
             type: "error",
