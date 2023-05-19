@@ -2,16 +2,16 @@ import { createSignal } from "@dilane3/gx";
 
 export type ToastDataType = {
   message: string;
-  type: 'success' | 'error' | 'info';
+  type: "success" | "error" | "info";
   visible: boolean;
-}
+};
 
 export const toastSignal = createSignal<ToastDataType>({
-  name: 'toast',
+  name: "toast",
   state: {
-    message: '',
-    type: 'success',
-    visible: false
+    message: "",
+    type: "success",
+    visible: false,
   },
   actions: {
     show: (state, payload) => {
@@ -24,8 +24,9 @@ export const toastSignal = createSignal<ToastDataType>({
 
     hide: (state) => {
       state.visible = false;
+      state.message = "";
 
       return state;
-    }
-  }
-})
+    },
+  },
+});

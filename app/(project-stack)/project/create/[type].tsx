@@ -22,6 +22,7 @@ import { UserDataType } from "../../../../gx/signals/current-user";
 import ProjectsRepository from "../../../../storage/db/projects";
 import Project from "../../../../entities/project";
 import { projectSignal } from "../../../../gx/signals/projects";
+import { NetworkDataType } from "../../../../gx/signals";
 
 let schema = object({
   title: string().min(5).max(40).required(),
@@ -41,6 +42,7 @@ export default function CreateProject() {
 
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
+  const { isInternetReachable } = useSignal<NetworkDataType>("network");
 
   const { show: toast } = useActions("toast");
   const { addProject } = useActions("projects");
@@ -96,6 +98,17 @@ export default function CreateProject() {
 
       // Create shared project
       if (type === "shared" && user) {
+        if (!isInternetReachable) {
+          setLoading(false);
+
+          toast({
+            message: "Your are not connected",
+            type: "info"
+          })
+
+          return;
+        }
+
         // Create project in firebase
         const { data, error: projectError } = await createProject({
           name: value.title,

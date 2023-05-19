@@ -10,7 +10,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { object, string } from "yup";
 import { useEffect, useMemo, useState } from "react";
 import { useActions, useSignal } from "@dilane3/gx";
-import { ProjectsDataType, UserDataType } from "../../../../gx/signals";
+import { NetworkDataType, ProjectsDataType, UserDataType } from "../../../../gx/signals";
 import { generateUID } from "../../../../utils";
 import TasksRepository from "../../../../storage/db/tasks/index";
 import Task, { TaskStatus } from "../../../../entities/task";
@@ -35,6 +35,7 @@ export default function Tasks() {
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
   const { projects } = useSignal<ProjectsDataType>("projects");
+  const { isInternetReachable } = useSignal<NetworkDataType>("network");
 
   const { show: toast } = useActions("toast");
   const { addTask } = useActions("projects");
@@ -128,6 +129,17 @@ export default function Tasks() {
             toast({ message: "Error creating task", type: "error" });
           }
         } else {
+          if (!isInternetReachable) {
+            setLoading(false);
+
+            toast({
+              message: "Your are not connected",
+              type: "info"
+            })
+
+            return;
+          }
+
           // Create task in a shared project
           const { data: task } = await createTask({
             title: value.title,

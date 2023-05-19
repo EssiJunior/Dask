@@ -5,7 +5,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { deleteProject } from "../../../api/projects";
 import Colors from "../../../constants/Colors";
 import Project from "../../../entities/project";
-import { ModalStateType, UserDataType } from "../../../gx/signals";
+import { ModalStateType, NetworkDataType, UserDataType } from "../../../gx/signals";
 import ProjectsRepository from "../../../storage/db/projects";
 import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
@@ -19,6 +19,7 @@ export default function DeleteProject() {
     data: { project },
   } = useSignal<ModalStateType>("modal") as { data: { project: Project } };
   const { user } = useSignal<UserDataType>("currentUser");
+  const { isInternetReachable } = useSignal<NetworkDataType>("network");
 
   const { close } = useActions("modal");
   const { show: toast } = useActions("toast");
@@ -59,12 +60,22 @@ export default function DeleteProject() {
         close();
       }
     } else {
+      if (!isInternetReachable) {
+        setLoading(false);
+
+        toast({
+          message: "Your are not connected",
+          type: "info"
+        })
+
+        return;
+      }
+      
       // Verify if the user is the owner of the project
       const owner = project.owner;
 
       if (user && owner) {
         if (owner.uid === user.uid) {
-          console.log("delete project");
           // Delete shared project
           const { data, error } = await deleteProject(project);
 

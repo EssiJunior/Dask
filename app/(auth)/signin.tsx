@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useActions } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
@@ -21,6 +21,8 @@ import TouchableSurface from "../../components/buttons/TouchableSurface";
 import { object, string } from "yup";
 import { loginUser } from "../../api/auth";
 import { sleep } from "../../utils";
+import { NetworkDataType } from "../../gx/signals";
+import { UserDataType } from '../../gx/signals/current-user';
 
 let schema = object({
   email: string().email().required(),
@@ -30,9 +32,12 @@ let schema = object({
 export default function SignIn() {
   const router = useRouter();
 
-
   // Global actions
+  const { isInternetReachable } = useSignal<NetworkDataType>("network")
+  const { ready } = useSignal<UserDataType>("currentUser")
+
   const { setReady } = useActions("currentUser");
+  const { show: toast } = useActions("toast")
 
   //   Local state
   const [email, setEmail] = useState("");
@@ -86,13 +91,22 @@ export default function SignIn() {
   const handleSubmit = async () => {
     const { value, error: checkError } = await checkForm();
 
+    if (!isInternetReachable) {
+      toast({
+        message: "Your are not connected",
+        type: "info"
+      })
+
+      return;
+    }
+
     if (value) {
       setLoading(true);
 
       const { data, error } = await loginUser({ email, password });
 
       if (data) {
-        setReady(true);
+        setReady(!ready);
         setSuccess(true);
       } else {
         console.log(error);

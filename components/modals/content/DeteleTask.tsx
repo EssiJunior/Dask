@@ -2,7 +2,7 @@ import { useActions, useSignal } from "@dilane3/gx";
 import { useState } from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import Colors from "../../../constants/Colors";
-import { ModalStateType } from "../../../gx/signals";
+import { ModalStateType, NetworkDataType } from "../../../gx/signals";
 import TasksRepository from "../../../storage/db/tasks";
 import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
@@ -14,6 +14,8 @@ export default function DeleteTask() {
   const {
     data: { projectType, projectId, taskId },
   } = useSignal<ModalStateType>("modal");
+  const { isInternetReachable } = useSignal<NetworkDataType>("network");
+
   const { close } = useActions("modal");
   const { show: toast } = useActions("toast");
   const { removeTask } = useActions("projects");
@@ -53,6 +55,17 @@ export default function DeleteTask() {
         });
       }
     } else {
+      if (!isInternetReachable) {
+        setLoading(false);
+
+        toast({
+          message: "Your are not connected",
+          type: "info"
+        })
+
+        return;
+      }
+
       // Delete task from a shared project
       const { data, error } = await deleteTaskById(taskId);
 
