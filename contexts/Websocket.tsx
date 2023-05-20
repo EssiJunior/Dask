@@ -25,7 +25,7 @@ export default function WebsocketProvider({
   const { projects } = useSignal<ProjectsDataType>("projects");
   const { isInternetReachable } = useSignal<NetworkDataType>("network");
 
-  const { addTask, removeTask } = useActions("projects");
+  const { addTask, removeTask, changeTaskStatus } = useActions("projects");
 
   // Use Memo section
 
@@ -84,7 +84,7 @@ export default function WebsocketProvider({
     return () => {
       socket.off("connect");
       socket.off("disconnect");
-    }
+    };
   }, [user, sharedProjects]);
 
   useEffect(() => {
@@ -107,13 +107,26 @@ export default function WebsocketProvider({
         // Delete task from global state
         removeTask({ projectId, taskId });
       });
+
+      // On update task
+      socket.on(WebSocketEvent.UPDATE_TASK, (data) => {
+        const {
+          task: { id: taskId, status },
+          project: projectId,
+        } = data;
+
+        if (status) {
+          // Update task from global state
+          changeTaskStatus({ projectId, taskId, status });
+        }
+      });
     }
 
     return () => {
       socket.off(WebSocketEvent.ADD_TASK);
       socket.off(WebSocketEvent.REMOVE_TASK);
-    }
-  }, [user])
+    };
+  }, [user]);
 
   // Emitter section
 
@@ -132,6 +145,8 @@ export default function WebsocketProvider({
         break;
 
       case WebSocketEvent.UPDATE_TASK:
+        socket.emit(WebSocketEvent.UPDATE_TASK, action.payload);
+
         break;
 
       case WebSocketEvent.REMOVE_TASK:

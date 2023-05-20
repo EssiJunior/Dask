@@ -1,5 +1,5 @@
 import { useActions, useSignal } from "@dilane3/gx";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import Colors from "../../../constants/Colors";
 import { ModalStateType, NetworkDataType } from "../../../gx/signals";
@@ -10,8 +10,13 @@ import { RadioButton } from "react-native-paper";
 import { TaskStatus } from "../../../entities/task/index";
 import { updateTaskStatus } from "../../../api/tasks";
 import { sleep } from "../../../utils";
+import { WebsocketContext } from "../../../contexts/Websocket";
+import { WebSocketEvent } from "../../../contexts/enum";
 
 export default function ChangeTaskStatus() {
+  // Context
+  const { dispatch } = useContext(WebsocketContext);
+
   // Global state
   const {
     data: { projectType, projectId, taskId, currentStatus },
@@ -47,9 +52,9 @@ export default function ChangeTaskStatus() {
 
         if (isUpdated) {
           close();
-  
+
           changeTaskStatus({ projectId, taskId, status });
-  
+
           toast({
             type: "success",
             message: "The status has been changed",
@@ -63,12 +68,12 @@ export default function ChangeTaskStatus() {
       } else {
         if (!isInternetReachable) {
           setLoading(false);
-  
+
           toast({
             message: "Your are not connected",
-            type: "info"
-          })
-  
+            type: "info",
+          });
+
           return;
         }
 
@@ -85,7 +90,20 @@ export default function ChangeTaskStatus() {
             message: "Status could not be changed",
           });
         } else {
+          // Update the status in the global state
           changeTaskStatus({ projectId, taskId, status });
+
+          // Dispatch the event to the websocket
+          dispatch({
+            type: WebSocketEvent.UPDATE_TASK,
+            payload: {
+              projectId,
+              task: {
+                id: taskId,
+                status,
+              },
+            },
+          });
 
           close();
 
