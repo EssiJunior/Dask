@@ -1,5 +1,5 @@
-import { Dimensions, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ActivityIndicator, Dimensions, View } from "react-native";
+import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../../../components/buttons/Button";
 import TextInput from "../../../../components/inputs/TextInput";
@@ -11,8 +11,10 @@ import MemberItem from "../../../../components/projects/MemberItem";
 import { useSearchParams } from "expo-router";
 import { ProjectsDataType } from "../../../../gx/signals";
 import { useSignal } from "@dilane3/gx";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SearchResultCard from "../../../../components/projects/SearchResultCard";
+import User from "../../../../entities/user";
+import { findUserByEmail } from "../../../../api/users";
 
 export default function Members() {
   const params = useSearchParams();
@@ -20,6 +22,13 @@ export default function Members() {
 
   // Global state
   const { projects } = useSignal<ProjectsDataType>("projects");
+
+  // Local state
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const members = useMemo(() => {
     const project = projects.find((project) => project.id === projectId);
@@ -29,14 +38,70 @@ export default function Members() {
     return [];
   }, [projects]);
 
+  // UseEffect
+
+  useEffect(() => {
+    const searchUsers = async () => {
+      await handleSearch();
+    }
+
+    searchUsers();
+  }, [search])
+
+  // Handlers
+
+  const handleChange = (text: string) => {
+    setSearch(text);
+    setReady(false);
+  }
+
+  const handleSearch = async () => {
+    if (search.length === 0) return;
+
+    setSearching(true);
+
+    const { data } = await findUserByEmail(search);
+
+    setSearching(false);
+
+    if (data) {
+      setSearchResults(data);
+    }
+  };
+
+  const handleInvite = async () => {};
+
+  const handleSelectUser = (user: User) => {
+    setSearch(user.email);
+    setSearchResults([]);
+    setReady(true);
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
       <HeaderText title="Members" />
 
       {members && (
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={{ flex: 1 }}>
+          {!ready && search.length > 0 && (
+            <View
+              style={{
+                position: "absolute",
+                minHeight: 200,
+                top: 80,
+                left: 0,
+                right: 0,
+                alignItems: "center",
+                zIndex: 2,
+              }}
+            >
+              <SearchResultCard users={searchResults} loading={searching} onSelect={handleSelectUser} />
+            </View>
+          )}
+
           <View
             style={{
+              position: "relative",
               width: "100%",
               paddingHorizontal: 20,
               flexDirection: "row",
@@ -52,7 +117,8 @@ export default function Members() {
               style={{
                 paddingLeft: 50,
               }}
-              value=""
+              value={search}
+              onChange={handleChange}
             >
               <View
                 style={{
@@ -69,23 +135,21 @@ export default function Members() {
               </View>
             </TextInput>
 
-            <Button width={80}>
-              <Typography
-                text="Invite"
-                color={Colors.dark.text}
-                weight="bold"
-              />
+            <Button
+              width={80}
+              disabled={!ready || loading}
+              onPress={handleInvite}
+            >
+              {loading ? (
+                <ActivityIndicator size={23} color={Colors.light.background} />
+              ) : (
+                <Typography
+                  text="Invite"
+                  color={Colors.dark.text}
+                  weight="bold"
+                />
+              )}
             </Button>
-
-            <View style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              alignItems: "center",
-            }}>
-              <SearchResultCard />
-            </View>
           </View>
 
           <View
@@ -93,9 +157,9 @@ export default function Members() {
               marginTop: 20,
             }}
           >
-            {
-              members.map((member) => (<MemberItem key={member.uid} member={member} />))
-            }
+            {members.map((member) => (
+              <MemberItem key={member.uid} member={member} />
+            ))}
           </View>
         </ScrollView>
       )}

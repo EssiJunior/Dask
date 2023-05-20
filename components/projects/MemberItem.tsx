@@ -8,16 +8,19 @@ import User from "../../entities/user";
 import { capitalize } from '../../utils/index';
 
 type MemberItemProps = {
-  member: User
+  member: User,
+  type: string,
+  disabled?: boolean,
 };
 
-export default function MemberItem({ member }: MemberItemProps) {
+export default function MemberItem({ member, type, disabled }: MemberItemProps) {
   return (
     <TouchableSurface
       style={{
         paddingVertical: 10,
         paddingHorizontal: 20,
       }}
+      disabled={disabled}
     >
       <View style={styles.container}>
         <View
@@ -46,13 +49,21 @@ export default function MemberItem({ member }: MemberItemProps) {
           </View>
         </View>
 
-        <Typography
-          text="member"
-          style={{ alignSelf: "flex-start" }}
-          fontSize={14}
-          weight="semibold"
-        />
+        {
+          type === "members" && (
+            <Typography
+              text="member"
+              style={{ alignSelf: "flex-start" }}
+              fontSize={14}
+              weight="semibold"
+            />
+          )
+        }
       </View>
     </TouchableSurface>
   );
+}
+
+MemberItem.defaultProps = {
+  type: "members"
 }

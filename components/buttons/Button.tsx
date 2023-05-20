@@ -4,7 +4,7 @@ import TouchableSurface from "./TouchableSurface";
 
 export type ButtonProps = {
   children: React.ReactNode;
-  onPress?: () => void;
+  onPress?: () => void | Promise<void>;
   color?: string;
   rippleColor?: string;
   disabled?: boolean;
