@@ -8,8 +8,8 @@ import ProjectsRepository from "../storage/db/projects";
 export default function useLoadProjects() {
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
-  const { isInternetReachable } = useSignal<NetworkDataType>("network");
-  const { sharedPostsLoaded } = useSignal<ProjectsDataType>("projects")
+  const { isInternetReachable, ready } = useSignal<NetworkDataType>("network");
+  const { sharedPostsLoaded } = useSignal<ProjectsDataType>("projects");
 
   const { show: toast } = useActions("toast");
   const { loadProjects, setSharedPostsLoaded } = useActions("projects");
@@ -19,7 +19,7 @@ export default function useLoadProjects() {
       // Load projects
       handleLoadProjects(user);
     }
-  }, [user, sharedPostsLoaded, isInternetReachable]);
+  }, [user, sharedPostsLoaded, isInternetReachable, ready]);
 
   const handleLoadProjects = async (user: User | null) => {
     // Load projects from local database
@@ -29,20 +29,22 @@ export default function useLoadProjects() {
       if (!isInternetReachable) {
         toast({
           message: "Couldn't retrieve shared projects",
-          type: "info"
-        })
+          type: "info",
+        });
       } else {
-        // Load projects from firebase
-        const { data, error } = await findAllProjects(user);
-  
-        if (data) {
-          personalProjects.push(...data);
-          setSharedPostsLoaded(true);
-        } else {
-          toast({
-            type: "error",
-            message: error,
-          });
+        if (ready) {
+          // Load projects from firebase
+          const { data, error } = await findAllProjects(user);
+
+          if (data) {
+            personalProjects.push(...data);
+            setSharedPostsLoaded(true);
+          } else {
+            toast({
+              type: "error",
+              message: error,
+            });
+          }
         }
       }
     }

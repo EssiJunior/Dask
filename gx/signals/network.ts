@@ -9,8 +9,8 @@ export type NetworkDataType = {
 export const networkSignal = createSignal<NetworkDataType>({
   name: "network",
   state: {
-    isConnected: false,
-    isInternetReachable: false,
+    isConnected: true,
+    isInternetReachable: true,
     ready: false
   },
   actions: {
