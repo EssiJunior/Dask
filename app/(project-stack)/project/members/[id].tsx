@@ -10,11 +10,13 @@ import { Ionicons } from "@expo/vector-icons";
 import MemberItem from "../../../../components/projects/MemberItem";
 import { useSearchParams } from "expo-router";
 import { ProjectsDataType } from "../../../../gx/signals";
-import { useSignal } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
 import { useEffect, useMemo, useState } from "react";
 import SearchResultCard from "../../../../components/projects/SearchResultCard";
 import User from "../../../../entities/user";
 import { findUserByEmail } from "../../../../api/users";
+import { addMemberToProject } from "../../../../api/projects";
+import { UserDataType } from '../../../../gx/signals/current-user';
 
 export default function Members() {
   const params = useSearchParams();
@@ -22,9 +24,14 @@ export default function Members() {
 
   // Global state
   const { projects } = useSignal<ProjectsDataType>("projects");
+  const { user } = useSignal<UserDataType>("currentUser");
+
+  const { show: toast } = useActions("toast");
+  const { addMember } = useActions("projects");
 
   // Local state
   const [search, setSearch] = useState("");
+  const [member, setMember] = useState<User | null>(null);
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [searching, setSearching] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,24 +43,25 @@ export default function Members() {
     if (project) return project.getMembers();
 
     return [];
-  }, [projects]);
+  }, [JSON.stringify(projects)]);
 
   // UseEffect
 
   useEffect(() => {
     const searchUsers = async () => {
       await handleSearch();
-    }
+    };
 
     searchUsers();
-  }, [search])
+  }, [search]);
 
   // Handlers
 
   const handleChange = (text: string) => {
     setSearch(text);
+    setMember(null);
     setReady(false);
-  }
+  };
 
   const handleSearch = async () => {
     if (search.length === 0) return;
@@ -69,12 +77,55 @@ export default function Members() {
     }
   };
 
-  const handleInvite = async () => {};
+  const handleInvite = async () => {
+    setLoading(true);
+
+    if (member) {
+      const { data, error } = await addMemberToProject(projectId, member.uid);
+
+      setLoading(false);
+
+      if (data) {
+        console.log("New member added", member);
+
+        // Add member to global state
+        addMember({ projectId, member });
+
+        // Reset search
+        setSearch("");
+
+        // Show toast
+        toast({ message: "New member added to project", type: "success" });
+
+        // Reset state to default
+        setMember(null);
+      }
+    }
+  };
 
   const handleSelectUser = (user: User) => {
     setSearch(user.email);
+    setMember(user);
     setSearchResults([]);
     setReady(true);
+  };
+
+  const filterResults = () => {
+    if (search.length === 0) return [];
+
+    let filtered: User[] = [];
+
+    if (user) {
+      filtered = searchResults.filter((result) => result.uid !== user.uid);
+    }
+
+    for (let member of members) {
+      filtered = filtered.filter((result) => result.uid !== member.uid);
+    }
+
+    console.log("Filtered", filtered)
+
+    return filtered;
   }
 
   return (
@@ -95,7 +146,11 @@ export default function Members() {
                 zIndex: 2,
               }}
             >
-              <SearchResultCard users={searchResults} loading={searching} onSelect={handleSelectUser} />
+              <SearchResultCard
+                users={filterResults()}
+                loading={searching}
+                onSelect={handleSelectUser}
+              />
             </View>
           )}
 

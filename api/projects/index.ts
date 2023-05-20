@@ -1,5 +1,13 @@
 // Users operations
-import { addDoc, deleteDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { getCollectionReference, getDocumentReference } from "..";
 import { CreateProjectDto } from "./type";
 import User from "../../entities/user";
@@ -7,6 +15,7 @@ import Project from "../../entities/project";
 import { generateColor } from "../../utils";
 import Task from "../../entities/task";
 import { findAllTasksByProjectId } from "../tasks";
+import { findUser } from "../auth";
 
 /**
  * Create project and save it to firestore
@@ -70,6 +79,17 @@ export const findAllProjects = async (user: User) => {
       // Load tasks
       const { data: tasks } = await findAllTasksByProjectId(doc.id);
 
+      // Load members
+      const members: User[] = [];
+
+      for (let workerData of doc.data().members) {
+        const workderId = workerData.id;
+
+        const { data: member } = await findUser(workderId);
+
+        if (member) members.push(member);
+      }
+
       const project = new Project({
         id: doc.id,
         name: doc.data().name,
@@ -78,7 +98,7 @@ export const findAllProjects = async (user: User) => {
         createdAt: new Date(doc.data().createdAt),
         updatedAt: new Date(doc.data().updatedAt),
         color: doc.data().color,
-        members: doc.data().members,
+        members,
         owner: user,
         type: "shared",
         tasks: tasks || [],
@@ -120,5 +140,33 @@ export const deleteProject = async (project: Project) => {
     console.error(error);
 
     return { error: "Something went wrong while deleting project" };
+  }
+};
+
+/**
+ * Add a member to a project
+ * @param {string} projectId
+ * @param {string} userId
+ */
+export const addMemberToProject = async (projectId: string, userId: string) => {
+  const projectRef = getDocumentReference(projectId, "projects");
+  const userRef = getDocumentReference(userId, "users");
+
+  try {
+    const projectDoc = await getDoc(projectRef);
+    const projectData = projectDoc.data();
+
+    if (projectData) {
+      await updateDoc(projectRef, {
+        members: [...projectData.members, userRef],
+      });
+      return { data: true };
+    }
+
+    return { error: "Project not found" };
+  } catch (error) {
+    console.error(error);
+
+    return { error: "Something went wrong while adding member to project" };
   }
 };

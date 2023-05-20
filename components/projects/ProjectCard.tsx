@@ -40,6 +40,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     router.push(`/project/${project.id}`);
   };
 
+  console.log({ members: project.getMembers()  })
+
   return (
     <TouchableSurface
       style={{ marginBottom: 20 }}

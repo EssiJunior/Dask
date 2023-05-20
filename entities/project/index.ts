@@ -92,6 +92,8 @@ export default class Project {
 
     if (this._owner) members.push(this._owner);
 
+    console.log({ members })
+
     return members;
   }
 
@@ -117,5 +119,9 @@ export default class Project {
     if (task) {
       task.status = status;
     }
+  }
+
+  addMember(member: User) {
+    this._members.push(member);
   }
 }

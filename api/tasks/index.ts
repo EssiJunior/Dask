@@ -86,7 +86,7 @@ export const findAllTasksByProjectId = async (projectId: string) => {
         const workderId = workerData.id;
 
         const { data: worker } = await findUser(workderId);
-
+        
         if (worker) workers.push(worker);
       }
 
