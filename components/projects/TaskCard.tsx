@@ -4,7 +4,7 @@ import styles from "./styles/task";
 import Typography from "../text/Typography";
 import Badge from "../badges/Badge";
 import MultiAvatars from "../avatars/MultiAvartar";
-import { Feather, SimpleLineIcons } from "@expo/vector-icons";
+import { Feather, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { useRouter } from "expo-router";
 import Task from "../../entities/task";
@@ -44,6 +44,10 @@ export default function TaskCard({ task, type }: TaskCardProps) {
     () => task.getFormatedStatus(),
     [task.status]
   );
+
+  const workers = useMemo(() => {
+    return task.workers;
+  }, [task.workers]);
 
   // Animated styles
   const animatedStyles = useAnimatedStyle(() => ({
@@ -106,7 +110,7 @@ export default function TaskCard({ task, type }: TaskCardProps) {
     })
     .simultaneousWithExternalGesture(longPressGesture);
 
-    const composedGesture = Gesture.Race(panGesture, longPressGesture);
+  const composedGesture = Gesture.Race(panGesture, longPressGesture);
 
   // Handlers
 
@@ -126,8 +130,6 @@ export default function TaskCard({ task, type }: TaskCardProps) {
   };
 
   const handleOpenChangeTaskStatusModal = () => {
-    "worklet";
-
     open({
       name: ModalTypes.ChangeTaskStatus,
       data: {
@@ -135,6 +137,16 @@ export default function TaskCard({ task, type }: TaskCardProps) {
         projectType: type,
         projectId: task.projectId,
         currentStatus: task.status,
+      },
+    });
+  };
+
+  const handleOpenAssignTaskToMember = () => {
+    open({
+      name: ModalTypes.AssignTaskToMember,
+      data: {
+        taskId: task.id,
+        projectId: task.projectId,
       },
     });
   };
@@ -165,7 +177,31 @@ export default function TaskCard({ task, type }: TaskCardProps) {
             </View>
 
             <View style={styles.bottom}>
-              {type === "shared" && <MultiAvatars size={25} />}
+              {type === "shared" &&
+                (task.workers.length === 0 ? (
+                  <TouchableSurface
+                    rounded
+                    style={{
+                      borderRadius: 50,
+                    }}
+                    onPress={handleOpenAssignTaskToMember}
+                  >
+                    <View style={styles.assignMemberIcon}>
+                      <Ionicons
+                        name="add"
+                        size={22}
+                        color={Colors.light.gray}
+                      />
+                    </View>
+                  </TouchableSurface>
+                ) : (
+                  <TouchableSurface
+                    useForeground
+                    onPress={handleOpenAssignTaskToMember}
+                  >
+                    <MultiAvatars sources={workers} size={30} />
+                  </TouchableSurface>
+                ))}
 
               <View style={{ flexDirection: "row", marginLeft: "auto" }}>
                 <TouchableSurface

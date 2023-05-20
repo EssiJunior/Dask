@@ -196,3 +196,32 @@ export const updateTaskStatus = async (taskId: string, status: TaskStatus) => {
     return { error };
   }
 };
+
+/**
+ * Assign task to members
+ * @params {string} taskId
+ * @params {string[]} membersId
+ */
+export const assignTaskToMembers = async (taskId: string, membersId: string[]) => {
+  const taskRef = getDocumentReference(taskId, "tasks")
+  const membersRef = [];
+
+  for (let memberId of membersId) {
+    const memberRef = getDocumentReference(memberId, "users");
+
+    membersRef.push(memberRef);
+  }
+
+  try {
+    // Add members to the task
+    await updateDoc(taskRef, {
+      workers: membersRef
+    })
+
+    return { data: true }
+  } catch (error) {
+    console.log(error);
+
+    return { error }
+  }
+}

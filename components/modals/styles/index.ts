@@ -19,16 +19,17 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     elevation: 5,
   },
   bgView: {
@@ -45,9 +46,8 @@ const styles = StyleSheet.create({
     minHeight: 200,
     backgroundColor: Colors.light.background,
     borderRadius: 10,
-    padding: 20,
-
-  }
+    justifyContent: "center",
+  },
 });
 
 export default styles;

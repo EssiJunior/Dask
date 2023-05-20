@@ -97,6 +97,8 @@ export const findAllProjects = async (user: User) => {
         if (member) members.push(member);
       }
 
+      const { data: owner } = await findUser(doc.data().owner.id);
+
       const project = new Project({
         id: doc.id,
         name: doc.data().name,
@@ -106,7 +108,7 @@ export const findAllProjects = async (user: User) => {
         updatedAt: new Date(doc.data().updatedAt),
         color: doc.data().color,
         members,
-        owner: user,
+        owner,
         type: "shared",
         tasks: tasks || [],
       });

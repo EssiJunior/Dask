@@ -117,7 +117,7 @@ export default function DeleteTask() {
         text="Are you sure you want to delete this task?"
         fontSize={16}
         color={Colors.light.black}
-        style={{ marginTop: 16 }}
+        style={{ marginTop: 16, textAlign: "center" }}
       />
 
       <View style={{ flexDirection: "row", marginTop: 32 }}>
@@ -161,5 +161,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     alignItems: "center",
+    padding: 20
   },
 });

@@ -76,6 +76,11 @@ export default class Task {
     this._status = status;
   }
 
+  set workers(workers: User[]) {
+    console.log(workers)
+    this._workers = workers;
+  }
+
   addWorker(worker: User): void {
     this._workers.push(worker);
   }

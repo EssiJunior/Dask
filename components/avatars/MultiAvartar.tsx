@@ -57,9 +57,9 @@ export default function MultiAvatars({
         </View>
       )}
 
-      {users.map((user, index) => (
+      {users.splice(0, 3).map((user, index) => (
         <View
-          key={index}
+          key={user.uid}
           style={[
             styles.avatarItem,
             {

@@ -6,6 +6,8 @@ import { WebSocketEvent } from "./enum";
 import { WebSocketContextAction, WebSocketContextData } from "./type";
 import { ProjectsDataType } from "../gx/signals/projects";
 import { findTaskById } from "../api/tasks";
+import { findUserByEmail } from "../api/users";
+import { findUser } from "../api/auth";
 
 export const WebsocketContext = createContext<WebSocketContextData>({
   dispatch: (action: WebSocketContextAction) => {},
@@ -25,7 +27,8 @@ export default function WebsocketProvider({
   const { projects } = useSignal<ProjectsDataType>("projects");
   const { isInternetReachable } = useSignal<NetworkDataType>("network");
 
-  const { addTask, removeTask, changeTaskStatus } = useActions("projects");
+  const { addTask, removeTask, changeTaskStatus, addMember } =
+    useActions("projects");
 
   // Use Memo section
 
@@ -120,11 +123,27 @@ export default function WebsocketProvider({
           changeTaskStatus({ projectId, taskId, status });
         }
       });
+
+      // On new project member
+      socket.on(WebSocketEvent.NEW_PROJECT_MEMBER, async (data) => {
+        console.log("new member", data);
+
+        const { projectId, newMemberId } = data;
+
+        // Get user from firebase
+        const { data: user } = await findUser(newMemberId);
+
+        if (user) {
+          // Add user to project
+          addMember({ projectId, member: user });
+        }
+      });
     }
 
     return () => {
       socket.off(WebSocketEvent.ADD_TASK);
       socket.off(WebSocketEvent.REMOVE_TASK);
+      socket.off(WebSocketEvent.UPDATE_TASK);
     };
   }, [user]);
 
@@ -155,6 +174,8 @@ export default function WebsocketProvider({
         break;
 
       case WebSocketEvent.NEW_PROJECT_MEMBER:
+        socket.emit(WebSocketEvent.NEW_PROJECT_MEMBER, action.payload);
+
         break;
 
       default:

@@ -38,6 +38,7 @@ export default function SearchResultCard({
           users.map((user) => (
             <>
               <TouchableSurface
+                key={user.uid}
                 style={{ width: "100%" }}
                 onPress={() => onSelect(user)}
               >
