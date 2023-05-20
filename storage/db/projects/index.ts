@@ -37,8 +37,6 @@ export default class ProjectsRepository {
               const data = results[0] as ResultSet;
 
               if (data && data.rows) {
-                console.log("Projects table created");
-
                 resolve(true);
 
                 return;
@@ -116,8 +114,6 @@ export default class ProjectsRepository {
    * @param {CreateProjectDto} payload
    */
   static async insert(payload: CreateProjectDto): Promise<boolean> {
-    console.log({ payload });
-
     try {
       return new Promise((resolve, reject) => {
         this.db.exec(

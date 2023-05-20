@@ -92,8 +92,6 @@ export default class Project {
 
     if (this._owner) members.push(this._owner);
 
-    console.log({ members })
-
     return members;
   }
 

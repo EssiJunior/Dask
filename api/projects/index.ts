@@ -68,8 +68,6 @@ export const findAllProjects = async (user: User) => {
   const projectsRef = getCollectionReference("projects");
   const userDocRef = getDocumentReference(user.uid, "users");
 
-  console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-
   try {
     // Make a query to get all projects where the user is a member
     const querySnapshot = query(
@@ -79,8 +77,6 @@ export const findAllProjects = async (user: User) => {
         where("members", "array-contains", userDocRef)
       )
     );
-
-    console.log({userDocRef})
 
     const snapshot = await getDocs(querySnapshot);
 
@@ -117,8 +113,6 @@ export const findAllProjects = async (user: User) => {
 
       projects.push(project);
     }
-
-    console.log({ projects });
 
     return { data: projects };
   } catch (error) {

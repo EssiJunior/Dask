@@ -16,8 +16,6 @@ export default function useAuth() {
   const { show: toast } = useActions("toast");
 
   useEffect(() => {
-    console.log({ isNetworkReady });
-    
     if (!user) handleGetCurrentUser();
   }, [ready, isNetworkReady]);
 

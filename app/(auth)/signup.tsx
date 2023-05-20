@@ -126,8 +126,6 @@ export default function SignUp() {
 
       setLoading(false);
     } else {
-      console.log(checkError);
-
       toast({
         message: checkError,
         type: "error",

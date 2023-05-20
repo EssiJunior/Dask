@@ -74,8 +74,6 @@ export default class Task {
 
   set status(status: TaskStatus) {
     this._status = status;
-
-    console.log("yooooooooo", status);
   }
 
   addWorker(worker: User): void {

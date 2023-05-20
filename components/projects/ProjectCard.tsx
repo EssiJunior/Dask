@@ -25,8 +25,6 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   useEffect(() => {
     let timer = setInterval(() => {
-      console.log("Updating date", project.createdAt)
-
       setProjectDate(formatDate(project.createdAt));
     }, 60000);
 
@@ -39,9 +37,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const handleNavigateToProject = () => {
     router.push(`/project/${project.id}`);
   };
-
-  console.log({ members: project.getMembers()  })
-
+  
   return (
     <TouchableSurface
       style={{ marginBottom: 20 }}

@@ -38,8 +38,6 @@ export default function Project() {
   useEffect(() => {
     let timer = setInterval(() => {
       if (project) {
-        console.log("Updating date", project.createdAt);
-
         setProjectDate(formatDate(project.createdAt));
       }
     }, 60000);

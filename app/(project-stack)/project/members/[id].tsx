@@ -86,8 +86,6 @@ export default function Members() {
       setLoading(false);
 
       if (data) {
-        console.log("New member added", member);
-
         // Add member to global state
         addMember({ projectId, member });
 
@@ -122,9 +120,7 @@ export default function Members() {
     for (let member of members) {
       filtered = filtered.filter((result) => result.uid !== member.uid);
     }
-
-    console.log("Filtered", filtered)
-
+    
     return filtered;
   }
 

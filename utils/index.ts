@@ -8,8 +8,6 @@ export const capitalize = (name: string) => {
 };
 
 export const formatDate = (date: Date) => {
-  console.log({ date });
-
   // Get relative date
   const day = date.getDate();
   const month = date.getMonth();

@@ -61,8 +61,6 @@ const getCurrentUser = async (login: (user: any) => void) => {
 
       const { data: currentUser, error } = await findUser(uid);
 
-      console.log({currentUser});
-
       if (currentUser) {
         // Login the user
         login(currentUser);
@@ -192,8 +190,6 @@ const loginWithToken = async (token: string) => {
           avatar: userData.avatar,
           createdAt: new Date(userData.createdAt),
         };
-
-        console.log({ payload });
 
         const currentUser = new User(payload);
 

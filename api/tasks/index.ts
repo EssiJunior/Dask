@@ -117,7 +117,6 @@ export const findAllTasksByProjectId = async (projectId: string) => {
  * @param {string} taskId
  */
 export const deleteTaskById = async (taskId: string) => {
-  console.log("deleteTaskById", taskId);
   const taskRef = getDocumentReference(taskId, "tasks");
 
   try {

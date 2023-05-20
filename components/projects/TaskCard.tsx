@@ -83,7 +83,6 @@ export default function TaskCard({ task, type }: TaskCardProps) {
       }
     })
     .onEnd((e) => {
-      console.log(position.value);
       if (position.value < -END_POSITION) {
         position.value = withTiming(END_POSITION, { duration: 100 });
         onLeft.value = false;
