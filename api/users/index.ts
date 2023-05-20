@@ -28,8 +28,7 @@ export const findUserByEmail = async (email: string) => {
     const querySnapshot = query(
       usersCollectionRef,
       or(
-        where("email", ">=", "bel"),
-        where("email", "<", "bem")
+        where("email", ">=", email.toLowerCase())
       ),
     );
 

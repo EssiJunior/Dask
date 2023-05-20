@@ -19,6 +19,7 @@ import useLoadProjects from "../hooks/useLoadProjects";
 import ModalContainer from "../components/modals/ModalContainer";
 import useNetworkStats from "../hooks/useNetworkStats";
 import { NetworkDataType, ToastDataType } from "../gx/signals";
+import WebsocketProvider from "../contexts/Websocket";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -111,12 +112,14 @@ function RootLayoutNav() {
   };
 
   return (
-    <ToastContainer>
-      <>
-        <Stack screenOptions={{ headerShown: false }} />
+    <WebsocketProvider>
+      <ToastContainer>
+        <>
+          <Stack screenOptions={{ headerShown: false }} />
 
-        <ModalContainer />
-      </>
-    </ToastContainer>
+          <ModalContainer />
+        </>
+      </ToastContainer>
+    </WebsocketProvider>
   );
 }
