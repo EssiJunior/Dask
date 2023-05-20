@@ -13,17 +13,16 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, CommonActions } from "@react-navigation/native";
-import storage from "../../storage";
-import { READ_TERMS } from "../../constants";
-import { useActions } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
 import TouchableSurface from "../../components/buttons/TouchableSurface";
 import { object, string } from "yup";
-import { findUser, getCurrentUser, loginUser } from "../../api/auth";
+import { loginUser } from "../../api/auth";
 import { sleep } from "../../utils";
+import { NetworkDataType } from "../../gx/signals";
+import { UserDataType } from '../../gx/signals/current-user';
 
 let schema = object({
   email: string().email().required(),
@@ -33,12 +32,20 @@ let schema = object({
 export default function SignIn() {
   const router = useRouter();
 
+  // Global actions
+  const { isInternetReachable } = useSignal<NetworkDataType>("network")
+  const { ready } = useSignal<UserDataType>("currentUser")
+
+  const { setReady } = useActions("currentUser");
+  const { show: toast } = useActions("toast")
+
   //   Local state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [seePassword, setSeePassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   //   UseEffects
   useEffect(() => {
@@ -48,6 +55,20 @@ export default function SignIn() {
       });
     }
   }, [success]);
+
+  useEffect(() => {
+    const check = async () => {
+      const { error } = await checkForm();
+
+      if (error) {
+        setError(true);
+      } else {
+        setError(false);
+      }
+    };
+
+    check();
+  }, [email, password]);
 
   const handleChange = (value: string, name: string) => {
     if (name === "email") setEmail(value);
@@ -70,20 +91,40 @@ export default function SignIn() {
   const handleSubmit = async () => {
     const { value, error: checkError } = await checkForm();
 
+    if (!isInternetReachable) {
+      toast({
+        message: "Your are not connected",
+        type: "info"
+      })
+
+      return;
+    }
+
     if (value) {
       setLoading(true);
 
       const { data, error } = await loginUser({ email, password });
 
       if (data) {
+        setReady(!ready);
         setSuccess(true);
       } else {
         console.log(error);
+
+        toast({
+          message: "Check your email and password",
+          type: "error",
+        });
       }
 
       setLoading(false);
     } else {
       console.log(checkError);
+
+      toast({
+        message: "Verify your email and password",
+        type: "error"
+      })
     }
   };
 
@@ -99,7 +140,13 @@ export default function SignIn() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flex: 1, paddingHorizontal: 20 }}>
+      <ScrollView
+        style={{
+          flex: 1,
+          paddingHorizontal: 20,
+          backgroundColor: Colors.light.background,
+        }}
+      >
         <Typography
           text="Sign In"
           color={Colors.light.secondary}
@@ -154,6 +201,13 @@ export default function SignIn() {
               />
             </TouchableSurface>
           </View>
+          <Typography
+            text="Provide at least 6 characters"
+            color={Colors.light.black}
+            weight="light"
+            fontSize={12}
+            style={{ marginBottom: 10 }}
+          />
 
           {/* <TouchableOpacity activeOpacity={0.8} style={{ marginTop: 25 }}>
             <Typography
@@ -211,7 +265,7 @@ export default function SignIn() {
             // onPress={handleSignUp}
             pv={12}
             onPress={handleSubmit}
-            disabled={loading}
+            disabled={error || loading}
             color={success ? Colors.light.green : Colors.light.primary}
           >
             {loading ? (

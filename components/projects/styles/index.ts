@@ -27,6 +27,6 @@ export const styles = StyleSheet.create({
   },
 
   cardBodyText: {
-    marginTop: 20
+    marginTop: 30
   }
 })

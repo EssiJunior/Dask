@@ -30,8 +30,8 @@ export default function HeaderText({ title }: HeaderTextProps) {
           rounded
           style={{
             borderRadius: 50,
-            width: 40,
-            height: 40,
+            width: 30,
+            height: 30,
             justifyContent: "center",
             alignItems: "center",
           }}

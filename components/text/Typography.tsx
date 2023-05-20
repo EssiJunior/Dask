@@ -7,6 +7,7 @@ type TypographyProps = {
   color?: string;
   weight?: "bold" | "normal" | "light" | "black" | "semibold";
   style?: object;
+  lineHeight?: number;
 };
 
 export default function Typography({
@@ -15,6 +16,7 @@ export default function Typography({
   color,
   weight,
   style,
+  lineHeight
 }: TypographyProps) {
   // Handlers
   const getFontFamily = () => {
@@ -42,6 +44,7 @@ export default function Typography({
           color,
           fontFamily: getFontFamily(),
           verticalAlign: "middle",
+          lineHeight
         },
         style,
       ]}

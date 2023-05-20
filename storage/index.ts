@@ -10,7 +10,6 @@ class CustomStorage {
   }
 
   async getItem(key: string): Promise<string | null> {
-    console.log(key)
     return await this._storage.getItem(key);
   }
 
@@ -24,3 +23,7 @@ class CustomStorage {
 }
 
 export default new CustomStorage();
+
+export * from "./db/init";
+export * from "./db/users";
+export * from "./db/projects";

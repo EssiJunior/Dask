@@ -15,6 +15,10 @@ import GXProvider, { useActions, useSignal } from "@dilane3/gx";
 import store from "../gx/store";
 import useAuth from "../hooks/useAuth";
 import ToastContainer from "../components/toast/ToastContainer";
+import useLoadProjects from "../hooks/useLoadProjects";
+import ModalContainer from "../components/modals/ModalContainer";
+import useNetworkStats from "../hooks/useNetworkStats";
+import { NetworkDataType, ToastDataType } from "../gx/signals";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -59,6 +63,8 @@ export default function RootLayout() {
 function RootLayoutNav() {
   // Global state
   const { read: termsRead, loading: termsReadLoading } = useSignal("terms");
+  const { isInternetReachable, ready } = useSignal<NetworkDataType>("network");
+  const { show: toast } = useActions("toast");
 
   // Global actions
   const { setTermsRead } = useActions("terms");
@@ -67,7 +73,9 @@ function RootLayoutNav() {
   const navigation = useNavigation();
 
   // Custom hooks
+  useNetworkStats();
   useAuth();
+  useLoadProjects();
 
   useEffect(() => {
     const getTermsRead = async () => {
@@ -78,6 +86,16 @@ function RootLayoutNav() {
 
     getTermsRead();
   }, []);
+
+  useEffect(() => {
+    if (ready) {
+      if (isInternetReachable) {
+        toast({ message: "backing online", type: "success" });
+      } else {
+        toast({ message: "Check your internet connection", type: "info" });
+      }
+    }
+  }, [isInternetReachable, ready]);
 
   useEffect(() => {
     const navigateToWelcomeScreen = async () => {
@@ -94,7 +112,11 @@ function RootLayoutNav() {
 
   return (
     <ToastContainer>
-      <Stack screenOptions={{ headerShown: false }} />
+      <>
+        <Stack screenOptions={{ headerShown: false }} />
+
+        <ModalContainer />
+      </>
     </ToastContainer>
   );
 }

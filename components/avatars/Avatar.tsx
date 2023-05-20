@@ -1,14 +1,20 @@
 import { Image, ImageSourcePropType, View } from "react-native";
+import Typography from "../text/Typography";
+import { capitalize } from "../../utils/index";
 
 const image = require("../../assets/images/image1.jpeg");
 
+const randomUriImage = "https://picsum.photos/200/300";
+
 export type AvatarProps = {
-  source: ImageSourcePropType;
+  source: string;
   size: number;
   style?: object;
   rounded?: boolean;
   borderWidth?: number;
   borderColor?: string;
+  letter?: string;
+  bgColor?: string;
 };
 
 export default function Avatar({
@@ -18,6 +24,8 @@ export default function Avatar({
   source,
   borderWidth,
   borderColor,
+  letter,
+  bgColor,
 }: AvatarProps) {
   return (
     <View
@@ -28,19 +36,31 @@ export default function Avatar({
           borderRadius: rounded ? 200 : 8,
           borderWidth,
           borderColor,
+          backgroundColor: bgColor,
+          justifyContent: "center",
+          alignItems: "center",
         },
         style,
       ]}
       // rounded
     >
-      <Image
-        source={source}
-        style={{
-          width: "100%",
-          height: "100%",
-          borderRadius: rounded ? 200 : 8,
-        }}
-      />
+      {source ? (
+        <Image
+          source={{ uri: randomUriImage }}
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: rounded ? 200 : 8,
+          }}
+        />
+      ) : (
+        <Typography
+          text={capitalize(letter || "D")}
+          color="white"
+          fontSize={size / 3}
+          weight="bold"
+        />
+      )}
     </View>
   );
 }
@@ -48,7 +68,9 @@ export default function Avatar({
 Avatar.defaultProps = {
   size: 40,
   rounded: true,
-  source: image,
+  source: "",
   borderWidth: 0,
   borderColor: "transparent",
+  letter: "D",
+  bgColor: "transparent",
 };

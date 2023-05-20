@@ -8,20 +8,36 @@ import Typography from "../text/Typography";
 import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"
+import Project from "../../entities/project";
+import { formatDate } from "../../utils";
+import { useActions } from "@dilane3/gx";
+import { useEffect, useState } from "react";
 
 type ProjectCardProps = {
-  type: "personal" | "shared";
+  project: Project
 };
 
-export default function ProjectCard({ type }: ProjectCardProps) {
+export default function ProjectCard({ project }: ProjectCardProps) {
   // Navigation
   const router = useRouter();
 
+  const [projectDate, setProjectDate] = useState(formatDate(project.createdAt));
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      setProjectDate(formatDate(project.createdAt));
+    }, 60000);
+
+    return () => {
+      clearInterval(timer);
+    }
+  }, []);
+
   // Handlers
   const handleNavigateToProject = () => {
-    router.push("/project/shared")
+    router.push(`/project/${project.id}`);
   };
-
+  
   return (
     <TouchableSurface
       style={{ marginBottom: 20 }}
@@ -41,10 +57,12 @@ export default function ProjectCard({ type }: ProjectCardProps) {
               rounded={false}
               borderWidth={2}
               borderColor={Colors.light.background}
+              bgColor={project.color}
+              letter={project.name[0]}
             />
           </View>
 
-          {type === "shared" && (
+          {project.type === "shared" && (
             <View
               style={{
                 width: 30,
@@ -66,33 +84,34 @@ export default function ProjectCard({ type }: ProjectCardProps) {
         </View>
 
         <View style={styles.cardBody}>
-          {type === "shared" && (
+          {project.type === "shared" && (
             <View
               style={{
                 position: "absolute",
-                top: 10,
+                top: 0,
                 right: 20,
               }}
             >
               <MultiAvatars
-                size={30}
+                size={26}
                 borderWidth={2}
                 borderColor={Colors.light.background}
+                sources={project.getMembers()}
               />
             </View>
           )}
 
           <View style={styles.cardBodyText}>
             <Typography
-              text="Project Name"
+              text={project.name}
               weight="bold"
               fontSize={20}
               color={Colors.light.black}
             />
-            <Typography text="Since yesterday" weight="light" fontSize={14} />
+            <Typography text={projectDate} weight="light" fontSize={14} style={{ marginTop: 5 }} />
           </View>
 
-          <ProgressBar />
+          <ProgressBar project={project} />
         </View>
       </View>
     </TouchableSurface>

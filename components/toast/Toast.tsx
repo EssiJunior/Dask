@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 import Colors from "../../constants/Colors";
 import Typography from "../text/Typography";
@@ -14,6 +15,12 @@ export default function Toast({ message, type }: ToastProps) {
     return Colors.light.info;
   }
 
+  const getIcon = () => {
+    if (type === "success") return "checkmark-circle";
+    if (type === "error") return "md-close-circle-sharp";
+    return "md-information-circle";
+  }
+
   return (
     <View
       style={{
@@ -22,11 +29,16 @@ export default function Toast({ message, type }: ToastProps) {
         borderRadius: 5,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         width: "80%"
       }}
     >
-      <Typography text={message} weight="bold" color={Colors.dark.text} />
+      <Ionicons 
+        name={getIcon()}
+        size={30}
+        color={Colors.light.background}
+      />
+      <Typography text={message} weight="bold" color={Colors.dark.text} style={{ marginLeft: 10 }} />
     </View>
   );
 }

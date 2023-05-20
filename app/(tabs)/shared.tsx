@@ -1,14 +1,34 @@
 import { Feather } from "@expo/vector-icons";
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FloatingButton from "../../components/buttons/FloattingButton";
 import HeaderHome from "../../components/layouts/headers/HeaderHome";
 import ProjectCard from "../../components/projects/ProjectCard";
 import Typography from "../../components/text/Typography";
 import Colors from "../../constants/Colors";
+import { useRouter } from "expo-router";
+import { useSignal } from "@dilane3/gx";
+import { ProjectsDataType } from "../../gx/signals";
 
 export default function SharedProjectScreen() {
+  const router = useRouter();
+
+  // Global state
+  const { projects } = useSignal<ProjectsDataType>("projects");
+
+  const handleNavigateTo = (path: string) => {
+    router.push(path);
+  };
+
+  const filterProjects = () => {
+    const filteredProjects = projects.filter((project) => {
+      return project.type === "shared";
+    });
+
+    return filteredProjects;
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
       <HeaderHome />
@@ -23,15 +43,14 @@ export default function SharedProjectScreen() {
         <Typography
           fontSize={16}
           weight="light"
-          text="You have 5 shared projects"
+          text={`You have ${filterProjects().length} shared project${filterProjects().length > 1 ? "s" : ""}`}
           color={Colors.light.secondary}
         />
 
         <View style={{ marginTop: 20 }}>
-          <ProjectCard type="shared" />
-          <ProjectCard type="shared" />
-          <ProjectCard type="shared" />
-          <ProjectCard type="shared" />
+          {filterProjects().map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
         </View>
       </ScrollView>
 
@@ -43,6 +62,7 @@ export default function SharedProjectScreen() {
         ph={20}
         bottom={20}
         right={20}
+        onPress={() => handleNavigateTo("/project/create/shared")}
       >
         <Feather
           name="plus"

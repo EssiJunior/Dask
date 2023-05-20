@@ -1,26 +1,47 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "../components/text/Typography";
 import Button from "../components/buttons/Button";
-import { Dimensions, View, StyleSheet, Image } from "react-native";
+import {
+  Dimensions,
+  View,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { CheckBox } from "@rneui/themed";
-// import CheckBox from "@react-native-community/checkbox";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, CommonActions } from "@react-navigation/native";
-import storage from "../storage";
+import storage, { initDBSchema } from "../storage";
 import { READ_TERMS } from "../constants";
 import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function WelcomeScreen() {
-  const navigation = useNavigation();
   const router = useRouter();
 
   const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Global actions
   const { setTermsRead } = useActions("terms");
+
+  // Use Effect
+  useEffect(() => {
+    const initializeDbSchema = async () => {
+      // Initialize the database schema
+      await initDBSchema();
+
+      setLoading(false);
+
+      router.replace("/");
+    };
+
+    if (loading) {
+      initializeDbSchema();
+    }
+  }, [loading]);
 
   // Handlers
   const toggleCheckbox = () => setChecked(!checked);
@@ -29,76 +50,85 @@ export default function WelcomeScreen() {
     await storage.setItem(READ_TERMS, READ_TERMS);
 
     setTermsRead(true);
-
-    navigation.dispatch(CommonActions.navigate("(tabs)"));
-  };
-  const handleCancel = async () => {
-    router.push("/tasks/1")
+    setLoading(true);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.imgContent}>
-        <Image
-          source={require("../assets/illustrations/welcome_illustration.png")}
-          style={styles.image}
-        />
-      </View>
-
-      <Typography
-        text="Welcome to Dask"
-        color={Colors.light.secondary}
-        weight="bold"
-        style={styles.title}
-      />
-      <Typography
-        text="Organize your personal tasks easily and also work with other person nicely."
-        color={Colors.light.gray}
-        weight="light"
-        style={styles.paragraph}
-      />
-
-      <View style={styles.agree}>
-        <CheckBox
-          iconType="material-community"
-          checked={true}
-          checkedIcon="checkbox-outline"
-          uncheckedIcon={"checkbox-blank-outline"}
-        />
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center" }}>
+        <View style={styles.imgContent}>
+          <Image
+            source={require("../assets/illustrations/welcome_illustration.png")}
+            style={styles.image}
+          />
+        </View>
 
         <Typography
-          text="Agree with the "
+          text="Welcome to Dask"
+          color={Colors.light.secondary}
+          weight="bold"
+          style={styles.title}
+        />
+        <Typography
+          text="Organize your personal tasks easily and also work with other person nicely."
           color={Colors.light.gray}
-          weight="bold"
+          weight="light"
+          style={styles.paragraph}
         />
-        <Typography
-          text="terms and conditions"
-          color={Colors.light.primary}
-          weight="bold"
-        />
-      </View>
 
-      {/* <Button width={300} onPress={handleCancel}>
-        <Typography text="Cancel" color={Colors.dark.text} weight="bold" />
-      </Button> */}
+        <View style={styles.agree}>
+          <CheckBox
+            iconType="material-community"
+            checked={checked}
+            onPress={toggleCheckbox}
+            checkedIcon="checkbox-outline"
+            uncheckedIcon={"checkbox-blank-outline"}
+          />
 
-      <Button width={300} onPress={handleContinue}>
-        <Typography text="Continue" color={Colors.dark.text} weight="bold" />
+          <Typography
+            text="Agree with the "
+            color={Colors.light.gray}
+            weight="bold"
+          />
+          <Typography
+            text="terms and conditions"
+            color={Colors.light.primary}
+            weight="bold"
+          />
+        </View>
 
-        <Ionicons
-          name="arrow-forward-outline"
-          size={24}
-          color={Colors.dark.text}
-          style={{ marginLeft: 15 }}
-        />
-      </Button>
+        <Button
+          width={200}
+          onPress={handleContinue}
+          disabled={!checked}
+          style={{ marginBottom: 30 }}
+        >
+          {loading ? (
+            <ActivityIndicator size={25} color={Colors.light.background} />
+          ) : (
+            <>
+              <Typography
+                text="Continue"
+                color={Colors.dark.text}
+                weight="bold"
+              />
+
+              <Ionicons
+                name="arrow-forward-outline"
+                size={24}
+                color={Colors.dark.text}
+                style={{ marginLeft: 15 }}
+              />
+            </>
+          )}
+        </Button>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "white",

@@ -1,4 +1,18 @@
 import { createStore } from "@dilane3/gx";
-import { currentUserSignal, termsSignal, toastSignal } from "../signals";
+import {
+  currentUserSignal,
+  modalSignal,
+  networkSignal,
+  projectSignal,
+  termsSignal,
+  toastSignal,
+} from "../signals";
 
-export default createStore([termsSignal, currentUserSignal, toastSignal]);
+export default createStore([
+  termsSignal,
+  currentUserSignal,
+  projectSignal,
+  toastSignal,
+  modalSignal,
+  networkSignal
+]);

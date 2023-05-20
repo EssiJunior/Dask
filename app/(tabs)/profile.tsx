@@ -1,23 +1,56 @@
-import { useSignal } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
+import { Ionicons } from "@expo/vector-icons";
 import { Dimensions, Text, View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Avatar from "../../components/avatars/Avatar";
 import Badge from "../../components/badges/Badge";
 import Button from "../../components/buttons/Button";
+import TouchableSurface from "../../components/buttons/TouchableSurface";
 import Dot from "../../components/dot/Dot";
 import TextInput from "../../components/inputs/TextInput";
 import HeaderText from "../../components/layouts/headers/HeaderText";
 import Typography from "../../components/text/Typography";
+import { DASK_USER_ID } from "../../constants";
 import Colors from "../../constants/Colors";
 import { UserDataType } from "../../gx/signals";
+import storage from "../../storage";
+import { useRouter } from "expo-router";
+import { ProjectsDataType } from "../../gx/signals/projects";
 
 const image = require("../../assets/images/image1.jpeg");
 const image2 = require("../../assets/images/image2.jpeg");
 
 export default function ProfileScreen() {
+  const router = useRouter();
+
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
+  const { projects } = useSignal<ProjectsDataType>("projects");
+  const { logout } = useActions("currentUser");
+  const { show: toast } = useActions("toast");
+
+  const handleLogout = async () => {
+    // Empty local storage
+    await storage.removeItem(DASK_USER_ID);
+
+    // Show toast
+    toast({ message: "You have been logged out", type: "info" });
+
+    // Logout
+    logout();
+
+    // Navigate to home
+    router.replace("/");
+  };
+
+  const filterProjects = (type: string) => {
+    const filteredProjects = projects.filter((project) => {
+      return project.type === type;
+    });
+
+    return filteredProjects;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,10 +60,12 @@ export default function ProfileScreen() {
           <ScrollView>
             <View style={styles.container}>
               <Avatar
-                source={image}
+                source={user.avatar}
                 size={120}
                 rounded={true}
                 style={{ marginTop: 20 }}
+                bgColor={user.color || "blue"}
+                letter={user.name[0]}
               />
               <View style={styles.myIDContainer}>
                 <Typography
@@ -49,38 +84,112 @@ export default function ProfileScreen() {
                 />
               </View>
 
+              <View
+                style={{
+                  width: "100%",
+                  paddingHorizontal: 20,
+                  paddingBottom: 10,
+                  marginTop: 20,
+                }}
+              >
+                <Typography
+                  text="Statistics"
+                  weight="semibold"
+                  fontSize={24}
+                  color={Colors.light.secondary}
+                />
+              </View>
+
               <View style={styles.projects}>
                 <Typography
-                  fontSize={20}
+                  fontSize={18}
                   weight="semibold"
                   text="Personal Projects"
-                  color={Colors.light.secondary}
+                  color={Colors.light.black}
                   style={styles.projectsText}
                 />
                 <Typography
                   fontSize={16}
                   weight="light"
-                  text="You have 9 personal projects"
-                  color={Colors.light.secondary}
+                  text={`You have ${
+                    filterProjects("personal").length
+                  } personal project${
+                    filterProjects("personal").length > 1 ? "s" : ""
+                  }`}
+                  color={Colors.light.black}
                   style={styles.projectsText}
                 />
               </View>
               <View style={styles.projects}>
                 <Typography
-                  fontSize={20}
+                  fontSize={18}
                   weight="semibold"
                   text="Shared Projects"
-                  color={Colors.light.secondary}
+                  color={Colors.light.black}
                   style={styles.projectsText}
                 />
                 <Typography
                   fontSize={16}
                   weight="light"
-                  text="You have 5 shared projects"
-                  color={Colors.light.secondary}
+                  text={`You have ${
+                    filterProjects("shared").length
+                  } shared project${
+                    filterProjects("shared").length > 1 ? "s" : ""
+                  }`}
+                  color={Colors.light.black}
                   style={styles.projectsText}
                 />
               </View>
+
+              <View
+                style={{
+                  width: "100%",
+                  paddingHorizontal: 20,
+                  paddingBottom: 10,
+                  marginTop: 30,
+                }}
+              >
+                <Typography
+                  text="Manage Account"
+                  weight="semibold"
+                  fontSize={24}
+                  color={Colors.light.secondary}
+                />
+              </View>
+
+              <View style={styles.rowBlock}>
+                <Ionicons
+                  name="person-outline"
+                  size={22}
+                  color={Colors.light.black}
+                />
+
+                <Typography
+                  fontSize={18}
+                  weight="semibold"
+                  text="Update profile"
+                  color={Colors.light.black}
+                  style={[styles.projectsText, { marginLeft: 10 }]}
+                />
+              </View>
+
+              <TouchableSurface onPress={handleLogout}>
+                <View style={styles.rowBlock}>
+                  <Ionicons
+                    name="log-out-outline"
+                    size={24}
+                    color={Colors.light.black}
+                  />
+
+                  <Typography
+                    fontSize={18}
+                    weight="semibold"
+                    text="Log out"
+                    color={Colors.light.black}
+                    style={[styles.projectsText, { marginLeft: 10 }]}
+                  />
+                </View>
+              </TouchableSurface>
             </View>
 
             {/* <Badge text="done" width={40} />
@@ -106,6 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.background,
     height: Dimensions.get("screen").height,
     width: Dimensions.get("screen").width,
+    marginBottom: 50,
   },
   myIDContainer: {
     width: "100%",
@@ -125,6 +235,15 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: Colors.light.grayNormal,
+    paddingVertical: 15,
+    width: "100%",
+  },
+  rowBlock: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center",
     borderTopWidth: 1,
     borderTopColor: Colors.light.grayNormal,

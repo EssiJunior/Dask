@@ -7,18 +7,34 @@ import Colors from "../../../constants/Colors";
 import MultiAvatars from "../../avatars/MultiAvartar";
 import { useRouter } from "expo-router";
 import Typography from "../../text/Typography";
+import Project from "../../../entities/project";
+import { UserDataType } from "../../../gx/signals/current-user";
+import { useSignal } from "@dilane3/gx";
 
-export default function HeaderProject() {
+type HeaderProjectProps = {
+  project: Project;
+};
+
+export default function HeaderProject({ project }: HeaderProjectProps) {
   const router = useRouter();
+
+  // Global state
+  const { user } = useSignal<UserDataType>("currentUser");
 
   // Some handlers
   const handleNavigateToMembers = () => {
-    router.push("/project/members");
+    router.push(`/project/members/${project.id}`);
+  };
+
+  const handleNavigateToProfile = () => {
+    router.push("/profile");
   };
 
   const handleGoBack = () => {
     router.back();
   };
+
+  const members = project.getMembers();
 
   return (
     <View style={styles.header}>
@@ -26,8 +42,8 @@ export default function HeaderProject() {
         rounded
         style={{
           borderRadius: 50,
-          width: 40,
-          height: 40,
+          width: 30,
+          height: 30,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -41,10 +57,17 @@ export default function HeaderProject() {
         />
       </TouchableSurface>
 
-      <TouchableSurface useForeground onPress={handleNavigateToMembers}>
-        <MultiAvatars />
-      </TouchableSurface>
-      {/* <Typography text="Hello" /> */}
+      {project.type === "shared" ? (
+        <TouchableSurface useForeground onPress={handleNavigateToMembers}>
+          <MultiAvatars sources={members} />
+        </TouchableSurface>
+      ) : (
+        user && (
+          <TouchableSurface onPress={handleNavigateToProfile}>
+            <Avatar size={30} bgColor={user.color || "blue"} letter={user.name[0]} />
+          </TouchableSurface>
+        )
+      )}
     </View>
   );
 }

@@ -17,8 +17,6 @@ export default function FloatingButton({
   left,
   ...props
 }: FloatingButtonProps) {
-  console.log({ bottom, right, top, left })
-
   return (
     <View
       style={{

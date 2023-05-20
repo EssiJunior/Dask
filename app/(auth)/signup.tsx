@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useActions } from "@dilane3/gx";
+import { useActions, useSignal } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import TextInput from "../../components/inputs/TextInput";
 import { ScrollView } from "react-native-gesture-handler";
@@ -19,6 +19,7 @@ import TouchableSurface from "../../components/buttons/TouchableSurface";
 import { object, string } from "yup";
 import { createUser } from "../../api/auth";
 import { sleep } from "../../utils";
+import { NetworkDataType, UserDataType } from "../../gx/signals";
 
 let schema = object({
   name: string().min(2).max(20).required(),
@@ -29,6 +30,13 @@ let schema = object({
 export default function SignUp() {
   const router = useRouter();
 
+  // Global actions
+  const { isInternetReachable } = useSignal<NetworkDataType>("network");
+  const { ready } = useSignal<UserDataType>("currentUser");
+
+  const { setReady } = useActions("currentUser");
+  const { show: toast } = useActions("toast");
+
   //   Local state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +44,7 @@ export default function SignUp() {
   const [seePassword, setSeePassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   //   UseEffects
   useEffect(() => {
@@ -45,6 +54,20 @@ export default function SignUp() {
       });
     }
   }, [success]);
+
+  useEffect(() => {
+    const check = async () => {
+      const { error } = await checkForm();
+
+      if (error) {
+        setError(true);
+      } else {
+        setError(false);
+      }
+    };
+
+    check();
+  }, [name, email, password]);
 
   // Handlers
   const signIn = async () => {
@@ -56,7 +79,7 @@ export default function SignUp() {
   };
 
   const handleChange = (value: string, name: string) => {
-    if (name === "email") setEmail(value);
+    if (name === "email") setEmail(value.toLowerCase());
     if (name === "password") setPassword(value);
     if (name === "name") setName(value);
   };
@@ -68,21 +91,45 @@ export default function SignUp() {
   const handleSubmit = async () => {
     const { value, error: checkError } = await checkForm();
 
+    if (!isInternetReachable) {
+      toast({
+        message: "Your are not connected",
+        type: "info",
+      });
+
+      return;
+    }
+
     if (value) {
       setLoading(true);
 
-      const { data, error } = await createUser({ name, email, password });
+      const response = await createUser({ name, email, password });
 
-      if (error) {
-        console.log(error);
+      if (response) {
+        const { data, error } = response;
+
+        if (error) {
+          console.log(error);
+
+          toast({
+            message: "Something went wrong on the server",
+            type: "error",
+          });
+        } else {
+          // Set global state
+          setReady(!ready);
+          setSuccess(true);
+        }
       } else {
-        console.log(data);
-        setSuccess(true);
+        console.log("Something went wrong");
       }
 
       setLoading(false);
     } else {
-      console.log(checkError);
+      toast({
+        message: checkError,
+        type: "error",
+      });
     }
   };
 
@@ -114,6 +161,14 @@ export default function SignUp() {
             style={styles.inputs}
             pv={10}
           />
+          <Typography
+            text="Provide at least 2 characters"
+            color={Colors.light.black}
+            weight="light"
+            fontSize={12}
+            style={{ marginBottom: 10 }}
+          />
+
           <TextInput
             value={email}
             onChange={(value) => handleChange(value, "email")}
@@ -121,6 +176,7 @@ export default function SignUp() {
             style={styles.inputs}
             pv={10}
           />
+          <Typography text="" />
 
           <View
             style={{
@@ -160,6 +216,13 @@ export default function SignUp() {
               />
             </TouchableSurface>
           </View>
+          <Typography
+            text="Provide at least 6 characters"
+            color={Colors.light.black}
+            weight="light"
+            fontSize={12}
+            style={{ marginBottom: 10 }}
+          />
         </View>
 
         {/* <View style={styles.otherMethods}>
@@ -209,7 +272,7 @@ export default function SignUp() {
             // onPress={handleSignUp}
             pv={12}
             onPress={handleSubmit}
-            disabled={loading}
+            disabled={error || loading}
             color={success ? Colors.light.green : Colors.light.primary}
           >
             {loading ? (
@@ -271,7 +334,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   inputs: {
-    marginBottom: 10,
+    marginBottom: 5,
     marginTop: 10,
     width: "100%",
   },

@@ -8,10 +8,14 @@ import {
   signInWithCustomToken,
   signInWithEmailAndPassword,
   signOut,
+  User as UserCredential,
 } from "firebase/auth";
 import { CreateUserDto, LoginUserDto } from "./type";
 import User from "../../entities/user";
-// import { sleep } from "app/utils/time";
+import storage from "../../storage";
+import UsersRepository from "../../storage/db/users";
+import { DASK_USER_ID } from "../../constants";
+import { generateColor } from "../../utils/index";
 
 /**
  * Find an admin
@@ -24,7 +28,18 @@ const findUser = async (uid: string) => {
     const userDoc = await getDoc(userDocumentRef);
 
     if (userDoc.exists()) {
-      return { data: userDoc.data() };
+      const data = userDoc.data();
+
+      const payload = {
+        uid,
+        name: data.name,
+        color: data.color,
+        email: data.email,
+        avatar: data.avatar,
+        createdAt: new Date(data.createdAt),
+      };
+
+      return { data: new User(payload) };
     }
 
     return { error: "User not found" };
@@ -42,22 +57,26 @@ const findUser = async (uid: string) => {
 const getCurrentUser = async (login: (user: any) => void) => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const { uid } = user;
+      const uid = user.uid;
 
-      const { data: userData, error } = await findUser(uid);
+      const { data: currentUser, error } = await findUser(uid);
 
-      if (userData) {
-        const payload = {
-          uid,
-          name: userData.name,
-          email: userData.email,
-          avatar: userData.avatar,
-          createdAt: new Date(userData.createdAt),
-        };
-
-        const currentUser = new User(payload);
-
+      if (currentUser) {
+        // Login the user
         login(currentUser);
+
+        // Save uid into the local storage
+        await storage.setItem(DASK_USER_ID, uid);
+
+        // Save user into the local database
+        await UsersRepository.insert({
+          uid: currentUser.uid,
+          name: currentUser.name,
+          color: currentUser.color || generateColor(),
+          email: currentUser.email,
+          avatar: currentUser.avatar,
+          createdAt: currentUser.createdAt.getTime(),
+        });
       } else {
         console.log(error);
       }
@@ -103,6 +122,7 @@ const createUser = async (payload: CreateUserDto) => {
     await setDoc(userDocument, {
       name,
       email,
+      color: generateColor(),
       createdAt,
       avatar: "",
     });
@@ -149,6 +169,49 @@ const loginUser = async (payload: LoginUserDto) => {
 };
 
 /**
+ * Login a user with a token
+ * @param {String} token
+ **/
+const loginWithToken = async (token: string) => {
+  try {
+    const credentials = await signInWithCustomToken(auth, token);
+
+    if (credentials) {
+      const { uid } = credentials.user;
+
+      const { data: userData, error } = await findUser(uid);
+
+      if (userData) {
+        const payload = {
+          uid,
+          name: userData.name,
+          color: userData.color,
+          email: userData.email,
+          avatar: userData.avatar,
+          createdAt: new Date(userData.createdAt),
+        };
+
+        const currentUser = new User(payload);
+
+        return { data: currentUser };
+      } else {
+        console.log(error);
+
+        return { error };
+      }
+    }
+
+    return { error: "User not found" };
+  } catch (err) {
+    console.log(err);
+
+    return {
+      error: "Something went wrong while trying to connect the admin",
+    };
+  }
+};
+
+/**
  * Signout a user
  * @returns {any}
  */
@@ -165,4 +228,11 @@ const logoutUser = async (): Promise<any> => {
   }
 };
 
-export { findUser, createUser, loginUser, logoutUser, getCurrentUser };
+export {
+  findUser,
+  createUser,
+  loginUser,
+  loginWithToken,
+  logoutUser,
+  getCurrentUser,
+};
