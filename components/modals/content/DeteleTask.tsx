@@ -1,5 +1,5 @@
 import { useActions, useSignal } from "@dilane3/gx";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
 import Colors from "../../../constants/Colors";
 import { ModalStateType, NetworkDataType } from "../../../gx/signals";
@@ -8,8 +8,13 @@ import Button from "../../buttons/Button";
 import Typography from "../../text/Typography";
 import { ProjectsDataType } from "../../../gx/signals/projects";
 import { deleteTaskById } from "../../../api/tasks";
+import { WebsocketContext } from "../../../contexts/Websocket";
+import { WebSocketEvent } from "../../../contexts/enum";
 
 export default function DeleteTask() {
+  // Context
+  const { dispatch } = useContext(WebsocketContext);
+
   // Global state
   const {
     data: { projectType, projectId, taskId },
@@ -60,14 +65,14 @@ export default function DeleteTask() {
 
         toast({
           message: "Your are not connected",
-          type: "info"
-        })
+          type: "info",
+        });
 
         return;
       }
 
       // Delete task from a shared project
-      const { data, error } = await deleteTaskById(taskId);
+      const { error } = await deleteTaskById(taskId);
 
       setLoading(false);
 
@@ -84,6 +89,15 @@ export default function DeleteTask() {
 
         // Delete task from global state
         removeTask({ taskId, projectId });
+
+        // Send event to websocket
+        dispatch({
+          type: WebSocketEvent.REMOVE_TASK,
+          payload: {
+            taskId,
+            projectId,
+          },
+        });
 
         // Close modal
         close();

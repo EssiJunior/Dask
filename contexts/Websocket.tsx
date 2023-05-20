@@ -25,7 +25,7 @@ export default function WebsocketProvider({
   const { projects } = useSignal<ProjectsDataType>("projects");
   const { isInternetReachable } = useSignal<NetworkDataType>("network");
 
-  const { addTask } = useActions("projects");
+  const { addTask, removeTask } = useActions("projects");
 
   // Use Memo section
 
@@ -53,8 +53,6 @@ export default function WebsocketProvider({
 
         console.log(`connected as ${user.name}`);
 
-        console.log("sharedProjects: ", sharedProjects)
-
         // Join projects rooms
         socket.emit(WebSocketEvent.JOIN, {
           userId: user.uid,
@@ -68,12 +66,8 @@ export default function WebsocketProvider({
 
   useEffect(() => {
     socket.on("connect", () => {
-      console.log("connected");
-
       if (user) {
         console.log(`connected as ${user.name}`);
-
-        console.log("sharedProjects: ", sharedProjects)
 
         // Join projects rooms
         socket.emit(WebSocketEvent.JOIN, {
@@ -99,18 +93,25 @@ export default function WebsocketProvider({
       socket.on(WebSocketEvent.ADD_TASK, async (data) => {
         const { taskId, projectId } = data;
 
-        console.log("Received: ", data);
-
         // Get task from firebase
         const { data: task } = await findTaskById(taskId);
 
         // Add task to global state
         addTask({ projectId, task });
       });
+
+      // On delete task
+      socket.on(WebSocketEvent.REMOVE_TASK, (data) => {
+        const { taskId, projectId } = data;
+
+        // Delete task from global state
+        removeTask({ projectId, taskId });
+      });
     }
 
     return () => {
       socket.off(WebSocketEvent.ADD_TASK);
+      socket.off(WebSocketEvent.REMOVE_TASK);
     }
   }, [user])
 
@@ -126,21 +127,16 @@ export default function WebsocketProvider({
         break;
 
       case WebSocketEvent.ADD_TASK:
-        const { taskId, projectId } = action.payload;
-
-        console.log(action.payload);
-
-        socket.emit(WebSocketEvent.ADD_TASK, {
-          taskId,
-          projectId,
-        });
+        socket.emit(WebSocketEvent.ADD_TASK, action.payload);
 
         break;
 
       case WebSocketEvent.UPDATE_TASK:
         break;
 
-      case WebSocketEvent.DELETE_TASK:
+      case WebSocketEvent.REMOVE_TASK:
+        socket.emit(WebSocketEvent.REMOVE_TASK, action.payload);
+
         break;
 
       case WebSocketEvent.NEW_PROJECT_MEMBER:
