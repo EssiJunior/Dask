@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCurrentUser } from "../api/auth";
 import { useActions, useSignal } from "@dilane3/gx";
-import { NetworkDataType, UserDataType } from "../gx/signals";
+import { NetworkDataType, TermsDataType, UserDataType } from "../gx/signals";
 import storage from "../storage";
 import UsersRepository from "../storage/db/users";
 import { DASK_USER_ID } from "../constants";
@@ -11,13 +11,17 @@ export default function useAuth() {
   const { user, ready } = useSignal<UserDataType>("currentUser");
   const { isInternetReachable, ready: isNetworkReady } =
     useSignal<NetworkDataType>("network");
+  const { read: termsRead } = useSignal<TermsDataType>("terms");
 
   const { login } = useActions("currentUser");
   const { show: toast } = useActions("toast");
 
+  // Local state
+  const [isConnecting, setIsConnecting] = useState(false);
+
   useEffect(() => {
-    if (!user) handleGetCurrentUser();
-  }, [ready, isNetworkReady]);
+    if (!user && termsRead) handleGetCurrentUser();
+  }, [ready, isNetworkReady, termsRead]);
 
   const handleGetCurrentUser = async () => {
     const uid = await storage.getItem(DASK_USER_ID);
@@ -35,7 +39,11 @@ export default function useAuth() {
           type: "info",
         });
       } else {
-        if (isNetworkReady) getCurrentUser(login);
+        if (isNetworkReady && !isConnecting) {
+          setIsConnecting(true);
+          
+          getCurrentUser(login);
+        }
       }
     }
   };

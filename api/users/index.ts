@@ -1,6 +1,6 @@
 // Users operations
 import { auth } from "../../firebase";
-import { getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { getDoc, getDocs, or, query, setDoc, where } from "firebase/firestore";
 import { getDocumentReference } from "..";
 import {
   createUserWithEmailAndPassword,
@@ -27,7 +27,10 @@ export const findUserByEmail = async (email: string) => {
   try {
     const querySnapshot = query(
       usersCollectionRef,
-      where("email", ">=", email),
+      or(
+        where("email", ">=", "bel"),
+        where("email", "<", "bem")
+      ),
     );
 
     const snapshot = await getDocs(querySnapshot);

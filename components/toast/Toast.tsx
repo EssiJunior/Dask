@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { Dimensions, View } from "react-native";
 import Colors from "../../constants/Colors";
 import Typography from "../text/Typography";
 
@@ -30,7 +30,7 @@ export default function Toast({ message, type }: ToastProps) {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-start",
-        width: "80%"
+        width: Dimensions.get('screen').width - 40,
       }}
     >
       <Ionicons 

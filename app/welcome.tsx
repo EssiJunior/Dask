@@ -33,6 +33,10 @@ export default function WelcomeScreen() {
       // Initialize the database schema
       await initDBSchema();
 
+      await storage.setItem(READ_TERMS, READ_TERMS);
+
+      setTermsRead(true);
+
       setLoading(false);
 
       router.replace("/");
@@ -46,16 +50,16 @@ export default function WelcomeScreen() {
   // Handlers
   const toggleCheckbox = () => setChecked(!checked);
 
-  const handleContinue = async () => {
-    await storage.setItem(READ_TERMS, READ_TERMS);
-
-    setTermsRead(true);
+  const handleContinue = () => {
     setLoading(true);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center" }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ alignItems: "center" }}
+      >
         <View style={styles.imgContent}>
           <Image
             source={require("../assets/illustrations/welcome_illustration.png")}
@@ -70,7 +74,7 @@ export default function WelcomeScreen() {
           style={styles.title}
         />
         <Typography
-          text="Organize your personal tasks easily and also work with other person nicely."
+          text="Organize your personal tasks into projects easily and also, collaborate with others."
           color={Colors.light.gray}
           weight="light"
           style={styles.paragraph}
@@ -89,11 +93,13 @@ export default function WelcomeScreen() {
             text="Agree with the "
             color={Colors.light.gray}
             weight="bold"
+            fontSize={14}
           />
           <Typography
             text="terms and conditions"
             color={Colors.light.primary}
             weight="bold"
+            fontSize={14}
           />
         </View>
 
@@ -131,9 +137,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "white",
-    height: Dimensions.get("screen").height,
-    width: Dimensions.get("screen").width,
+    flex: 1,
+    width: Dimensions.get("window").width,
+    backgroundColor: Colors.light.background,
   },
   image: {
     width: "80%",
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   imgContent: {
-    display: "flex",
+    width: Dimensions.get("window").width,
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 10,
@@ -158,11 +164,11 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   agree: {
-    display: "flex",
+    width: '100%',
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
-    margin: 30,
+    marginVertical: 30
   },
   validation: {
     display: "flex",
