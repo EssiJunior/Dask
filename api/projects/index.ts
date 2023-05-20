@@ -7,6 +7,7 @@ import {
   where,
   getDoc,
   updateDoc,
+  or,
 } from "firebase/firestore";
 import { getCollectionReference, getDocumentReference } from "..";
 import { CreateProjectDto } from "./type";
@@ -67,9 +68,19 @@ export const findAllProjects = async (user: User) => {
   const projectsRef = getCollectionReference("projects");
   const userDocRef = getDocumentReference(user.uid, "users");
 
+  console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
   try {
     // Make a query to get all projects where the user is a member
-    const querySnapshot = query(projectsRef, where("owner", "==", userDocRef));
+    const querySnapshot = query(
+      projectsRef,
+      or(
+        where("owner", "==", userDocRef),
+        where("members", "array-contains", userDocRef)
+      )
+    );
+
+    console.log({userDocRef})
 
     const snapshot = await getDocs(querySnapshot);
 

@@ -7,8 +7,12 @@ export default function useNetworkStats() {
   const { changeNetworkStats } = useActions("network")
 
   useEffect(() => {
+    const getStats = async () => {
+      await getNetworkStats();
+    }
+
     const timer = setInterval(() => {
-      getNetworkStats();
+      getStats();
     }, 10000);
 
     return () => {

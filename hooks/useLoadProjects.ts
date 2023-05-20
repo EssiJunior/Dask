@@ -15,6 +15,9 @@ export default function useLoadProjects() {
   const { loadProjects, setSharedPostsLoaded } = useActions("projects");
 
   useEffect(() => {
+    console.log({ sharedPostsLoaded, ready })
+
+
     if (!sharedPostsLoaded) {
       // Load projects
       handleLoadProjects(user);

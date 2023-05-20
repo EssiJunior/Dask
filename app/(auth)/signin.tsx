@@ -110,11 +110,21 @@ export default function SignIn() {
         setSuccess(true);
       } else {
         console.log(error);
+
+        toast({
+          message: "Check your email and password",
+          type: "error",
+        });
       }
 
       setLoading(false);
     } else {
       console.log(checkError);
+
+      toast({
+        message: "Verify your email and password",
+        type: "error"
+      })
     }
   };
 

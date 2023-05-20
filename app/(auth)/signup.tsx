@@ -94,8 +94,8 @@ export default function SignUp() {
     if (!isInternetReachable) {
       toast({
         message: "Your are not connected",
-        type: "info"
-      })
+        type: "info",
+      });
 
       return;
     }
@@ -110,6 +110,11 @@ export default function SignUp() {
 
         if (error) {
           console.log(error);
+
+          toast({
+            message: "Something went wrong on the server",
+            type: "error",
+          });
         } else {
           // Set global state
           setReady(!ready);
@@ -122,6 +127,11 @@ export default function SignUp() {
       setLoading(false);
     } else {
       console.log(checkError);
+
+      toast({
+        message: checkError,
+        type: "error",
+      });
     }
   };
 
@@ -168,9 +178,7 @@ export default function SignUp() {
             style={styles.inputs}
             pv={10}
           />
-          <Typography
-            text=""
-          />
+          <Typography text="" />
 
           <View
             style={{
