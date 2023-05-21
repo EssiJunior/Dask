@@ -94,6 +94,13 @@ export default function ChangeTaskStatus() {
           // Update the status in the global state
           changeTaskStatus({ projectId, taskId, status });
 
+          close();
+          
+          toast({
+            type: "success",
+            message: "The status has been changed",
+          });
+          
           // Dispatch the event to the websocket
           dispatch({
             type: WebSocketEvent.UPDATE_TASK,
@@ -104,13 +111,6 @@ export default function ChangeTaskStatus() {
                 status,
               },
             },
-          });
-
-          close();
-
-          toast({
-            type: "success",
-            message: "The status has been changed",
           });
         }
       }

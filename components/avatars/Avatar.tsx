@@ -2,8 +2,6 @@ import { Image, ImageSourcePropType, View } from "react-native";
 import Typography from "../text/Typography";
 import { capitalize } from "../../utils/index";
 
-const image = require("../../assets/images/image1.jpeg");
-
 const randomUriImage = "https://picsum.photos/200/300";
 
 export type AvatarProps = {

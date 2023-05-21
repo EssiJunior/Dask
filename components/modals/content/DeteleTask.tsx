@@ -90,6 +90,9 @@ export default function DeleteTask() {
         // Delete task from global state
         removeTask({ taskId, projectId });
 
+        // Close modal
+        close();
+        
         // Send event to websocket
         dispatch({
           type: WebSocketEvent.REMOVE_TASK,
@@ -98,9 +101,6 @@ export default function DeleteTask() {
             projectId,
           },
         });
-
-        // Close modal
-        close();
       }
     }
   };

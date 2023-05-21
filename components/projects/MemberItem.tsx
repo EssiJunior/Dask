@@ -6,6 +6,7 @@ import Colors from "../../constants/Colors";
 import Avatar from "../avatars/Avatar";
 import User from "../../entities/user";
 import { capitalize } from "../../utils/index";
+import Animeted, { ZoomInEasyDown, ZoomOutEasyDown } from "react-native-reanimated";
 
 type MemberItemProps = {
   member: User;
@@ -31,7 +32,10 @@ export default function MemberItem({
       disabled={disabled}
       onPress={onPress}
     >
-      <View style={styles.container}>
+      <Animeted.View 
+        entering={ZoomInEasyDown}
+        exiting={ZoomOutEasyDown}
+        style={styles.container}>
         <View
           style={{
             flexDirection: "row",
@@ -70,7 +74,7 @@ export default function MemberItem({
             weight="semibold"
           />
         )}
-      </View>
+      </Animeted.View>
     </TouchableSurface>
   );
 }

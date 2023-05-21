@@ -149,7 +149,7 @@ export default function Members() {
 
   const filterMembersPerDate = () => {
     const sorted = members.sort((a, b) => {
-      return b.createdAt.getTime() - a.createdAt.getTime();
+      return a.createdAt.getTime() - b.createdAt.getTime();
     });
 
     return sorted;

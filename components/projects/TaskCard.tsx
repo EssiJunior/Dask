@@ -172,6 +172,7 @@ export default function TaskCard({ task, type, delay }: TaskCardProps) {
         marginBottom: 20,
       }}
       onPress={handleNavigateToTask}
+      disabled
     >
       <GestureDetector gesture={composedGesture}>
         <Animated.View
@@ -226,7 +227,7 @@ export default function TaskCard({ task, type, delay }: TaskCardProps) {
                 ))} */}
 
               <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-                <TouchableSurface
+                {/* <TouchableSurface
                   rounded
                   style={{
                     borderRadius: 50,
@@ -242,7 +243,7 @@ export default function TaskCard({ task, type, delay }: TaskCardProps) {
                     size={20}
                     color={Colors.light.gray}
                   />
-                </TouchableSurface>
+                </TouchableSurface> */}
 
                 <TouchableSurface
                   rounded

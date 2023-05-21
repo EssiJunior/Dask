@@ -64,7 +64,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   // Global state
   const { read: termsRead, loading: termsReadLoading } = useSignal("terms");
-  const { isInternetReachable, ready } = useSignal<NetworkDataType>("network");
+  const { isInternetReachable, isConnected, ready } = useSignal<NetworkDataType>("network");
   const { show: toast } = useActions("toast");
 
   // Global actions
@@ -90,13 +90,13 @@ function RootLayoutNav() {
 
   useEffect(() => {
     if (ready) {
-      if (isInternetReachable) {
-        toast({ message: "backing online", type: "success" });
+      if (isInternetReachable && isConnected) {
+        toast({ message: "Your are online", type: "success" });
       } else {
         toast({ message: "Check your internet connection", type: "info" });
       }
     }
-  }, [isInternetReachable, ready]);
+  }, [isInternetReachable, isConnected, ready]);
 
   useEffect(() => {
     const navigateToWelcomeScreen = async () => {

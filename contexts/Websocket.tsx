@@ -14,7 +14,7 @@ export const WebsocketContext = createContext<WebSocketContextData>({
   dispatch: (action: WebSocketContextAction) => {},
 });
 
-let socket = io("http://192.168.43.31:3333");
+let socket = io("https://dask-websocket.onrender.com");
 
 const notificationSound = require("../assets/sounds/pop.mp3");
 

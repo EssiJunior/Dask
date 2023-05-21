@@ -5,7 +5,7 @@ import {
   ParamListBase,
   NavigationHelpers,
 } from "@react-navigation/native";
-import { Link, useRouter } from 'expo-router';
+import { Link, useRouter } from "expo-router";
 import React from "react";
 import {
   MaterialIcons,
@@ -22,6 +22,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { UserDataType } from "../../../gx/signals";
 import { useSignal } from "@dilane3/gx";
+import Badge from "../../badges/Badge";
 
 type TabBarProps = {
   state: TabNavigationState<ParamListBase>;
@@ -119,20 +120,26 @@ export function TabBar({ state, navigation }: TabBarProps) {
         </TabBarIcon>
       </Link>
 
-      <Link href="setting">
+      <Link href="setting" disabled>
         <TabBarIcon
           onPress={() => handleTabPress("setting")}
           active={tabName === "setting"}
+          disabled
         >
+          <View
+            style={{
+              position: "absolute",
+              top: 3,
+              right: -13,
+            }}
+          >
+            <Badge width={35} text="soon" fontSize={10} padding={1} />
+          </View>
           <Ionicons
             name={tabName === "setting" ? "settings-sharp" : "settings-outline"}
             size={28}
             style={{ marginBottom: -3 }}
-            color={
-              tabName === "setting"
-                ? Colors.light.primary
-                : Colors.light.tabIconDefault
-            }
+            color={Colors.light.grayNormal}
           />
         </TabBarIcon>
       </Link>
@@ -147,10 +154,12 @@ function TabBarIcon({
   children,
   onPress,
   active,
+  disabled,
 }: {
   children?: React.ReactNode;
   onPress?: () => void;
   active: boolean;
+  disabled?: boolean;
 }) {
   // Shared value
   const activeValue = useSharedValue(active ? 1 : 0);
@@ -197,6 +206,7 @@ function TabBarIcon({
             paddingHorizontal: 20,
             paddingVertical: 14,
           }}
+          disabled={disabled}
         >
           {children}
         </TouchableSurface>

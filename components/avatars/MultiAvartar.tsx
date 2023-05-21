@@ -6,7 +6,7 @@ import Typography from "../text/Typography";
 import { useMemo } from "react";
 import User from "../../entities/user";
 
-const image = require("../../assets/images/image1.jpeg");
+const image = "https://picsum.photos/200/300";
 
 type MultiAvatarsProps = AvatarProps & {
   size?: number;

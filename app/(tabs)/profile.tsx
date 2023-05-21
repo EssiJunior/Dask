@@ -18,9 +18,6 @@ import storage from "../../storage";
 import { useRouter } from "expo-router";
 import { ProjectsDataType } from "../../gx/signals/projects";
 
-const image = require("../../assets/images/image1.jpeg");
-const image2 = require("../../assets/images/image2.jpeg");
-
 export default function ProfileScreen() {
   const router = useRouter();
 

@@ -9,8 +9,11 @@ import { DASK_USER_ID } from "../constants";
 export default function useAuth() {
   // Global state
   const { user, ready } = useSignal<UserDataType>("currentUser");
-  const { isInternetReachable, ready: isNetworkReady } =
-    useSignal<NetworkDataType>("network");
+  const {
+    isInternetReachable,
+    isConnected,
+    ready: isNetworkReady,
+  } = useSignal<NetworkDataType>("network");
   const { read: termsRead } = useSignal<TermsDataType>("terms");
 
   const { login } = useActions("currentUser");
@@ -21,7 +24,7 @@ export default function useAuth() {
 
   useEffect(() => {
     if (!user && termsRead) handleGetCurrentUser();
-  }, [ready, isNetworkReady, termsRead]);
+  }, [ready, isNetworkReady, termsRead, isConnected, isInternetReachable]);
 
   const handleGetCurrentUser = async () => {
     const uid = await storage.getItem(DASK_USER_ID);
@@ -39,9 +42,9 @@ export default function useAuth() {
           type: "info",
         });
       } else {
-        if (isNetworkReady && !isConnecting) {
+        if (isNetworkReady && isConnected && !isConnecting) {
           setIsConnecting(true);
-          
+
           getCurrentUser(login);
         }
       }

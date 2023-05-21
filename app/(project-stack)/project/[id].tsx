@@ -134,7 +134,7 @@ export default function Project() {
 
                   {user && owner && user.uid === owner.uid && (
                     <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-                      <TouchableSurface
+                      {/* <TouchableSurface
                         rounded
                         style={{
                           borderRadius: 50,
@@ -150,7 +150,7 @@ export default function Project() {
                           size={20}
                           color={Colors.light.gray}
                         />
-                      </TouchableSurface>
+                      </TouchableSurface> */}
 
                       <TouchableSurface
                         rounded

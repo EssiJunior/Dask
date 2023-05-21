@@ -13,7 +13,7 @@ export default function useNetworkStats() {
 
     const timer = setInterval(() => {
       getStats();
-    }, 10000);
+    }, 2000);
 
     return () => {
       clearInterval(timer);
