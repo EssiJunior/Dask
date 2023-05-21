@@ -24,8 +24,10 @@ export default function ProfileScreen() {
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
   const { projects } = useSignal<ProjectsDataType>("projects");
+
   const { logout } = useActions("currentUser");
   const { show: toast } = useActions("toast");
+  const { removeAllSharedProjects } = useActions("projects");
 
   const handleLogout = async () => {
     // Empty local storage
@@ -33,6 +35,9 @@ export default function ProfileScreen() {
 
     // Show toast
     toast({ message: "You have been logged out", type: "info" });
+
+    // Remove all shared projects
+    removeAllSharedProjects();
 
     // Logout
     logout();

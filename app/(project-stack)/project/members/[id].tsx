@@ -193,7 +193,7 @@ export default function Members() {
               }}
             >
               <TextInput
-                placeholder="Invite new persons"
+                placeholder="Invite a new member"
                 fontSize={16}
                 width={Dimensions.get("window").width - 130}
                 pv={5}

@@ -91,7 +91,7 @@ function RootLayoutNav() {
   useEffect(() => {
     if (ready) {
       if (isInternetReachable && isConnected) {
-        toast({ message: "Your are online", type: "success" });
+        toast({ message: "You are online", type: "success" });
       } else {
         toast({ message: "Check your internet connection", type: "info" });
       }

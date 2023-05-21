@@ -27,6 +27,16 @@ export const projectSignal = createSignal<ProjectsDataType>({
       return state;
     },
 
+    removeAllSharedProjects: (state) => {
+      state.projects = state.projects.filter(
+        (project) => project.type !== "shared"
+      );
+      state.sharedPostsLoaded = false;
+      state.loading = false;
+
+      return state;
+    },
+
     setSharedPostsLoaded: (state, payload: boolean) => {
       state.sharedPostsLoaded = payload;
 

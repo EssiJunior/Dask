@@ -18,6 +18,7 @@ export const ProjectSkeleton = () => {
             borderColor: Colors.light.background,
             backgroundColor: Colors.light.grayNormal,
           }}
+          skeletonStyle={{ backgroundColor: Colors.light.grayNormal }}
         />
       </View>
 
