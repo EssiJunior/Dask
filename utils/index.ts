@@ -41,7 +41,7 @@ export const formatDate = (date: Date) => {
   } else if (hours >= 1 && hours < 24) {
     return `${hours}h ago`;
   } else if (hours >= 24 && hours < 48) {
-    return `Since Yesterday`;
+    return `Yesterday`;
   }
 
   const months = [
@@ -59,7 +59,7 @@ export const formatDate = (date: Date) => {
     "Dec.",
   ];
 
-  return `Since ${months[month]} ${day}, ${year}`;
+  return `${months[month]} ${day}, ${year}`;
 };
 
 export const generateUID = () => {

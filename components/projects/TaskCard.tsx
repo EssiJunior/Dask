@@ -177,7 +177,7 @@ export default function TaskCard({ task, type }: TaskCardProps) {
             </View>
 
             <View style={styles.bottom}>
-              {type === "shared" &&
+              {/* {type === "shared" &&
                 (task.workers.length === 0 ? (
                   <TouchableSurface
                     rounded
@@ -201,7 +201,7 @@ export default function TaskCard({ task, type }: TaskCardProps) {
                   >
                     <MultiAvatars sources={workers} size={30} />
                   </TouchableSurface>
-                ))}
+                ))} */}
 
               <View style={{ flexDirection: "row", marginLeft: "auto" }}>
                 <TouchableSurface

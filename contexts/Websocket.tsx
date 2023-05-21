@@ -1,19 +1,22 @@
 import { useAction, useActions, useSignal } from "@dilane3/gx";
-import { createContext, useEffect, useMemo } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
-import { NetworkDataType, UserDataType } from "../gx/signals";
+import { NetworkDataType, ToastDataType, UserDataType } from "../gx/signals";
 import { WebSocketEvent } from "./enum";
 import { WebSocketContextAction, WebSocketContextData } from "./type";
 import { ProjectsDataType } from "../gx/signals/projects";
 import { findTaskById } from "../api/tasks";
 import { findUserByEmail } from "../api/users";
 import { findUser } from "../api/auth";
+import { Audio } from "expo-av";
 
 export const WebsocketContext = createContext<WebSocketContextData>({
   dispatch: (action: WebSocketContextAction) => {},
 });
 
-let socket = io("http://192.168.43.237:3333");
+let socket = io("http://192.168.43.31:3333");
+
+const notificationSound = require("../assets/sounds/pop.mp3");
 
 type WebSocketProviderProps = {
   children: React.ReactNode;
@@ -26,9 +29,13 @@ export default function WebsocketProvider({
   const { user } = useSignal<UserDataType>("currentUser");
   const { projects } = useSignal<ProjectsDataType>("projects");
   const { isInternetReachable } = useSignal<NetworkDataType>("network");
+  const { show: toast } = useActions("toast");
 
   const { addTask, removeTask, changeTaskStatus, addMember } =
     useActions("projects");
+
+  // Local state
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
   // Use Memo section
 
@@ -47,6 +54,15 @@ export default function WebsocketProvider({
   }, [projects]);
 
   // Use Effect section
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   useEffect(() => {
     if (user) {
@@ -101,18 +117,36 @@ export default function WebsocketProvider({
 
         // Add task to global state
         addTask({ projectId, task });
+
+        // Play sound
+        playSound();
+
+        // Show toast
+        toast({
+          type: "info",
+          message: "New task added",
+        });
       });
 
       // On delete task
-      socket.on(WebSocketEvent.REMOVE_TASK, (data) => {
+      socket.on(WebSocketEvent.REMOVE_TASK, async (data) => {
         const { taskId, projectId } = data;
 
         // Delete task from global state
         removeTask({ projectId, taskId });
+
+        // Play sound
+        playSound();
+
+        // Show toast
+        toast({
+          type: "info",
+          message: "Task deleted",
+        });
       });
 
       // On update task
-      socket.on(WebSocketEvent.UPDATE_TASK, (data) => {
+      socket.on(WebSocketEvent.UPDATE_TASK, async (data) => {
         const {
           task: { id: taskId, status },
           project: projectId,
@@ -121,13 +155,20 @@ export default function WebsocketProvider({
         if (status) {
           // Update task from global state
           changeTaskStatus({ projectId, taskId, status });
+
+          // Play sound
+          playSound();
+
+          // Show toast
+          toast({
+            type: "info",
+            message: "Task status changed",
+          });
         }
       });
 
       // On new project member
       socket.on(WebSocketEvent.NEW_PROJECT_MEMBER, async (data) => {
-        console.log("new member", data);
-
         const { projectId, newMemberId } = data;
 
         // Get user from firebase
@@ -137,6 +178,15 @@ export default function WebsocketProvider({
           // Add user to project
           addMember({ projectId, member: user });
         }
+
+        // Play sound
+        playSound();
+
+        // Show toast
+        toast({
+          type: "info",
+          message: "New member added",
+        });
       });
     }
 
@@ -182,6 +232,18 @@ export default function WebsocketProvider({
         break;
     }
   };
+
+  // Some handlers
+
+  async function playSound() {
+    console.log("Playing Sound");
+
+    const { sound } = await Audio.Sound.createAsync(notificationSound);
+
+    setSound(sound);
+
+    if (sound) await sound.playAsync();
+  }
 
   return (
     <WebsocketContext.Provider value={{ dispatch }}>

@@ -109,6 +109,7 @@ export default function Project() {
                     text={projectDate}
                     weight="light"
                     color={Colors.light.gray}
+                    fontSize={14}
                   />
 
                   {user && owner && user.uid === owner.uid && (

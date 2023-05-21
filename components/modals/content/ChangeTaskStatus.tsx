@@ -12,6 +12,7 @@ import { updateTaskStatus } from "../../../api/tasks";
 import { sleep } from "../../../utils";
 import { WebsocketContext } from "../../../contexts/Websocket";
 import { WebSocketEvent } from "../../../contexts/enum";
+import TouchableSurface from "../../buttons/TouchableSurface";
 
 export default function ChangeTaskStatus() {
   // Context
@@ -148,70 +149,83 @@ export default function ChangeTaskStatus() {
           marginTop: 30,
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            marginBottom: 10,
-            alignItems: "center",
-          }}
+        <TouchableSurface
+          onPress={() => handleSelectNewStatus(TaskStatus.TODO)}
+          style={{ justifyContent: "center", marginBottom: 10 }}
         >
-          <RadioButton
-            color={Colors.light.primary}
-            value={TaskStatus.TODO}
-            status={status === TaskStatus.TODO ? "checked" : "unchecked"}
-            onPress={() => handleSelectNewStatus(TaskStatus.TODO)}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <RadioButton
+              color={Colors.light.primary}
+              value={TaskStatus.TODO}
+              status={status === TaskStatus.TODO ? "checked" : "unchecked"}
+              onPress={() => handleSelectNewStatus(TaskStatus.TODO)}
+            />
 
-          <Typography
-            text="To do"
-            fontSize={16}
-            weight="normal"
-            color={Colors.light.black}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            marginBottom: 10,
-            alignItems: "center",
-          }}
+            <Typography
+              text="To do"
+              fontSize={16}
+              weight="normal"
+              color={Colors.light.black}
+            />
+          </View>
+        </TouchableSurface>
+
+        <TouchableSurface
+          onPress={() => handleSelectNewStatus(TaskStatus.PENDING)}
+          style={{ justifyContent: "center", marginBottom: 10 }}
         >
-          <RadioButton
-            color={Colors.light.primary}
-            value={TaskStatus.PENDING}
-            status={status === TaskStatus.PENDING ? "checked" : "unchecked"}
-            onPress={() => handleSelectNewStatus(TaskStatus.PENDING)}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <RadioButton
+              color={Colors.light.primary}
+              value={TaskStatus.PENDING}
+              status={status === TaskStatus.PENDING ? "checked" : "unchecked"}
+              onPress={() => handleSelectNewStatus(TaskStatus.PENDING)}
+            />
 
-          <Typography
-            text="Pending"
-            fontSize={16}
-            weight="normal"
-            color={Colors.light.black}
-          />
-        </View>
+            <Typography
+              text="Pending"
+              fontSize={16}
+              weight="normal"
+              color={Colors.light.black}
+            />
+          </View>
+        </TouchableSurface>
 
-        <View
-          style={{
-            flexDirection: "row",
-            marginBottom: 10,
-            alignItems: "center",
-          }}
+        <TouchableSurface
+          onPress={() => handleSelectNewStatus(TaskStatus.DONE)}
+          style={{ justifyContent: "center", marginBottom: 10 }}
         >
-          <RadioButton
-            color={Colors.light.primary}
-            value={TaskStatus.DONE}
-            status={status === TaskStatus.DONE ? "checked" : "unchecked"}
-            onPress={() => handleSelectNewStatus(TaskStatus.DONE)}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <RadioButton
+              color={Colors.light.primary}
+              value={TaskStatus.DONE}
+              status={status === TaskStatus.DONE ? "checked" : "unchecked"}
+              onPress={() => handleSelectNewStatus(TaskStatus.DONE)}
+            />
 
-          <Typography
-            text="Done"
-            fontSize={16}
-            weight="normal"
-            color={Colors.light.black}
-          />
-        </View>
+            <Typography
+              text="Done"
+              fontSize={16}
+              weight="normal"
+              color={Colors.light.black}
+            />
+          </View>
+        </TouchableSurface>
       </View>
 
       <View style={{ flexDirection: "row", marginTop: 32 }}>
@@ -255,6 +269,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     alignItems: "center",
-    padding: 20
+    padding: 20,
   },
 });

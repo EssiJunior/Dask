@@ -42,15 +42,25 @@ export default function ProgressBar({ project }: ProgressBarProps) {
     const completedPercentage = (completedTasks / totalTasks) * 100;
     const pendingPercentage = (pendingTasks / totalTasks) * 100;
 
+    let rounded = false;
+
+    if (pendingPercentage === 0) {
+      rounded = true;
+    }
+
     // Push to progress array
     progress.push({
       value: completedPercentage,
       color: Colors.light.green,
+      rounded,
+      type: TaskStatus.DONE,
     });
 
     progress.push({
       value: pendingPercentage,
       color: Colors.light.primary,
+      rounded,
+      type: TaskStatus.PENDING,
     });
 
     return progress;
@@ -69,14 +79,23 @@ export default function ProgressBar({ project }: ProgressBarProps) {
 
       <View style={styles.progressBody}>
         {getProgress().map((item, index) => (
-          <ProgressValue key={index} value={item.value} color={item.color} />
+          <ProgressValue key={index} progress={item} />
         ))}
       </View>
     </View>
   );
 }
 
-const ProgressValue = ({ value, color }: { value: number; color: string }) => {
+const ProgressValue = ({
+  progress: { value, color, rounded, type },
+}: {
+  progress: {
+    value: number;
+    color: string;
+    rounded: boolean;
+    type: TaskStatus;
+  };
+}) => {
   // Animated value
   const width = useSharedValue(value);
 
@@ -85,16 +104,39 @@ const ProgressValue = ({ value, color }: { value: number; color: string }) => {
   }, [value]);
 
   // Animated style
-  const animatedStyle = useAnimatedStyle(() => ({
-    width: `${width.value}%`,
-    backgroundColor: color,
-  }), [value]);
+  const animatedStyle = useAnimatedStyle(
+    () => ({
+      width: `${width.value}%`,
+      backgroundColor: color,
+    }),
+    [value]
+  );
 
   const handleUpdateWidth = (value: number) => {
     "worklet";
 
     width.value = withSpring(value, { damping: 10 });
-  }
+  };
 
-  return <Animated.View style={[animatedStyle, styles.progress]} />;
+  const getBorderRadius = () => {
+    if (rounded) {
+      if (type === TaskStatus.DONE) {
+        return { borderTopRightRadius: 10, borderBottomRightRadius: 10 };
+      }
+    } else {
+      if (type === TaskStatus.DONE) {
+        return { borderTopRightRadius: 0, borderBottomRightRadius: 0 };
+      }
+
+      if (type === TaskStatus.PENDING) {
+        return { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 };
+      }
+    }
+  };
+
+  return (
+    <Animated.View
+      style={[animatedStyle, styles.progress, getBorderRadius()]}
+    />
+  );
 };
