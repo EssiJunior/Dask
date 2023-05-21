@@ -10,12 +10,13 @@ import Colors from "../../constants/Colors";
 import { useRouter } from "expo-router";
 import { useSignal } from "@dilane3/gx";
 import { ProjectsDataType } from "../../gx/signals";
+import { ProjectSkeleton } from "../../components/projects/ProjectSkeleton";
 
 export default function SharedProjectScreen() {
   const router = useRouter();
 
   // Global state
-  const { projects } = useSignal<ProjectsDataType>("projects");
+  const { projects, sharedPostsLoaded } = useSignal<ProjectsDataType>("projects");
 
   const handleNavigateTo = (path: string) => {
     router.push(path);
@@ -48,9 +49,17 @@ export default function SharedProjectScreen() {
         />
 
         <View style={{ marginTop: 20 }}>
-          {filterProjects().map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+          {
+            sharedPostsLoaded ? filterProjects().map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            )) : (
+              <>
+                <ProjectSkeleton />
+                <ProjectSkeleton />
+                <ProjectSkeleton />
+              </>
+            )
+          }
         </View>
       </ScrollView>
 
