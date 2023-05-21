@@ -18,6 +18,9 @@ import { useRouter } from "expo-router";
 import TouchableSurface from "../../../components/buttons/TouchableSurface";
 import { ModalTypes } from "../../../components/modals/type";
 import { UserDataType } from "../../../gx/signals/current-user";
+import ProjectEntity from "../../../entities/project";
+import Task from "../../../entities/task";
+import Animated, { Layout } from "react-native-reanimated";
 
 export default function Project() {
   const searchParams = useSearchParams();
@@ -33,6 +36,23 @@ export default function Project() {
   const project = useMemo(() => {
     return projects.find((project) => project.id === projectId);
   }, [projectId]);
+
+  const tasks = useMemo(() => {
+    if (project) {
+      const tasks = project.tasks;
+
+      if (tasks.length > 1) {
+        return tasks.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      }
+
+      return tasks;
+    }
+
+    return [];
+  }, [project?.tasks]);
 
   const owner = useMemo(() => {
     if (project) return project.owner;
@@ -215,11 +235,19 @@ export default function Project() {
               </Button>
             </View>
 
-            <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-              {project.tasks.map((task) => (
-                <TaskCard key={task.id} type={project.type} task={task} />
+            <Animated.View
+              layout={Layout.delay(100)}
+              style={{ marginTop: 20, paddingHorizontal: 20 }}
+            >
+              {tasks.map((task, index) => (
+                <TaskCard
+                  key={task.id}
+                  type={project.type}
+                  task={task}
+                  delay={index * 100}
+                />
               ))}
-            </View>
+            </Animated.View>
           </ScrollView>
 
           <View

@@ -16,7 +16,12 @@ import { object, string } from "yup";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useActions, useSignal } from "@dilane3/gx";
-import { sleep, generateUID, capitalize, generateColor } from "../../../../utils";
+import {
+  sleep,
+  generateUID,
+  capitalize,
+  generateColor,
+} from "../../../../utils";
 import { createProject } from "../../../../api/projects";
 import { UserDataType } from "../../../../gx/signals/current-user";
 import ProjectsRepository from "../../../../storage/db/projects";
@@ -25,7 +30,7 @@ import { projectSignal } from "../../../../gx/signals/projects";
 import { NetworkDataType } from "../../../../gx/signals";
 
 let schema = object({
-  title: string().min(5).max(40).required(),
+  title: string().min(4).max(40).required(),
   description: string(),
 });
 
@@ -103,8 +108,8 @@ export default function CreateProject() {
 
           toast({
             message: "Your are not connected",
-            type: "info"
-          })
+            type: "info",
+          });
 
           return;
         }
@@ -138,14 +143,14 @@ export default function CreateProject() {
         const projectId = generateUID();
         const projectCreatedAt = Date.now();
         const projectUpdatedAt = Date.now();
-        const projectColor = generateColor()
+        const projectColor = generateColor();
 
         const isCreated = await ProjectsRepository.insert({
           id: projectId,
           name: value.title,
           description: value.description || "",
           avatar: "",
-          color:projectColor,
+          color: projectColor,
           createdAt: projectCreatedAt,
           updatedAt: projectUpdatedAt,
         });
@@ -163,7 +168,7 @@ export default function CreateProject() {
             createdAt: new Date(projectCreatedAt),
             updatedAt: new Date(projectUpdatedAt),
             type: "personal",
-            members: []
+            members: [],
           });
 
           addProject(project);
@@ -198,7 +203,7 @@ export default function CreateProject() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
-      <HeaderText title={`${capitalize(type)} Project`} />
+      <HeaderText title={`New ${capitalize(type)} Project`} />
 
       <ScrollView style={styles.container}>
         <View style={styles.inputsBox}>
@@ -206,7 +211,18 @@ export default function CreateProject() {
             value={title}
             onChange={(value) => handleChange(value, "title")}
             placeholder="Title"
+            style={{
+              marginBottom: -15,
+            }}
           />
+          <Typography
+            text="Provide at least 4 characters and a maximum of 40"
+            color={Colors.light.black}
+            weight="light"
+            fontSize={12}
+            style={{ marginBottom: 10 }}
+          />
+
           <TextInput
             value={description}
             onChange={(value) => handleChange(value, "description")}
@@ -258,7 +274,7 @@ const styles = StyleSheet.create({
 
   inputsBox: {
     gap: 20,
-    marginTop: 50,
+    marginTop: 20,
   },
 
   buttonsContainer: {

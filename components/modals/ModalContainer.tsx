@@ -10,6 +10,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDecay,
+  withDelay,
   withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
@@ -29,7 +30,7 @@ export default function ModalContainer() {
     if (open) {
       opacity.value = withTiming(1, { duration: 300 });
     } else {
-      opacity.value = withTiming(0, { duration: 300 });
+      opacity.value = withDelay(1100, withTiming(0, { duration: 300 }));
     }
   }, [open]);
 

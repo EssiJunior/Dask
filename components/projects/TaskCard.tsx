@@ -9,14 +9,20 @@ import Colors from "../../constants/Colors";
 import { useRouter } from "expo-router";
 import Task from "../../entities/task";
 import { capitalize } from "../../utils";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useActions } from "@dilane3/gx";
 import { ModalTypes } from "../modals/type";
 import Animated, {
+  FadeIn,
   interpolate,
+  Layout,
   runOnJS,
   useSharedValue,
   withTiming,
+  ZoomInDown,
+  ZoomInEasyDown,
+  ZoomOutEasyDown,
+  ZoomOutEasyUp,
 } from "react-native-reanimated";
 import { useAnimatedStyle } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -24,14 +30,23 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 type TaskCardProps = {
   task: Task;
   type: string;
+  delay: number;
 };
 
-export default function TaskCard({ task, type }: TaskCardProps) {
+export default function TaskCard({ task, type, delay }: TaskCardProps) {
   // Router
   const router = useRouter();
 
   // Global state
   const { open } = useActions("modal");
+
+  // Use ref
+  const initialMode = useRef(true);
+
+  // Use Effect
+  useEffect(() => {
+    initialMode.current = false;
+  }, []);
 
   // Animations
   const END_POSITION = 100;
@@ -159,7 +174,14 @@ export default function TaskCard({ task, type }: TaskCardProps) {
       onPress={handleNavigateToTask}
     >
       <GestureDetector gesture={composedGesture}>
-        <Animated.View style={animatedStyles}>
+        <Animated.View
+          style={animatedStyles}
+          entering={
+            initialMode.current ? ZoomInEasyDown.delay(delay) : ZoomInEasyDown
+          }
+          exiting={ZoomOutEasyUp}
+          layout={Layout.delay(100)}
+        >
           <View style={styles.container}>
             <View style={styles.top}>
               <View style={{ flex: 1 }}>
