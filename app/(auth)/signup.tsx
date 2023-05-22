@@ -20,6 +20,7 @@ import { object, string } from "yup";
 import { createUser } from "../../api/auth";
 import { sleep } from "../../utils";
 import { NetworkDataType, UserDataType } from "../../gx/signals";
+import { checkEmail } from "../../api/users";
 
 let schema = object({
   name: string().min(2).max(20).required(),
@@ -42,6 +43,9 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [seePassword, setSeePassword] = useState(false);
+  const [emailAlreadyUsed, setEmailAlreadyUsed] = useState(false);
+  const [emailChecking, setEmailChecking] = useState(false);
+  const [emailValid, setEmailValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -68,6 +72,37 @@ export default function SignUp() {
 
     check();
   }, [name, email, password]);
+
+  useEffect(() => {
+    const checkEmailIfAlreadyUsed = async () => {
+      const isValid = await string().email().isValid(email);
+
+      setEmailValid(isValid);
+
+      if (isValid) {
+        setEmailChecking(true);
+
+        const { data } = await checkEmail(email);
+
+        setEmailChecking(false);
+
+        if (data !== undefined) {
+          setEmailAlreadyUsed(data);
+        } else {
+          setEmailAlreadyUsed(true);
+        }
+
+        if (data) {
+          toast({
+            message: "Email already used",
+            type: "error",
+          });
+        }
+      }
+    };
+
+    checkEmailIfAlreadyUsed();
+  }, [email]);
 
   // Handlers
   const signIn = async () => {
@@ -134,6 +169,8 @@ export default function SignUp() {
   };
 
   const checkForm = async () => {
+    if (emailAlreadyUsed) return { error: "Email already used" };
+
     try {
       const value = await schema.validate({ name, email, password });
 
@@ -169,13 +206,45 @@ export default function SignUp() {
             style={{ marginBottom: 10 }}
           />
 
-          <TextInput
-            value={email}
-            onChange={(value) => handleChange(value, "email")}
-            placeholder="Email"
-            style={styles.inputs}
-            pv={10}
-          />
+          <View
+            style={{
+              width: "100%",
+            }}
+          >
+            <TextInput
+              value={email}
+              onChange={(value) => handleChange(value, "email")}
+              placeholder="Email"
+              style={styles.inputs}
+              pv={10}
+            />
+
+            <View
+              style={{
+                position: "absolute",
+                right: 15,
+                top: 20,
+                width: 30,
+                height: 30,
+                borderRadius: 50,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {email !== "" &&
+                (emailChecking ? (
+                  <ActivityIndicator size="small" color={Colors.light.primary} />
+                ) : (
+                  <Ionicons
+                    name={emailAlreadyUsed || !emailValid ? "close" : "checkmark-sharp"}
+                    size={24}
+                    color={
+                      emailAlreadyUsed || !emailValid ? Colors.light.red : Colors.light.green
+                    }
+                  />
+                ))}
+            </View>
+          </View>
           <Typography text="" />
 
           <View
@@ -272,7 +341,7 @@ export default function SignUp() {
             // onPress={handleSignUp}
             pv={12}
             onPress={handleSubmit}
-            disabled={error || loading}
+            disabled={error || loading || emailAlreadyUsed}
             color={success ? Colors.light.green : Colors.light.primary}
           >
             {loading ? (

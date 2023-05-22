@@ -58,7 +58,6 @@ export default function WebsocketProvider({
   useEffect(() => {
     return sound
       ? () => {
-          console.log("Unloading Sound");
           sound.unloadAsync();
         }
       : undefined;
@@ -69,8 +68,6 @@ export default function WebsocketProvider({
       if (isInternetReachable) {
         // Connect to the socket
         socket.connect();
-
-        console.log(`connected as ${user.name}`);
 
         // Join projects rooms
         socket.emit(WebSocketEvent.JOIN, {
@@ -86,8 +83,6 @@ export default function WebsocketProvider({
   useEffect(() => {
     socket.on("connect", () => {
       if (user) {
-        console.log(`connected as ${user.name}`);
-
         // Join projects rooms
         socket.emit(WebSocketEvent.JOIN, {
           userId: user.uid,
@@ -236,8 +231,6 @@ export default function WebsocketProvider({
   // Some handlers
 
   async function playSound() {
-    console.log("Playing Sound");
-
     const { sound } = await Audio.Sound.createAsync(notificationSound);
 
     setSound(sound);

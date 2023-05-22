@@ -27,9 +27,7 @@ export const findUserByEmail = async (email: string) => {
   try {
     const querySnapshot = query(
       usersCollectionRef,
-      or(
-        where("email", ">=", email.toLowerCase())
-      ),
+      where("email", ">=", email.toLowerCase())
     );
 
     const snapshot = await getDocs(querySnapshot);
@@ -60,3 +58,30 @@ export const findUserByEmail = async (email: string) => {
     return { error: "Something went wrong while trying to find the user" };
   }
 };
+
+/**
+ * Check if the email is already in use
+ * @param {String} email
+ */
+export const checkEmail = async (email: string) => {
+  const usersCollectionRef = getCollectionReference("users");
+
+  try {
+    const querySnapshot = query(
+      usersCollectionRef,
+      where("email", "==", email.toLowerCase()),
+    );
+
+    const snapshot = await getDocs(querySnapshot);
+
+    if (snapshot.empty) {
+      return { data: false };
+    }
+
+    return { data: true };
+  } catch (err) {
+    console.log(err);
+
+    return { error: "Something went wrong while trying to check the email" };
+  }
+}

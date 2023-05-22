@@ -153,7 +153,7 @@ export default function Members() {
     });
 
     return sorted;
-  }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -161,26 +161,6 @@ export default function Members() {
 
       {members && (
         <ScrollView contentContainerStyle={{ flex: 1 }}>
-          {!ready && search.length > 0 && (
-            <View
-              style={{
-                position: "absolute",
-                minHeight: 200,
-                top: 80,
-                left: 0,
-                right: 0,
-                alignItems: "center",
-                zIndex: 2,
-              }}
-            >
-              <SearchResultCard
-                users={filterResults()}
-                loading={searching}
-                onSelect={handleSelectUser}
-              />
-            </View>
-          )}
-
           {user && owner && user.uid === owner.uid && (
             <View
               style={{
@@ -241,9 +221,30 @@ export default function Members() {
 
           <View
             style={{
+              flex: 1,
               marginTop: 20,
             }}
           >
+            {!ready && search.length > 0 && (
+              <View
+                style={{
+                  position: "absolute",
+                  minHeight: 200,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  alignItems: "center",
+                  zIndex: 200,
+                }}
+              >
+                <SearchResultCard
+                  users={filterResults()}
+                  loading={searching}
+                  onSelect={handleSelectUser}
+                />
+              </View>
+            )}
+
             {filterMembersPerDate().map((member) => (
               <MemberItem key={member.uid} member={member} owner={owner} />
             ))}

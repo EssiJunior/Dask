@@ -28,6 +28,7 @@ export default function MemberItem({
       style={{
         paddingVertical: 10,
         paddingHorizontal: 20,
+        zIndex: 0
       }}
       disabled={disabled}
       onPress={onPress}

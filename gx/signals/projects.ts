@@ -125,7 +125,6 @@ export const projectSignal = createSignal<ProjectsDataType>({
       const project = state.projects.find((project) => project.id === projectId);
 
       if (project && members) {
-        console.log("Et de 1")
         project.assignTaskToMembers(taskId, members)
       }
 

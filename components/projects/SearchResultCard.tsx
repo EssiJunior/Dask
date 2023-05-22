@@ -1,4 +1,5 @@
 import { useSignal } from "@dilane3/gx";
+import { Fragment } from "react";
 import { StyleSheet, View, Dimensions, ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Colors from "../../constants/Colors";
@@ -36,15 +37,14 @@ export default function SearchResultCard({
           />
         ) : (
           users.map((user) => (
-            <>
+            <Fragment key={user.uid}>
               <TouchableSurface
-                key={user.uid}
                 style={{ width: "100%" }}
                 onPress={() => onSelect(user)}
               >
                 <MemberItem member={user} type="search" disabled />
               </TouchableSurface>
-            </>
+            </Fragment>
           ))
         )}
       </ScrollView>
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     maxHeight: 300,
     backgroundColor: Colors.light.background,
     borderRadius: 5,
+    zIndex: 10,
     elevation: 100,
   },
 });

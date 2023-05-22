@@ -119,8 +119,6 @@ export default function SignIn() {
 
       setLoading(false);
     } else {
-      console.log(checkError);
-
       toast({
         message: "Verify your email and password",
         type: "error"

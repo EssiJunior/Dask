@@ -70,6 +70,9 @@ function RootLayoutNav() {
   // Global actions
   const { setTermsRead } = useActions("terms");
 
+  // Local storage
+  const [firstTime, setFirstTime] = useState(true);
+
   // Navigation
   const navigation = useNavigation();
 
@@ -91,7 +94,11 @@ function RootLayoutNav() {
   useEffect(() => {
     if (ready) {
       if (isInternetReachable && isConnected) {
-        toast({ message: "You are online", type: "success" });
+        if (!firstTime) {
+          toast({ message: "You are online", type: "success" });
+        } else {
+          setFirstTime(false);
+        }
       } else {
         toast({ message: "Check your internet connection", type: "info" });
       }

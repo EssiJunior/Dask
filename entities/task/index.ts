@@ -77,7 +77,6 @@ export default class Task {
   }
 
   set workers(workers: User[]) {
-    console.log(workers)
     this._workers = workers;
   }
 

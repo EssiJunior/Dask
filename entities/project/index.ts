@@ -127,7 +127,6 @@ export default class Project {
     const task = this._tasks.find((task) => task.id === taskId);
 
     if (task) {
-      console.log("Et de 2")
       task.workers = members;
     }
   }

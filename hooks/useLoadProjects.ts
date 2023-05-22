@@ -9,6 +9,8 @@ import { useEffect } from "react";
 import { findAllProjects } from "../api/projects";
 import User from "../entities/user";
 import ProjectsRepository from "../storage/db/projects";
+import storage from "../storage";
+import { DASK_USER_ID } from "../constants";
 
 export default function useLoadProjects() {
   // Global state
@@ -36,10 +38,12 @@ export default function useLoadProjects() {
   ]);
 
   const handleLoadProjects = async (user: User | null) => {
+    const uid = await storage.getItem(DASK_USER_ID);
+
     // Load projects from local database
     const personalProjects = await ProjectsRepository.findAll();
 
-    if (user) {
+    if (user && uid && uid === user.uid) {
       if (!isInternetReachable) {
         toast({
           message: "Couldn't retrieve shared projects",
