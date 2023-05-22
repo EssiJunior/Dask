@@ -17,6 +17,10 @@ import { formatDate } from "../../../utils";
 import { useRouter } from "expo-router";
 import TouchableSurface from "../../../components/buttons/TouchableSurface";
 import { ModalTypes } from "../../../components/modals/type";
+import { UserDataType } from "../../../gx/signals/current-user";
+import ProjectEntity from "../../../entities/project";
+import Task from "../../../entities/task";
+import Animated, { Layout } from "react-native-reanimated";
 
 export default function Project() {
   const searchParams = useSearchParams();
@@ -25,11 +29,36 @@ export default function Project() {
 
   // Global state
   const { projects } = useSignal<ProjectsDataType>("projects");
+  const { user } = useSignal<UserDataType>("currentUser");
+
   const { open } = useActions("modal");
 
   const project = useMemo(() => {
     return projects.find((project) => project.id === projectId);
   }, [projectId]);
+
+  const tasks = useMemo(() => {
+    if (project) {
+      const tasks = project.tasks;
+
+      if (tasks.length > 1) {
+        return tasks.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      }
+
+      return tasks;
+    }
+
+    return [];
+  }, [project?.tasks]);
+
+  const owner = useMemo(() => {
+    if (project) return project.owner;
+
+    return null;
+  }, [project]);
 
   const [projectDate, setProjectDate] = useState(
     formatDate(project ? project.createdAt : new Date())
@@ -56,11 +85,11 @@ export default function Project() {
       open({
         name: ModalTypes.DeleteProject,
         data: {
-          project
-        }
-      })
+          project,
+        },
+      });
     }
-  }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -100,45 +129,48 @@ export default function Project() {
                     text={projectDate}
                     weight="light"
                     color={Colors.light.gray}
+                    fontSize={14}
                   />
 
-                  <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-                    <TouchableSurface
-                      rounded
-                      style={{
-                        borderRadius: 50,
-                        width: 30,
-                        height: 30,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginRight: 10,
-                      }}
-                    >
-                      <SimpleLineIcons
-                        name="pencil"
-                        size={20}
-                        color={Colors.light.gray}
-                      />
-                    </TouchableSurface>
+                  {user && owner && user.uid === owner.uid && (
+                    <View style={{ flexDirection: "row", marginLeft: "auto" }}>
+                      {/* <TouchableSurface
+                        rounded
+                        style={{
+                          borderRadius: 50,
+                          width: 30,
+                          height: 30,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginRight: 10,
+                        }}
+                      >
+                        <SimpleLineIcons
+                          name="pencil"
+                          size={20}
+                          color={Colors.light.gray}
+                        />
+                      </TouchableSurface> */}
 
-                    <TouchableSurface
-                      rounded
-                      style={{
-                        borderRadius: 50,
-                        width: 30,
-                        height: 30,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      onPress={handleOpenDeleteProjectModal}
-                    >
-                      <Feather
-                        name="trash-2"
-                        size={20}
-                        color={Colors.light.red}
-                      />
-                    </TouchableSurface>
-                  </View>
+                      <TouchableSurface
+                        rounded
+                        style={{
+                          borderRadius: 50,
+                          width: 30,
+                          height: 30,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onPress={handleOpenDeleteProjectModal}
+                      >
+                        <Feather
+                          name="trash-2"
+                          size={20}
+                          color={Colors.light.red}
+                        />
+                      </TouchableSurface>
+                    </View>
+                  )}
                 </View>
               </View>
             </View>
@@ -203,11 +235,19 @@ export default function Project() {
               </Button>
             </View>
 
-            <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-              {project.tasks.map((task) => (
-                <TaskCard key={task.id} type={project.type} task={task} />
+            <Animated.View
+              layout={Layout.delay(100)}
+              style={{ marginTop: 20, paddingHorizontal: 20 }}
+            >
+              {tasks.map((task, index) => (
+                <TaskCard
+                  key={task.id}
+                  type={project.type}
+                  task={task}
+                  delay={index * 100}
+                />
               ))}
-            </View>
+            </Animated.View>
           </ScrollView>
 
           <View

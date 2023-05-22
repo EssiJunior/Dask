@@ -1,38 +1,56 @@
 import { useActions, useSignal } from "@dilane3/gx";
-import { NetworkDataType, ProjectsDataType, UserDataType } from "../gx/signals";
+import {
+  NetworkDataType,
+  ProjectsDataType,
+  TermsDataType,
+  UserDataType,
+} from "../gx/signals";
 import { useEffect } from "react";
 import { findAllProjects } from "../api/projects";
 import User from "../entities/user";
 import ProjectsRepository from "../storage/db/projects";
+import storage from "../storage";
+import { DASK_USER_ID } from "../constants";
 
 export default function useLoadProjects() {
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
-  const { isInternetReachable, ready } = useSignal<NetworkDataType>("network");
+  const { isInternetReachable, isConnected, ready } =
+    useSignal<NetworkDataType>("network");
   const { sharedPostsLoaded } = useSignal<ProjectsDataType>("projects");
+  const { read: termsRead } = useSignal<TermsDataType>("terms");
 
   const { show: toast } = useActions("toast");
   const { loadProjects, setSharedPostsLoaded } = useActions("projects");
 
   useEffect(() => {
-    if (!sharedPostsLoaded) {
+    if (!sharedPostsLoaded && termsRead) {
       // Load projects
       handleLoadProjects(user);
     }
-  }, [user, sharedPostsLoaded, isInternetReachable, ready]);
+  }, [
+    user,
+    sharedPostsLoaded,
+    isInternetReachable,
+    isConnected,
+    ready,
+    termsRead,
+  ]);
 
   const handleLoadProjects = async (user: User | null) => {
+    const uid = await storage.getItem(DASK_USER_ID);
+
     // Load projects from local database
     const personalProjects = await ProjectsRepository.findAll();
 
-    if (user) {
+    if (user && uid && uid === user.uid) {
       if (!isInternetReachable) {
         toast({
           message: "Couldn't retrieve shared projects",
           type: "info",
         });
       } else {
-        if (ready) {
+        if (ready && isConnected) {
           // Load projects from firebase
           const { data, error } = await findAllProjects(user);
 

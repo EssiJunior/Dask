@@ -10,6 +10,7 @@ import Typography from "../../text/Typography";
 import { useRouter } from "expo-router";
 import { useActions, useSignal } from "@dilane3/gx";
 import { UserDataType } from "../../../gx/signals";
+import Badge from "../../badges/Badge";
 
 export default function HeaderHome() {
   const router = useRouter();
@@ -25,13 +26,13 @@ export default function HeaderHome() {
 
   const handleToast = () => {
     toast({ message: "Hello world", type: "info" });
-  }
+  };
 
   return (
     <View style={styles.header}>
       {user ? (
         <TouchableSurface onPress={() => handleNavigate("/profile")}>
-          <Avatar 
+          <Avatar
             bgColor={user.color || Colors.light.primary}
             letter={user.name[0]}
           />
@@ -54,18 +55,37 @@ export default function HeaderHome() {
       )}
 
       <View style={styles.headerIcons}>
-        <TouchableSurface rounded style={{ borderRadius: 50 }} onPress={handleToast}>
-          <Ionicons name="search-outline" size={24} color={Colors.light.gray} />
+        <TouchableSurface
+          rounded
+          style={{ borderRadius: 50 }}
+          onPress={handleToast}
+          disabled
+        >
+          <Ionicons
+            name="search-outline"
+            size={24}
+            color={Colors.light.grayNormal}
+          />
+
+          <View
+            style={{
+              position: "absolute",
+              top: -15,
+              right: -10,
+            }}
+          >
+            <Badge width={25} text="soon" fontSize={8} padding={0} />
+          </View>
         </TouchableSurface>
 
-        <TouchableSurface rounded style={{ borderRadius: 50 }}>
+        <TouchableSurface rounded style={{ borderRadius: 50 }} disabled>
           <Ionicons
             name="notifications-outline"
             size={24}
-            color={Colors.light.gray}
+            color={Colors.light.grayNormal}
           />
 
-          <Dot
+          {/* <Dot
             size={10}
             style={{
               position: "absolute",
@@ -74,7 +94,17 @@ export default function HeaderHome() {
               borderWidth: 2,
               borderColor: Colors.light.background,
             }}
-          />
+          /> */}
+
+          <View
+            style={{
+              position: "absolute",
+              top: -15,
+              right: -10,
+            }}
+          >
+            <Badge width={25} text="soon" fontSize={8} padding={0} />
+          </View>
         </TouchableSurface>
       </View>
     </View>

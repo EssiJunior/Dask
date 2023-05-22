@@ -61,7 +61,7 @@ export default function HomeScreen() {
           color={Colors.light.secondary}
         />
 
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 20, marginBottom: 70 }}>
           {filterProjects().map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}

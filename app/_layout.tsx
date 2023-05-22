@@ -19,6 +19,7 @@ import useLoadProjects from "../hooks/useLoadProjects";
 import ModalContainer from "../components/modals/ModalContainer";
 import useNetworkStats from "../hooks/useNetworkStats";
 import { NetworkDataType, ToastDataType } from "../gx/signals";
+import WebsocketProvider from "../contexts/Websocket";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,11 +64,14 @@ export default function RootLayout() {
 function RootLayoutNav() {
   // Global state
   const { read: termsRead, loading: termsReadLoading } = useSignal("terms");
-  const { isInternetReachable, ready } = useSignal<NetworkDataType>("network");
+  const { isInternetReachable, isConnected, ready } = useSignal<NetworkDataType>("network");
   const { show: toast } = useActions("toast");
 
   // Global actions
   const { setTermsRead } = useActions("terms");
+
+  // Local storage
+  const [firstTime, setFirstTime] = useState(true);
 
   // Navigation
   const navigation = useNavigation();
@@ -89,13 +93,17 @@ function RootLayoutNav() {
 
   useEffect(() => {
     if (ready) {
-      if (isInternetReachable) {
-        toast({ message: "backing online", type: "success" });
+      if (isInternetReachable && isConnected) {
+        if (!firstTime) {
+          toast({ message: "You are online", type: "success" });
+        } else {
+          setFirstTime(false);
+        }
       } else {
         toast({ message: "Check your internet connection", type: "info" });
       }
     }
-  }, [isInternetReachable, ready]);
+  }, [isInternetReachable, isConnected, ready]);
 
   useEffect(() => {
     const navigateToWelcomeScreen = async () => {
@@ -111,12 +119,14 @@ function RootLayoutNav() {
   };
 
   return (
-    <ToastContainer>
-      <>
-        <Stack screenOptions={{ headerShown: false }} />
+    <WebsocketProvider>
+      <ToastContainer>
+        <>
+          <Stack screenOptions={{ headerShown: false }} />
 
-        <ModalContainer />
-      </>
-    </ToastContainer>
+          <ModalContainer />
+        </>
+      </ToastContainer>
+    </WebsocketProvider>
   );
 }

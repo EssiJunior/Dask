@@ -2,6 +2,7 @@
 import {
   addDoc,
   deleteDoc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -113,6 +114,51 @@ export const findAllTasksByProjectId = async (projectId: string) => {
 };
 
 /**
+ * Find task by id
+ * @param taskId 
+ */
+export const findTaskById = async (taskId: string) => {
+  const taskRef = getDocumentReference(taskId, "tasks");
+
+  try {
+    const doc = await getDoc(taskRef);
+
+    if (!doc.exists()) return { error: "Task not found" };
+
+    const data = doc.data();
+
+    // Load workers
+    const workers: User[] = [];
+
+    for (let workerData of data.workers) {
+      const workderId = workerData.id;
+
+      const { data: worker } = await findUser(workderId);
+      
+      if (worker) workers.push(worker);
+    }
+
+    // Create a new task object
+    const task = new Task({
+      id: doc.id,
+      title: data.title,
+      description: data.description,
+      status: data.status,
+      createdAt: new Date(data.createdAt),
+      updatedAt: new Date(data.updatedAt),
+      projectId: data.project.id,
+      workers,
+    });
+
+    return { data: task };
+  } catch (error) {
+    console.error(error);
+
+    return { error };
+  }
+};
+
+/**
  * Delete task by id
  * @param {string} taskId
  */
@@ -150,3 +196,32 @@ export const updateTaskStatus = async (taskId: string, status: TaskStatus) => {
     return { error };
   }
 };
+
+/**
+ * Assign task to members
+ * @params {string} taskId
+ * @params {string[]} membersId
+ */
+export const assignTaskToMembers = async (taskId: string, membersId: string[]) => {
+  const taskRef = getDocumentReference(taskId, "tasks")
+  const membersRef = [];
+
+  for (let memberId of membersId) {
+    const memberRef = getDocumentReference(memberId, "users");
+
+    membersRef.push(memberRef);
+  }
+
+  try {
+    // Add members to the task
+    await updateDoc(taskRef, {
+      workers: membersRef
+    })
+
+    return { data: true }
+  } catch (error) {
+    console.log(error);
+
+    return { error }
+  }
+}

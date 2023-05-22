@@ -122,4 +122,12 @@ export default class Project {
   addMember(member: User) {
     this._members.push(member);
   }
+
+  assignTaskToMembers(taskId: string, members: User[]) {
+    const task = this._tasks.find((task) => task.id === taskId);
+
+    if (task) {
+      task.workers = members;
+    }
+  }
 }

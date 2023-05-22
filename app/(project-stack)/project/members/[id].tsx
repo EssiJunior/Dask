@@ -11,14 +11,20 @@ import MemberItem from "../../../../components/projects/MemberItem";
 import { useSearchParams } from "expo-router";
 import { ProjectsDataType } from "../../../../gx/signals";
 import { useActions, useSignal } from "@dilane3/gx";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import SearchResultCard from "../../../../components/projects/SearchResultCard";
 import User from "../../../../entities/user";
 import { findUserByEmail } from "../../../../api/users";
 import { addMemberToProject } from "../../../../api/projects";
-import { UserDataType } from '../../../../gx/signals/current-user';
+import { UserDataType } from "../../../../gx/signals/current-user";
+import { WebsocketContext } from "../../../../contexts/Websocket";
+import { WebSocketEvent } from "../../../../contexts/enum";
+import useLoadProjects from "../../../../hooks/useLoadProjects";
 
 export default function Members() {
+  // Context
+  const { dispatch } = useContext(WebsocketContext);
+
   const params = useSearchParams();
   const projectId = params.id as string;
 
@@ -44,6 +50,14 @@ export default function Members() {
 
     return [];
   }, [JSON.stringify(projects)]);
+
+  const owner = useMemo(() => {
+    const project = projects.find((project) => project.id === projectId);
+
+    if (project) return project.owner;
+
+    return null;
+  }, [projects]);
 
   // UseEffect
 
@@ -81,13 +95,22 @@ export default function Members() {
     setLoading(true);
 
     if (member) {
-      const { data, error } = await addMemberToProject(projectId, member.uid);
+      const { data } = await addMemberToProject(projectId, member.uid);
 
       setLoading(false);
 
       if (data) {
         // Add member to global state
         addMember({ projectId, member });
+
+        // Dispatch add member event to the websocket
+        dispatch({
+          type: WebSocketEvent.NEW_PROJECT_MEMBER,
+          payload: {
+            projectId,
+            newMemberId: member.uid,
+          },
+        });
 
         // Reset search
         setSearch("");
@@ -120,9 +143,17 @@ export default function Members() {
     for (let member of members) {
       filtered = filtered.filter((result) => result.uid !== member.uid);
     }
-    
+
     return filtered;
-  }
+  };
+
+  const filterMembersPerDate = () => {
+    const sorted = members.sort((a, b) => {
+      return a.createdAt.getTime() - b.createdAt.getTime();
+    });
+
+    return sorted;
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
@@ -130,86 +161,92 @@ export default function Members() {
 
       {members && (
         <ScrollView contentContainerStyle={{ flex: 1 }}>
-          {!ready && search.length > 0 && (
+          {user && owner && user.uid === owner.uid && (
             <View
               style={{
-                position: "absolute",
-                minHeight: 200,
-                top: 80,
-                left: 0,
-                right: 0,
-                alignItems: "center",
-                zIndex: 2,
+                position: "relative",
+                width: "100%",
+                paddingHorizontal: 20,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 20,
               }}
             >
-              <SearchResultCard
-                users={filterResults()}
-                loading={searching}
-                onSelect={handleSelectUser}
-              />
+              <TextInput
+                placeholder="Invite a new member"
+                fontSize={16}
+                width={Dimensions.get("window").width - 130}
+                pv={5}
+                style={{
+                  paddingLeft: 50,
+                }}
+                value={search}
+                onChange={handleChange}
+              >
+                <View
+                  style={{
+                    position: "absolute",
+                    left: 35,
+                    top: 10,
+                  }}
+                >
+                  <Ionicons
+                    name="person-add-outline"
+                    size={20}
+                    color={Colors.light.gray}
+                  />
+                </View>
+              </TextInput>
+
+              <Button
+                width={80}
+                disabled={!ready || loading}
+                onPress={handleInvite}
+              >
+                {loading ? (
+                  <ActivityIndicator
+                    size={23}
+                    color={Colors.light.background}
+                  />
+                ) : (
+                  <Typography
+                    text="Invite"
+                    color={Colors.dark.text}
+                    weight="bold"
+                  />
+                )}
+              </Button>
             </View>
           )}
 
           <View
             style={{
-              position: "relative",
-              width: "100%",
-              paddingHorizontal: 20,
-              flexDirection: "row",
-              justifyContent: "space-between",
+              flex: 1,
               marginTop: 20,
             }}
           >
-            <TextInput
-              placeholder="Invite new persons"
-              fontSize={16}
-              width={Dimensions.get("window").width - 130}
-              pv={5}
-              style={{
-                paddingLeft: 50,
-              }}
-              value={search}
-              onChange={handleChange}
-            >
+            {!ready && search.length > 0 && (
               <View
                 style={{
                   position: "absolute",
-                  left: 35,
-                  top: 10,
+                  minHeight: 200,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  alignItems: "center",
+                  zIndex: 200,
                 }}
               >
-                <Ionicons
-                  name="person-add-outline"
-                  size={20}
-                  color={Colors.light.gray}
+                <SearchResultCard
+                  users={filterResults()}
+                  loading={searching}
+                  onSelect={handleSelectUser}
                 />
               </View>
-            </TextInput>
+            )}
 
-            <Button
-              width={80}
-              disabled={!ready || loading}
-              onPress={handleInvite}
-            >
-              {loading ? (
-                <ActivityIndicator size={23} color={Colors.light.background} />
-              ) : (
-                <Typography
-                  text="Invite"
-                  color={Colors.dark.text}
-                  weight="bold"
-                />
-              )}
-            </Button>
-          </View>
-
-          <View
-            style={{
-              marginTop: 20,
-            }}
-          >
-            {members.map((member) => (
-              <MemberItem key={member.uid} member={member} />
+            {filterMembersPerDate().map((member) => (
+              <MemberItem key={member.uid} member={member} owner={owner} />
             ))}
           </View>
         </ScrollView>

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../constants/Colors';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +24,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 10
+  },
+
+  assignMemberIcon: {
+    width: 30,
+    height: 30,
+    borderWidth: 1,
+    borderColor: Colors.light.grayNormal,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
   }
 })
 

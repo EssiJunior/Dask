@@ -10,10 +10,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDecay,
+  withDelay,
   withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
 import ChangeTaskStatus from "./content/ChangeTaskStatus";
+import AssignTaskToMember from "./content/AssignTaskToMember";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function ModalContainer() {
   // Global state
@@ -27,7 +30,7 @@ export default function ModalContainer() {
     if (open) {
       opacity.value = withTiming(1, { duration: 300 });
     } else {
-      opacity.value = withTiming(0, { duration: 300 });
+      opacity.value = withDelay(1100, withTiming(0, { duration: 300 }));
     }
   }, [open]);
 
@@ -51,6 +54,9 @@ export default function ModalContainer() {
       }
       case ModalTypes.ChangeTaskStatus: {
         return <ChangeTaskStatus />
+      }
+      case ModalTypes.AssignTaskToMember: {
+        return <AssignTaskToMember />
       }
       default:
         return null;

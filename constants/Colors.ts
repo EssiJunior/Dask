@@ -19,7 +19,8 @@ export default {
     black: "#333",
     error: "#d20f46",
     success: "#1dab45",
-    info: "#2994bd"
+    info: "#2994bd",
+    grayLight2: "#edf2fb"
   },
   dark: {
     text: "#fff",

@@ -6,7 +6,7 @@ import Typography from "../text/Typography";
 import { useMemo } from "react";
 import User from "../../entities/user";
 
-const image = require("../../assets/images/image1.jpeg");
+const image = "https://picsum.photos/200/300";
 
 type MultiAvatarsProps = AvatarProps & {
   size?: number;
@@ -57,9 +57,9 @@ export default function MultiAvatars({
         </View>
       )}
 
-      {users.map((user, index) => (
+      {users.splice(0, 3).map((user, index) => (
         <View
-          key={index}
+          key={user.uid}
           style={[
             styles.avatarItem,
             {

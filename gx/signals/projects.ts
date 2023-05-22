@@ -1,7 +1,7 @@
 import { createSignal } from "@dilane3/gx";
 import Project from "../../entities/project";
 import Task from "../../entities/task";
-import { TaskStatus } from '../../entities/task/index';
+import { TaskStatus } from "../../entities/task/index";
 import User from "../../entities/user";
 
 export type ProjectsDataType = {
@@ -22,6 +22,16 @@ export const projectSignal = createSignal<ProjectsDataType>({
   actions: {
     loadProjects: (state, payload: Project[]) => {
       state.projects = payload;
+      state.loading = false;
+
+      return state;
+    },
+
+    removeAllSharedProjects: (state) => {
+      state.projects = state.projects.filter(
+        (project) => project.type !== "shared"
+      );
+      state.sharedPostsLoaded = false;
       state.loading = false;
 
       return state;
@@ -78,7 +88,10 @@ export const projectSignal = createSignal<ProjectsDataType>({
       return state;
     },
 
-    changeTaskStatus: (state, payload: { projectId: string, taskId: string, status: TaskStatus }) => {
+    changeTaskStatus: (
+      state,
+      payload: { projectId: string; taskId: string; status: TaskStatus }
+    ) => {
       const project = state.projects.find(
         (project) => project.id === payload.projectId
       );
@@ -101,6 +114,21 @@ export const projectSignal = createSignal<ProjectsDataType>({
       }
 
       return state;
-    }
+    },
+
+    assignTaskToMembers: (
+      state,
+      payload: { projectId: string; taskId: string; members: User[] }
+    ) => {
+      const { projectId, taskId, members } = payload;
+
+      const project = state.projects.find((project) => project.id === projectId);
+
+      if (project && members) {
+        project.assignTaskToMembers(taskId, members)
+      }
+
+      return state;
+    },
   },
 });

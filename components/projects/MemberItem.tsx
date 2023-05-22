@@ -5,30 +5,48 @@ import Typography from "../text/Typography";
 import Colors from "../../constants/Colors";
 import Avatar from "../avatars/Avatar";
 import User from "../../entities/user";
-import { capitalize } from '../../utils/index';
+import { capitalize } from "../../utils/index";
+import Animeted, { ZoomInEasyDown, ZoomOutEasyDown } from "react-native-reanimated";
 
 type MemberItemProps = {
-  member: User,
-  type: string,
-  disabled?: boolean,
+  member: User;
+  owner?: User | null;
+  type: string;
+  disabled?: boolean;
+  onPress?: () => void
 };
 
-export default function MemberItem({ member, type, disabled }: MemberItemProps) {
+export default function MemberItem({
+  member,
+  type,
+  disabled,
+  owner,
+  onPress
+}: MemberItemProps) {
   return (
     <TouchableSurface
       style={{
         paddingVertical: 10,
         paddingHorizontal: 20,
+        zIndex: 0
       }}
       disabled={disabled}
+      onPress={onPress}
     >
-      <View style={styles.container}>
+      <Animeted.View 
+        entering={ZoomInEasyDown}
+        exiting={ZoomOutEasyDown}
+        style={styles.container}>
         <View
           style={{
             flexDirection: "row",
           }}
         >
-          <Avatar size={50} bgColor={member.color || "blue"} letter={member.name[0]} />
+          <Avatar
+            size={50}
+            bgColor={member.color || "blue"}
+            letter={member.name[0]}
+          />
 
           <View
             style={{
@@ -49,21 +67,19 @@ export default function MemberItem({ member, type, disabled }: MemberItemProps) 
           </View>
         </View>
 
-        {
-          type === "members" && (
-            <Typography
-              text="member"
-              style={{ alignSelf: "flex-start" }}
-              fontSize={14}
-              weight="semibold"
-            />
-          )
-        }
-      </View>
+        {type === "members" && (
+          <Typography
+            text={member.uid === owner?.uid ? "Owner" : "Member"}
+            style={{ alignSelf: "flex-start" }}
+            fontSize={14}
+            weight="semibold"
+          />
+        )}
+      </Animeted.View>
     </TouchableSurface>
   );
 }
 
 MemberItem.defaultProps = {
-  type: "members"
-}
+  type: "members",
+};

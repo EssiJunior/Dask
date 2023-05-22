@@ -8,16 +8,22 @@ import Button from "../../../../components/buttons/Button";
 import { useRouter, useSearchParams } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { object, string } from "yup";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useActions, useSignal } from "@dilane3/gx";
-import { NetworkDataType, ProjectsDataType, UserDataType } from "../../../../gx/signals";
+import {
+  NetworkDataType,
+  ProjectsDataType,
+  UserDataType,
+} from "../../../../gx/signals";
 import { generateUID } from "../../../../utils";
 import TasksRepository from "../../../../storage/db/tasks/index";
 import Task, { TaskStatus } from "../../../../entities/task";
 import { createTask } from "../../../../api/tasks";
+import { WebsocketContext } from "../../../../contexts/Websocket";
+import { WebSocketEvent } from "../../../../contexts/enum";
 
 let schema = object({
-  title: string().min(5).required(),
+  title: string().min(4).required(),
   description: string(),
 });
 
@@ -31,6 +37,9 @@ export default function Tasks() {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState(true);
+
+  // Context
+  const { dispatch } = useContext(WebsocketContext);
 
   // Global state
   const { user } = useSignal<UserDataType>("currentUser");
@@ -134,8 +143,8 @@ export default function Tasks() {
 
             toast({
               message: "Your are not connected",
-              type: "info"
-            })
+              type: "info",
+            });
 
             return;
           }
@@ -153,6 +162,15 @@ export default function Tasks() {
 
             // show toast
             toast({ message: "Task created successfully", type: "success" });
+
+            // Dispatch to websocket
+            dispatch({
+              type: WebSocketEvent.ADD_TASK,
+              payload: {
+                projectId,
+                taskId: task.id,
+              },
+            });
 
             // Redirect to project
             router.back();
@@ -181,7 +199,7 @@ export default function Tasks() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
-      <HeaderText title="Tasks" />
+      <HeaderText title="New Task" />
 
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.container}>
@@ -190,7 +208,16 @@ export default function Tasks() {
               value={title}
               placeholder="Title"
               onChange={(value) => handleChange(value, "title")}
+              style={{ marginBottom: -15 }}
             />
+            <Typography
+              text="Provide at least 4 characters"
+              color={Colors.light.black}
+              weight="light"
+              fontSize={12}
+              style={{ marginBottom: 10 }}
+            />
+
             <TextInput
               value={description}
               placeholder="Task description"
@@ -244,7 +271,7 @@ const styles = StyleSheet.create({
 
   inputsBox: {
     gap: 20,
-    marginTop: 50,
+    marginTop: 20,
   },
 
   buttonsContainer: {
