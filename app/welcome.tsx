@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import Colors from "../constants/Colors";
@@ -17,6 +18,7 @@ import { READ_TERMS } from "../constants";
 import { useActions } from "@dilane3/gx";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
+import TouchableSurface from "../components/buttons/TouchableSurface";
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -95,12 +97,18 @@ export default function WelcomeScreen() {
             weight="bold"
             fontSize={14}
           />
-          <Typography
-            text="terms and conditions"
-            color={Colors.light.primary}
-            weight="bold"
-            fontSize={14}
-          />
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => router.push("terms")}
+          >
+            <Typography
+              text="terms and conditions"
+              color={Colors.light.primary}
+              weight="bold"
+              fontSize={14}
+            />
+          </TouchableOpacity>
         </View>
 
         <Button
@@ -164,11 +172,11 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   agree: {
-    width: '100%',
+    width: "100%",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    marginVertical: 30
+    marginVertical: 30,
   },
   validation: {
     display: "flex",

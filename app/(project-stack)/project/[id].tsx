@@ -132,7 +132,7 @@ export default function Project() {
                     fontSize={14}
                   />
 
-                  {user && owner && user.uid === owner.uid && (
+                  {(!owner || (user && user.uid === owner.uid)) && (
                     <View style={{ flexDirection: "row", marginLeft: "auto" }}>
                       {/* <TouchableSurface
                         rounded

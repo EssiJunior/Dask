@@ -23,13 +23,13 @@ export default function HomeScreen() {
 
   const router = useRouter();
 
-  const handleUnreadTerms = async () => {
-    await storage.removeItem(READ_TERMS);
-    await storage.removeItem(DASK_USER_ID);
-    await destroyDBSchema();
+  // const handleUnreadTerms = async () => {
+  //   await storage.removeItem(READ_TERMS);
+  //   await storage.removeItem(DASK_USER_ID);
+  //   await destroyDBSchema();
 
-    setTermsRead(false);
-  };
+  //   setTermsRead(false);
+  // };
 
   const handleCreateNewProject = () => {
     router.push("/project/create/personal");
@@ -57,7 +57,9 @@ export default function HomeScreen() {
         <Typography
           fontSize={16}
           weight="light"
-          text={`You have ${filterProjects().length} project${filterProjects().length > 1 ? "s" : ""}`}
+          text={`You have ${filterProjects().length} project${
+            filterProjects().length > 1 ? "s" : ""
+          }`}
           color={Colors.light.secondary}
         />
 

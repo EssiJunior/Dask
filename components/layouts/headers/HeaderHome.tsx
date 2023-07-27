@@ -78,14 +78,14 @@ export default function HeaderHome() {
           </View>
         </TouchableSurface>
 
-        <TouchableSurface rounded style={{ borderRadius: 50 }} disabled>
+        {/* <TouchableSurface rounded style={{ borderRadius: 50 }} disabled>
           <Ionicons
             name="notifications-outline"
             size={24}
             color={Colors.light.grayNormal}
           />
 
-          {/* <Dot
+          <Dot
             size={10}
             style={{
               position: "absolute",
@@ -94,7 +94,7 @@ export default function HeaderHome() {
               borderWidth: 2,
               borderColor: Colors.light.background,
             }}
-          /> */}
+          /> 
 
           <View
             style={{
@@ -105,7 +105,7 @@ export default function HeaderHome() {
           >
             <Badge width={25} text="soon" fontSize={8} padding={0} />
           </View>
-        </TouchableSurface>
+        </TouchableSurface> */}
       </View>
     </View>
   );
