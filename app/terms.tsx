@@ -147,7 +147,7 @@ export default function TermsScreen() {
         </View>
 
         <View style={styles.termsItem}>
-          <Button onPress={() => router.back()} style={{ width: "100%" }}>
+          <Button onPress={() => router.back()} style={{ width: "100%", height: 50 }}>
             <Typography text="I Agree" style={styles.btnText} />
           </Button>
         </View>

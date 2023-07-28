@@ -38,7 +38,12 @@ export default function HeaderHome() {
           />
         </TouchableSurface>
       ) : (
-        <Button type="text" ph={10} onPress={() => handleNavigate("/signin")}>
+        <Button
+          type="text"
+          ph={10}
+          onPress={() => handleNavigate("/signin")}
+          style={{ minHeight: 48 }}
+        >
           <Ionicons
             name="person-outline"
             size={20}

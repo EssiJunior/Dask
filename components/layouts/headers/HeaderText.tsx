@@ -32,8 +32,6 @@ export default function HeaderText({ title }: HeaderTextProps) {
             borderRadius: 50,
             width: 30,
             height: 30,
-            justifyContent: "center",
-            alignItems: "center",
           }}
           onPress={handleBack}
         >

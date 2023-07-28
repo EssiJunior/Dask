@@ -233,13 +233,22 @@ export default function SignUp() {
             >
               {email !== "" &&
                 (emailChecking ? (
-                  <ActivityIndicator size="small" color={Colors.light.primary} />
+                  <ActivityIndicator
+                    size="small"
+                    color={Colors.light.primary}
+                  />
                 ) : (
                   <Ionicons
-                    name={emailAlreadyUsed || !emailValid ? "close" : "checkmark-sharp"}
+                    name={
+                      emailAlreadyUsed || !emailValid
+                        ? "close"
+                        : "checkmark-sharp"
+                    }
                     size={24}
                     color={
-                      emailAlreadyUsed || !emailValid ? Colors.light.red : Colors.light.green
+                      emailAlreadyUsed || !emailValid
+                        ? Colors.light.red
+                        : Colors.light.green
                     }
                   />
                 ))}
@@ -264,18 +273,18 @@ export default function SignUp() {
               width="100%"
             />
 
-            <TouchableSurface
+            <TouchableOpacity
               style={{
                 position: "absolute",
-                right: 15,
-                top: 20,
-                width: 30,
-                height: 30,
+                right: 5,
+                top: 12,
+                width: 48,
+                height: 48,
                 borderRadius: 50,
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              rounded
+              // rounded
               onPress={handleSeePassword}
             >
               <Ionicons
@@ -283,7 +292,7 @@ export default function SignUp() {
                 size={24}
                 color={Colors.light.gray}
               />
-            </TouchableSurface>
+            </TouchableOpacity>
           </View>
           <Typography
             text="Provide at least 6 characters"
@@ -380,7 +389,7 @@ export default function SignUp() {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => signIn()}
-            style={{ marginLeft: 5 }}
+            style={{ marginLeft: 5, height: 48, justifyContent: "center" }}
           >
             <Typography
               text="Sign In"

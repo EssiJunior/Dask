@@ -70,7 +70,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
               tabName === "index" ? "view-dashboard" : "view-dashboard-outline"
             }
             size={30}
-            style={{ marginBottom: -3 }}
+            style={{ marginBottom: -3, padding: 5 }}
             color={
               tabName === "index"
                 ? Colors.light.primary
@@ -88,7 +88,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
           <Ionicons
             name={tabName === "shared" ? "folder-open" : "folder-open-outline"}
             size={28}
-            style={{ marginBottom: -3 }}
+            style={{ marginBottom: -3, padding: 5 }}
             color={
               tabName === "shared"
                 ? Colors.light.primary
@@ -110,7 +110,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
               tabName === "profile" ? "person-circle" : "person-circle-outline"
             }
             size={28}
-            style={{ marginBottom: -3 }}
+            style={{ marginBottom: -3, padding: 5 }}
             color={
               tabName === "profile"
                 ? Colors.light.primary
@@ -138,7 +138,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
           <Ionicons
             name={tabName === "setting" ? "settings-sharp" : "settings-outline"}
             size={28}
-            style={{ marginBottom: -3 }}
+            style={{ marginBottom: -3, padding: 5 }}
             color={Colors.light.grayNormal}
           />
         </TabBarIcon>

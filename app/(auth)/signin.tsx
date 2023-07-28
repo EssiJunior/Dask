@@ -181,8 +181,8 @@ export default function SignIn() {
             <TouchableSurface
               style={{
                 position: "absolute",
-                right: 15,
-                top: 20,
+                right: 5,
+                top: 12,
                 width: 30,
                 height: 30,
                 borderRadius: 50,
@@ -302,7 +302,7 @@ export default function SignIn() {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => signUp()}
-            style={{ marginLeft: 5 }}
+            style={{ marginLeft: 5, height: 48, justifyContent: "center" }}
           >
             <Typography
               text="Create one"

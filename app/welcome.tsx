@@ -83,13 +83,19 @@ export default function WelcomeScreen() {
         />
 
         <View style={styles.agree}>
-          <CheckBox
-            iconType="material-community"
-            checked={checked}
+          <TouchableSurface
+            useForeground
+            rounded
             onPress={toggleCheckbox}
-            checkedIcon="checkbox-outline"
-            uncheckedIcon={"checkbox-blank-outline"}
-          />
+          >
+            <CheckBox
+              iconType="material-community"
+              checked={checked}
+              checkedIcon="checkbox-outline"
+              uncheckedIcon={"checkbox-blank-outline"}
+              disabled
+            />
+          </TouchableSurface>
 
           <Typography
             text="Agree with the "
@@ -101,6 +107,7 @@ export default function WelcomeScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => router.push("terms")}
+            style={{ height: 48, justifyContent: "center" }}
           >
             <Typography
               text="terms and conditions"
