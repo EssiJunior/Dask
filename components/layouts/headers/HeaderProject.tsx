@@ -44,11 +44,10 @@ export default function HeaderProject({ project }: HeaderProjectProps) {
           borderRadius: 50,
           width: 30,
           height: 30,
-          justifyContent: "center",
-          alignItems: "center",
         }}
         onPress={handleGoBack}
         useForeground
+        centered
       >
         <Ionicons
           name="chevron-back-outline"

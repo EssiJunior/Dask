@@ -43,7 +43,7 @@ const Button = ({
           borderRadius: rounded ? 50 : 8,
           opacity: disabled ? 0.7 : 1,
           width,
-          minHeight: 48,
+          // minHeight: 48,
           elevation,
         },
         style,
@@ -54,6 +54,8 @@ const Button = ({
         rippleColor={rippleColor}
         useForeground
         disabled={disabled}
+        defaultStyle={false}
+
       >
         <View
           style={{

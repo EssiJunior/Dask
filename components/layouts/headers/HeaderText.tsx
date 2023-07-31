@@ -34,6 +34,7 @@ export default function HeaderText({ title }: HeaderTextProps) {
             height: 30,
           }}
           onPress={handleBack}
+          centered
         >
           <Ionicons
             name="chevron-back-outline"

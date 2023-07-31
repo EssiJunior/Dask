@@ -31,7 +31,10 @@ export default function HeaderHome() {
   return (
     <View style={styles.header}>
       {user ? (
-        <TouchableSurface onPress={() => handleNavigate("/profile")}>
+        <TouchableSurface
+          onPress={() => handleNavigate("/profile")}
+          centered
+        >
           <Avatar
             bgColor={user.color || Colors.light.primary}
             letter={user.name[0]}
@@ -65,6 +68,7 @@ export default function HeaderHome() {
           style={{ borderRadius: 50 }}
           onPress={handleToast}
           disabled
+          defaultStyle={false}
         >
           <Ionicons
             name="search-outline"

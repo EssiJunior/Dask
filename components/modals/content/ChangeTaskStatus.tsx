@@ -95,12 +95,12 @@ export default function ChangeTaskStatus() {
           changeTaskStatus({ projectId, taskId, status });
 
           close();
-          
+
           toast({
             type: "success",
             message: "The status has been changed",
           });
-          
+
           // Dispatch the event to the websocket
           dispatch({
             type: WebSocketEvent.UPDATE_TASK,
@@ -152,6 +152,7 @@ export default function ChangeTaskStatus() {
         <TouchableSurface
           onPress={() => handleSelectNewStatus(TaskStatus.TODO)}
           style={{ justifyContent: "center", marginBottom: 10 }}
+          defaultStyle={false}
         >
           <View
             style={{
@@ -178,6 +179,7 @@ export default function ChangeTaskStatus() {
         <TouchableSurface
           onPress={() => handleSelectNewStatus(TaskStatus.PENDING)}
           style={{ justifyContent: "center", marginBottom: 10 }}
+          defaultStyle={false}
         >
           <View
             style={{
@@ -204,6 +206,7 @@ export default function ChangeTaskStatus() {
         <TouchableSurface
           onPress={() => handleSelectNewStatus(TaskStatus.DONE)}
           style={{ justifyContent: "center", marginBottom: 10 }}
+          defaultStyle={false}
         >
           <View
             style={{

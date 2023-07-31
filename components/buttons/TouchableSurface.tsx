@@ -10,6 +10,8 @@ type ButtonProps = {
   useForeground?: boolean;
   rounded: boolean;
   disabled?: boolean;
+  centered?: boolean;
+  defaultStyle?: boolean;
 };
 
 export default function TouchableSurface({
@@ -20,18 +22,25 @@ export default function TouchableSurface({
   useForeground,
   rounded,
   disabled,
+  centered,
+  defaultStyle
 }: ButtonProps) {
   return (
     <TouchableNativeFeedback
       onPress={onPress}
-      background={TouchableNativeFeedback.Ripple(
-        rippleColor,
-        rounded
-      )}
+      background={TouchableNativeFeedback.Ripple(rippleColor, rounded)}
       useForeground={useForeground}
       disabled={disabled}
     >
-      <View style={[styles.touchableSurface, style]}>{children}</View>
+      <View
+        style={[
+          defaultStyle && styles.touchableSurface,
+          style,
+          centered && { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        {children}
+      </View>
     </TouchableNativeFeedback>
   );
 }
@@ -42,5 +51,7 @@ TouchableSurface.defaultProps = {
   style: {},
   useForground: false,
   rounded: false,
-  disabled: false
+  disabled: false,
+  centered: false,
+  defaultStyle: true,
 };

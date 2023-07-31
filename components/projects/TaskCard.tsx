@@ -189,7 +189,11 @@ export default function TaskCard({ task, type, delay }: TaskCardProps) {
                 <Typography text={task.title} />
               </View>
 
-              <TouchableSurface onPress={handleOpenChangeTaskStatusModal}>
+              <TouchableSurface
+                onPress={handleOpenChangeTaskStatusModal}
+                centered
+                defaultStyle={false}
+              >
                 <Badge
                   width={badgeWidth}
                   text={capitalize(badgeText)}
@@ -251,10 +255,10 @@ export default function TaskCard({ task, type, delay }: TaskCardProps) {
                     borderRadius: 50,
                     width: 30,
                     height: 30,
-                    alignItems: "center",
-                    justifyContent: "center",
                   }}
                   onPress={handleOpenDeleteTaskModal}
+                  centered
+                  defaultStyle={false}
                 >
                   <Feather name="trash-2" size={20} color={Colors.light.red} />
                 </TouchableSurface>
