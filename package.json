@@ -1,6 +1,6 @@
 {
   "name": "dask",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "scripts": {
     "start": "expo start",
     "start:dev": "npx expo start --dev-client",

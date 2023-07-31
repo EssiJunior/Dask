@@ -112,7 +112,9 @@ export default class UsersRepository {
    */
   static async insert(payload: CreateUserDto): Promise<boolean> {
     try {
-      const user = await UsersRepository.findByUid(payload.uid);
+      const user = await UsersRepository.findByEmail(payload.email);
+
+      console.log(user)
 
       if (!user) {
         return new Promise((resolve, reject) => {
@@ -135,7 +137,7 @@ export default class UsersRepository {
               if (results) {
                 const data = results[0] as ResultSet;
 
-                console.log({ data });
+                console.log({ data, user });
 
                 if (data && data.rowsAffected) {
                   console.log("User inserted");
@@ -191,6 +193,59 @@ export default class UsersRepository {
 
                 const user = new User({
                   uid,
+                  name: userData.name,
+                  email: userData.email,
+                  color: userData.color,
+                  avatar: userData.avatar,
+                  createdAt: new Date(userData.created_at),
+                });
+
+                console.log("User retrieved succesfully");
+
+                resolve(user);
+              } else {
+                console.log("User not found");
+
+                resolve(null);
+              }
+            }
+
+            reject(null);
+          }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+
+      return new Promise((_, reject) => reject(null));
+    }
+  }
+
+  /**
+   * Finds a user by their uid
+   * @param email string
+   * @returns Promise<User | null>
+   */
+  static async findByEmail(email: string): Promise<User | null> {
+    try {
+      return new Promise((resolve, reject) => {
+        this.db.exec(
+          [
+            {
+              sql: `SELECT * FROM users WHERE email = ?`,
+              args: [email],
+            },
+          ],
+          false,
+          async (_, results) => {
+            if (results) {
+              const data = results[0] as ResultSet;
+
+              if (data && data.rows.length) {
+                const userData = data.rows[0];
+
+                const user = new User({
+                  uid: userData.uid,
                   name: userData.name,
                   email: userData.email,
                   color: userData.color,

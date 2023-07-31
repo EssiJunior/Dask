@@ -162,7 +162,7 @@ export default function ProfileScreen() {
             />
           </View>
 
-          <View style={styles.rowBlock}>
+          {/* <View style={styles.rowBlock}>
             <Ionicons
               name="person-outline"
               size={22}
@@ -176,7 +176,7 @@ export default function ProfileScreen() {
               color={Colors.light.black}
               style={[styles.projectsText, { marginLeft: 10 }]}
             />
-          </View>
+          </View> */}
 
           <TouchableSurface onPress={handleLogout} style={{ marginBottom: 50 }}>
             <View style={styles.rowBlock}>

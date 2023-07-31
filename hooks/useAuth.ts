@@ -29,6 +29,17 @@ export default function useAuth() {
   const handleGetCurrentUser = async () => {
     const uid = await storage.getItem(DASK_USER_ID);
 
+    console.log({
+      uid,
+      user,
+      ready,
+      isNetworkReady,
+      isConnected,
+      isInternetReachable,
+      termsRead,
+      isConnecting,
+    });
+
     if (uid) {
       const user = await UsersRepository.findByUid(uid);
 
@@ -45,9 +56,15 @@ export default function useAuth() {
         if (isNetworkReady && isConnected && !isConnecting) {
           setIsConnecting(true);
 
-          getCurrentUser(login);
+          getCurrentUser(handleLogin);
         }
       }
     }
   };
+
+  const handleLogin = (user: any) => {
+    login(user);
+
+    setIsConnecting(false);
+  }
 }

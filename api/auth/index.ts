@@ -56,6 +56,7 @@ const findUser = async (uid: string) => {
  */
 const getCurrentUser = async (login: (user: any) => void) => {
   onAuthStateChanged(auth, async (user) => {
+    console.log({ connected: user })
     if (user) {
       const uid = user.uid;
 

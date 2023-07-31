@@ -2,7 +2,7 @@
   "expo": {
     "name": "Dask",
     "slug": "dask",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "dask",
@@ -19,7 +19,7 @@
     },
     "android": {
       "package": "com.dilane3.dask",
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
